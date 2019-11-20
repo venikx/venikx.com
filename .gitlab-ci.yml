@@ -1,0 +1,33 @@
+image: haskell:8
+
+variables:
+  STACK_ROOT: "${CI_PROJECT_DIR}/.stack"
+
+cache:
+  untracked: true
+  paths:
+    - .stack
+    - .stack-work
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - stack build
+    - stack exec site build
+  artifacts:
+    paths:
+      - _site
+  only:
+    - master
+
+test:
+  stage: test
+  script:
+    - ls
+    - ls _site
+  only:
+    - master
