@@ -1,20 +1,16 @@
-image: haskell:8
-
-variables:
-  STACK_ROOT: "${CI_PROJECT_DIR}/.stack"
-
-cache:
-  untracked: true
-  paths:
-    - .stack
-    - .stack-work
-
 stages:
   - build
-  - test
+  - deploy
 
 build:
   stage: build
+  image: haskell:8
+  variables:
+    STACK_ROOT: "${CI_PROJECT_DIR}/.stack"
+  cache:
+    paths:
+      - .stack
+      - .stack-work
   script:
     - stack build
     - stack exec site build
@@ -24,10 +20,17 @@ build:
   only:
     - master
 
-test:
-  stage: test
+deploy:
+  stage: deploy
+  image: python:latest
+  variables:
+    S3_BUCKET_NAME: "venikx.com"
+  dependencies:
+    - build
+  before_script:
+    - pip install awscli
   script:
-    - ls
-    - ls _site
+    - aws s3 cp _site s3://${S3_BUCKET_NAME}/ --recursive
+    # - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths *
   only:
     - master
