@@ -6,6 +6,36 @@ html {
 
 body {
   font-family: 'Roboto';
-  display: flex;
-  justify-content: center;
+  background: url("../images/stars.gif") #00001a;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: darkblue;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+nav {
+  color: white;
+}
+
+nav::after {
+  content: '';
+  background: url("../images/divider-rainbow.gif") #8c1eff;
+  height: 1px;
+  width: 100%;
+  display: inline-block;
+}
+
+a {
+  cursor: auto;
+  cursor: url("../images/hand.gif"), auto;
+  color: white;
+  font-size: 2rem;
 }
