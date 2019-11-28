@@ -1,0 +1,14 @@
+{
+  "name": "venikx.com",
+  "private": true,
+  "scripts": {
+    "build": "gridsome build",
+    "test": "echo \"Kappa: no tests\"",
+    "develop": "gridsome develop",
+    "explore": "gridsome explore"
+  },
+  "dependencies": {
+    "gridsome": "^0.7.0",
+    "normalize.css": "^8.0.1"
+  }
+}

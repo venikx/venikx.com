@@ -1,0 +1,51 @@
+image: node:12.13.1
+
+cache:
+  paths:
+    - node_modules/
+    - .yarn
+
+stages:
+  - setup
+  - test
+  - build
+  - deploy
+
+setup:
+  stage: setup
+  script:
+    - yarn install --frozen-lockfile --non-interactive
+  only:
+    - master
+
+test:
+  stage: test
+  script:
+    - yarn test
+  only:
+    - master
+
+build:
+  stage: build
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - dist
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  image: python:latest
+  variables:
+    S3_BUCKET_NAME: "venikx.com"
+  dependencies:
+    - build
+  before_script:
+    - pip install awscli -q
+  script:
+    - aws s3 cp _site s3://${S3_BUCKET_NAME}/ --recursive
+    - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths "/*"
+  only:
+    - master
