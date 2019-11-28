@@ -3,7 +3,6 @@ image: node:12.13.1
 cache:
   paths:
     - node_modules/
-    - .yarn
 
 stages:
   - setup
@@ -31,7 +30,7 @@ build:
     - yarn build
   artifacts:
     paths:
-      - dist
+      - _site
   only:
     - master
 
