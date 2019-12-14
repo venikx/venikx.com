@@ -7,5 +7,5 @@
 module.exports = {
   siteName: 'Home',
   plugins: [],
-  outDir: '_site'
+  outputDir: '_site'
 };
