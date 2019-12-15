@@ -5,10 +5,6 @@
         src="~/assets/construction.gif"
         alt="A GeoCities 'Under Construction' gif"
       />
-      <g-image
-        src="~/assets/bartxxx.gif"
-        alt="Bart Simpson pulls down pants and moons you"
-      />
     </section>
   </Layout>
 </template>
@@ -21,4 +17,9 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+section {
+  grid-column: 2;
+  grid-row: 2;
+}
+</style>

@@ -1,0 +1,11 @@
+:root {
+  /* Non-color colours */
+  --black: #121212;
+  --white: #f7f7f7;
+
+  /* Colours */
+  --violet-dark: #240e28;
+  --violet: #521a4a;
+  --neon-pink: #d8247c;
+  --blue: #25a9f0;
+}

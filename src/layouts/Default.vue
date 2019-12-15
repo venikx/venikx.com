@@ -1,30 +1,19 @@
 <template>
   <div class="layout">
-    <nav>
-      <ul>
-        <!-- <li><g-link to="/">{{ $static.metadata.siteName }}</g-link></li> -->
-        <li><g-link to="/cv">CV</g-link></li>
-        <li><g-link to="/labs">Lab</g-link></li>
-        <li>
-          <g-link to="/home">
-            <g-image src="~/assets/phoenix.gif" alt="A flying phoenix" />
-          </g-link>
-        </li>
-        <li><g-link to="/blog">Blog</g-link></li>
-        <li><g-link to="/about">About</g-link></li>
-      </ul>
-    </nav>
-    <slot/>
+    <Header />
+    <slot />
   </div>
 </template>
 
-<static-query>
-query {
-  metadata {
-    siteName
-  }
+<script>
+import Header from '~/components/Header.vue'
+
+export default {
+  components: {
+    Header,
+  },
 }
-</static-query>
+</script>
 
 <style>
 html {
@@ -32,9 +21,13 @@ html {
 }
 
 body {
-  font-family: 'Roboto';
-  background: url("~@/assets/stars.gif") #00001a;
-  }
+  font-family: monospace;
+  font-weight: 400;
+  font-kerning: normal;
+  line-height: 1.2;
+  background: url('~@/assets/stars.gif') var(--black);
+  color: var(--white);
+}
 
 body::before {
   content: '';
@@ -43,27 +36,37 @@ body::before {
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: darkblue;
+  background-color: #130025;
   opacity: 0.1;
   z-index: -1;
 }
 
-nav {
-  color: white;
-}
-
-nav::after {
-  content: '';
-  background: url("~@/assets/divider-rainbow.gif") #8c1eff;
-  height: 1px;
-  width: 100%;
-  display: inline-block;
+.layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(20rem, 72rem) 1fr;
+  grid-gap: 2rem;
+  justify-items: 'center';
+  align-items: 'center';
 }
 
 a {
-  cursor: auto;
-  cursor: url("~@/assets/hand.gif"), auto;
-  color: white;
+  cursor: pointer;
+  cursor: url('~@/assets/hand.gif'), pointer;
+}
+
+h1 {
+  font-size: 4.2rem;
+}
+
+h2 {
+  font-size: 2.8rem;
+}
+
+h3 {
   font-size: 2rem;
+}
+
+p {
+  font-size: 1.4rem;
 }
 </style>
