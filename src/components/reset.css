@@ -76,3 +76,8 @@ select {
     scroll-behavior: auto !important;
   }
 }
+
+/* Reset the link color behaviors */
+a, a:visited, a:hover, a:active {
+  color: inherit;
+}

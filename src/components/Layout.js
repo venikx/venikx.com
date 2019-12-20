@@ -1,61 +1,41 @@
 import React from 'react'
 import { Link } from 'gatsby'
 
+import './reset.css'
+import './layout.css'
+
 class Layout extends React.Component {
   render() {
     const { location, title, children } = this.props
     const rootPath = `${__PATH_PREFIX__}/`
-    let header
+    const header = (
+      <div className="sidebar">
+        <Link to={`/`}>K</Link>
+        <nav>
+          <ul>
+            <li>
+              <a>Blog</a>
+            </li>
+            <li>
+              <a>Labs</a>
+            </li>
+            <li>
+              <a>About</a>
+            </li>
+          </ul>
+        </nav>
+        <div className="pageTitle">
+          <span />
+          <h1>Blog</h1>
+          <span />
+        </div>
+      </div>
+    )
 
-    if (location.pathname === rootPath) {
-      header = (
-        <h1
-          style={{
-            marginTop: 0,
-          }}
-        >
-          <Link
-            style={{
-              boxShadow: `none`,
-              textDecoration: `none`,
-              color: `inherit`,
-            }}
-            to={`/`}
-          >
-            {title}
-          </Link>
-        </h1>
-      )
-    } else {
-      header = (
-        <h3
-          style={{
-            fontFamily: `Montserrat, sans-serif`,
-            marginTop: 0,
-          }}
-        >
-          <Link
-            style={{
-              boxShadow: `none`,
-              textDecoration: `none`,
-              color: `inherit`,
-            }}
-            to={`/`}
-          >
-            {title}
-          </Link>
-        </h3>
-      )
-    }
     return (
-      <div
-        style={{
-          marginLeft: `auto`,
-          marginRight: `auto`,
-        }}
-      >
+      <div className="container">
         {header}
-        {children}
+        <main>{children}</main>
         <footer>
           Copyright (C) {new Date().getFullYear()} Kevin 'Rangel' De
           Baerdemaeker, licenced under{' '}
