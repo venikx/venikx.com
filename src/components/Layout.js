@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'gatsby'
 
-import { rhythm, scale } from '../utils/typography'
-
 class Layout extends React.Component {
   render() {
     const { location, title, children } = this.props
@@ -13,8 +11,6 @@ class Layout extends React.Component {
       header = (
         <h1
           style={{
-            ...scale(1.5),
-            marginBottom: rhythm(1.5),
             marginTop: 0,
           }}
         >
@@ -36,7 +32,6 @@ class Layout extends React.Component {
           style={{
             fontFamily: `Montserrat, sans-serif`,
             marginTop: 0,
-            marginBottom: rhythm(-1),
           }}
         >
           <Link
@@ -57,16 +52,20 @@ class Layout extends React.Component {
         style={{
           marginLeft: `auto`,
           marginRight: `auto`,
-          maxWidth: rhythm(24),
-          padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
         }}
       >
         {header}
         {children}
         <footer>
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>
+          Copyright (C) {new Date().getFullYear()} Kevin 'Rangel' De
+          Baerdemaeker, licenced under{' '}
+          <a
+            rel="license"
+            href="http://creativecommons.org/licenses/by-nc/4.0/"
+          >
+            Creative Commons Attribution-NonCommercial 4.0 International License
+          </a>
+          .
         </footer>
       </div>
     )
