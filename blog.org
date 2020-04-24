@@ -1,4 +1,0 @@
-#+TITLE: Blog
-
-Blog entries
-#+INCLUDE: sitemap.org::*blog :only-contents t
