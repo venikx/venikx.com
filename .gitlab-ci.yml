@@ -1,13 +1,12 @@
-image: iquiw/alpine-emacs
-before_script:
-  - apk update && apk add make
-
 stages:
   - build
   - deploy
 
 build:
   stage: build
+  image: iquiw/alpine-emacs
+  before_script:
+    - apk update && apk add make
   script:
     - make publish
   artifacts:
