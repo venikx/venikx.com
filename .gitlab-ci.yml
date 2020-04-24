@@ -25,7 +25,7 @@ deploy:
   before_script:
     - pip install awscli -q
   script:
-    - aws s3 sync public s3://${S3_BUCKET_NAME}/ --recursive --delete
+    - aws s3 sync public/ s3://${S3_BUCKET_NAME}/ --delete
     - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths "/*"
   only:
     - master
