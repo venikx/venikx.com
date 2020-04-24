@@ -21,7 +21,7 @@ deploy:
   variables:
     S3_BUCKET_NAME: "venikx.com"
   dependencies:
-    - public
+    - build
   before_script:
     - pip install awscli -q
   script:
