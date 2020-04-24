@@ -29,29 +29,11 @@
 (defvar venikx/description "Kevin Rangel is a web developer, focusing mainly on Javascript but likes to fiddle around with C/C++ and Rust."
   "The description of site (partly for SEO).")
 
-(defvar venikx/root
-  (locate-dominating-file (pwd)
-                          (lambda (dir)
-                            (seq-every-p
-                             (lambda (file) (file-exists-p (expand-file-name file dir)))
-                             '(".git" ".well-known" "content" "css" "elisp" "favicon.ico" "layouts" "posts"))))
-  "Root directory of this project.")
-
-(defvar venikx/layouts-directory
-  (expand-file-name "layouts" venikx/root)
-  "Directory where layouts are found.")
-
 (defvar venikix/site-attachments
   (regexp-opt '("jpg" "jpeg" "gif" "png" "svg"
                 "ico" "cur" "css" "js"
                 "eot" "woff" "woff2" "ttf" "pdf"))
   "File types that are published as static files.")
-
-(defun venikx/html-template-format (type)
-  "Return the content for the pre/postamble of TYPE."
-  `(("en" ,(with-temp-buffer
-             (insert-file-contents (expand-file-name (format "%s.html" type) rw--layouts-directory))
-             (buffer-string)))))
 
 ;; Formatting
 (defvar venikx/date-format "%F")
@@ -87,8 +69,8 @@
 <nav>
   <ul>
     <li><a href='/'>Home</a></li>
-    <li><a href='/blog'>Blog</a></li>
-    <li><a href='/about'>About</a></li>
+    <li><a href='/blog.html'>Blog</a></li>
+    <li><a href='/about.html'>About</a></li>
   </ul>
 </nav>")
 
@@ -101,35 +83,12 @@
  </p>
 ")
 
-
-(defvar site-attachments
-  (regexp-opt '("jpg" "jpeg" "gif" "png" "svg"
-                "ico" "cur" "css" "js" "woff" "html" "pdf"))
-  "File types that are published as static files.")
-
-
-;; TODO(kevin): Rework this function
 (defun venikx/org-sitemap (title list)
-  "Sitemap generation function."
-  (concat "#+TITLE: Sitemap\n\n"
+  "Generate sitemap as a string, setting TITLE.
+The LIST is a representation of the files to include."
+  (concat "#+TITLE: Sitemap\n"
+          "#+DESCRIPTION: Kevin Rangel's personal blog\n\n"
           (org-list-to-subtree list)))
-
-(defun venikx/org-sitemap-format-entry (entry style project)
-  "Format posts with author and published data in the index page.
-
-ENTRY: file-name
-STYLE:
-PROJECT: `posts in this case."
-  (cond ((not (directory-name-p entry))
-         (format "*[[file:%s][%s]]*
-                 #+HTML: <p class='pubdate'>by %s on %s.</p>"
-                 entry
-                 (org-publish-find-title entry project)
-                 (car (org-publish-find-property entry :author project))
-                 (format-time-string venikx/date-format
-                                     (org-publish-find-date entry project))))
-        ((eq style 'tree) (file-name-nondirectory (directory-file-name entry)))
-        (t entry)))
 
 (setq org-publish-project-alist
       `(("blog"
@@ -144,14 +103,11 @@ PROJECT: `posts in this case."
          :sitemap-title nil
          :sitemap-sort-files anti-chronologically
          :sitemap-function venikx/org-sitemap
-         ;; :sitemap-format-entry venikx/org-sitemap-format-entry
          :html-head-include-scripts t
          :html-head-include-default-style nil
-         :html-head ,venikx/html-head)
-         ;; :html-preamble t
-         ;; :html-preamble-format (venikx/html-template-format 'preamble)
-         ;; :html-postamble t
-         ;; :html-postamble-format (venikx/html-template-format 'postamble))
+         :html-head ,venikx/html-head
+         :html-preamble ,venikx/html-preamble
+         :html-postamble ,venikx/html-postamble)
         ("css"
          :base-directory "./css"
          :base-extension "css"
