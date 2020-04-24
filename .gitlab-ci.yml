@@ -1,33 +1,15 @@
-image: node:12.13.1
-
-cache:
-  paths:
-    - node_modules/
+image: iquiw/alpine-emacs
+before_script:
+  - apk update && apk add make
 
 stages:
-  - setup
-  - test
   - build
   - deploy
-
-setup:
-  stage: setup
-  script:
-    - yarn install --frozen-lockfile --non-interactive
-  only:
-    - master
-
-test:
-  stage: test
-  script:
-    - yarn test
-  only:
-    - master
 
 build:
   stage: build
   script:
-    - yarn build
+    - make publish
   artifacts:
     paths:
       - public

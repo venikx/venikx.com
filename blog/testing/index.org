@@ -1,0 +1,6 @@
+#+title: Post One
+#+date: <2020-02-12 Wed>
+#+author: John Doe
+#+email: john.doe@example.com
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry.

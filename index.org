@@ -1,0 +1,4 @@
+#+TITLE: Kevin Rangel
+
+* Latests posts
+#+INCLUDE: sitemap.org::*blog :lines "1-2" :only-contents t

@@ -1,0 +1,33 @@
+#+TITLE: Testing a blog post
+# #+SETUPFILE: ~/dev/venikx.com/org/setup.config
+#+HTML_HEAD: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+#+HTML_HEAD: <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+#+INCLUDE: code.inc
+
+* Introduction
+Blaaaa
+
+* Code Examples
+** Shells
+#+begin_src sh :exports both :results verbatim
+ls -l
+#+end_src
+
+#+RESULTS:
+: total 28
+: -rw-r--r-- 1 caspian caspian   194 Apr 22 04:38 code.inc
+: -rw-r--r-- 1 caspian caspian 13344 Apr 22 04:48 test.html
+: -rw-r--r-- 1 caspian caspian  1008 Apr 22 04:49 test.org
+: -rw-r--r-- 1 caspian caspian   476 Apr 22 03:53 test.texi
+
+** Call functions
+Kappa call_pi()
+
+** Use previous output as input
+#+name: hello
+#+begin_src shell :exports none
+echo Hello World
+#+end_src
+
+I can change to "call_short_hello(line=hello) Kevin" :
+* Paskaa
