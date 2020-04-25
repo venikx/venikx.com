@@ -1,4 +1,4 @@
-#+TITLE: Kevin Rangel
+#+TITLE: Kappa
 
 * Latests posts
 #+INCLUDE: sitemap.org::*blog :only-contents t

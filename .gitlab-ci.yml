@@ -17,15 +17,10 @@ build:
 
 deploy:
   stage: deploy
-  image: python:latest
-  variables:
-    S3_BUCKET_NAME: "venikx.com"
+  image: node:12
   dependencies:
     - build
-  before_script:
-    - pip install awscli -q
   script:
-    - aws s3 sync public/ s3://${S3_BUCKET_NAME}/ --delete
-    - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths "/*"
+    - npx netlify-cli deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --prod
   only:
     - master
