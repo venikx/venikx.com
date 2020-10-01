@@ -1,6 +1,6 @@
 # Makefile for Blogging using GNU Emacs & Org mode & Hugo
 
-.PHONY: clean publish publish_no_init
+.PHONY: clean publish develop
 
 all: publish
 

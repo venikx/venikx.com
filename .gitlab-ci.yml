@@ -8,7 +8,7 @@ build:
     name: klakegg/hugo
     entrypoint: [""]
   script:
-    - make publish
+    - hugo
   artifacts:
     paths:
       - public
