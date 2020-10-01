@@ -1,0 +1,75 @@
+#+hugo_base_dir: ../
+#+hugo_front_matter_format: yaml
+#+startup: indent
+#+seq_todo: TODO DRAFT DONE
+#+seq_todo: TEST__TODO | TEST__DONE
+
+#+macro: latex @@html:<span class="latex">L<sup>a</sup>T<sub>e</sub>X</span>@@
+#+macro: youtube @@html:<div class="org-youtube"><iframe src="https://www.youtube-nocookie.com/embed/$1" allowfullscreen title="YouTube Video"></iframe></div>@@
+
+* Homepage
+:PROPERTIES:
+:EXPORT_HUGO_SECTION:
+:EXPORT_FILE_NAME: _index
+:EXPORT_HUGO_MENU: :menu "main"
+:END:
+This is the home of Kevin Rangel!
+* About
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: about
+:EXPORT_FILE_NAME: _index
+:EXPORT_HUGO_MENU: :menu "main"
+:END:
+Hi there!
+* Blog Posts
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: blog
+:END:
+** Blog
+:PROPERTIES:
+:EXPORT_HUGO_MENU: :menu "main"
+:EXPORT_FILE_NAME: _index
+:END:
+Man, look at all my blog posts.
+** Post 1
+:PROPERTIES:
+:EXPORT_FILE_NAME: post 1
+:END:
+Content
+** Post 2 :@reading:testing:
+:PROPERTIES:
+:EXPORT_FILE_NAME: post-2
+:END:
+Post with tags
+** Testing all sorts of shit
+:PROPERTIES:
+:EXPORT_HUGO_BUNDLE: testing-bundle
+:EXPORT_FILE_NAME: index
+:END:
+*** Images
+[[file:images/testing-bundle/me.jpg]]
+
+*** Youtube
+{{{youtube(v_jDFgS2AqE)}}}
+
+Testing
+
+
+*** (Foo)Bar.Baz&Zoo
+* Projects
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: projects
+:END:
+** Projects
+:PROPERTIES:
+:EXPORT_HUGO_MENU: :menu "main"
+:EXPORT_FILE_NAME: _index
+:END:
+Man, look at all my projects.
+
+
+* Footnotes
+* COMMENT Local Variables                          :ARCHIVE:
+# Local Variables:
+# eval: (org-hugo-auto-export-mode)
+# End:

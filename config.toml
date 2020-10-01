@@ -1,0 +1,27 @@
+baseURL = "https://venikx.com/"
+languageCode = "en-gb"
+title = "venikx.com"
+theme = "cyberpunk-terminal"
+disqusShortname = "venikx"
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[params]
+  # Cutting off the page title to two chars for mobile (console-demo -> co)
+  titleCutting = true
+  author = "Kevin Rangel"
+  title = "venikx.com"
+  description = "Freelance Web Developer"
+
+  [[params.navlinks]]
+  name = "about/"
+  url = "about/"
+
+  [[params.navlinks]]
+  name = "blog/"
+  url = "blog/"
+
+  [[params.navlinks]]
+  name = "projects/"
+  url = "projects/"

@@ -1,10 +1,15 @@
+variables:
+  HUGO_VERSION: 0.65.3
+
 stages:
   - build
   - deploy
 
 build:
   stage: build
-  image: iquiw/alpine-emacs
+  image:
+    name: klakegg/hugo
+    entrypoint: [""]
   before_script:
     - apk update && apk add make
   script:

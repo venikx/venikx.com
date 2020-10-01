@@ -1,4 +1,0 @@
-#+TITLE: Kappa
-
-* Latests posts
-#+INCLUDE: sitemap.org::*blog :lines "1-6" :only-contents t
