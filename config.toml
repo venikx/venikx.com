@@ -8,8 +8,6 @@ disqusShortname = "venikx"
   unsafe = true
 
 [params]
-  # Cutting off the page title to two chars for mobile (console-demo -> co)
-  titleCutting = true
   author = "Kevin Rangel"
   title = "venikx.com"
   description = "Freelance Web Developer"

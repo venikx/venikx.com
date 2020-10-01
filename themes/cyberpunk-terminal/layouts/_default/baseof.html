@@ -28,29 +28,29 @@
 </head>
 <body class="terminal">
     <div class="container">
-        <div class="terminal-nav">
-          <header class="terminal-logo">
+        <header class="terminal-nav">
+          <div class="terminal-logo">
             <div class="logo terminal-prompt">
               {{ $url := replace .Permalink ( printf "%s" .Site.BaseURL) "" }}
               {{ $.Scratch.Add "path" .Site.BaseURL }}
-              <a href="{{ .Site.BaseURL }}" class="no-style {{ with .Site.Params.TitleCutting }}site-name{{ end }}">{{ .Site.Title }}</a>:~# 
+              <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a> λ
               {{ range $index, $element := split $url "/" }}{{ $.Scratch.Add "path" $element }}{{ if ne $element "" }}
               <a href='{{ $.Scratch.Get "path" | absURL }}'>{{ . }}</a>/{{ $.Scratch.Add "path" "/" }}{{ end }}{{ end }}
             </div>
-          </header>
+          </div>
           <nav class="terminal-menu">
-            <ul vocab="https://schema.org/" typeof="BreadcrumbList">
+            <ul>
                 {{ range .Site.Params.navlinks }}
-                <li><a href="{{ absURL .url }}" typeof="ListItem">{{ .name }}</a></li>
+                <li><a href="{{ absURL .url }}">{{ .name }}</a></li>
                 {{ end }}
             </ul>
           </nav>
-        </div>
-    </div>
+        </header>
 
-    <div class="container animated zoomIn fast">
-        {{ block "main" . }}
-        {{ end }}
+        <div class="animated zoomIn fast">
+            {{ block "main" . }}
+            {{ end }}
+        </div>
         {{ partial "footer.html" . }}
     </div>
   </body>
