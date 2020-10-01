@@ -1,6 +1,7 @@
 ---
 title: "Testing all sorts of shit"
 author: ["Kevin De Baerdemaeker"]
+images: ["me.jpg"]
 draft: false
 ---
 

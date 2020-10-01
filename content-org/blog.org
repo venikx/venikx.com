@@ -45,6 +45,7 @@ Post with tags
 :PROPERTIES:
 :EXPORT_HUGO_BUNDLE: testing-bundle
 :EXPORT_FILE_NAME: index
+:EXPORT_HUGO_IMAGES: me.jpg
 :END:
 *** Images
 [[file:images/testing-bundle/me.jpg]]

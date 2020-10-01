@@ -3,12 +3,12 @@
 <br/>
 {{ .Content }}
 
-<div class="posts-list">
+<div>
 {{ range sort .Data.Pages "Date" "desc" }}
     {{ if not .Params.private }}
-        <div class="post">
+        <div>
             <p>
-                <div class="date">{{ .PublishDate.Format "Jan. 2, 2006" }}</div>    
+                <div>{{ .PublishDate.Format "Jan. 2, 2006" }}</div>    
                 <h1><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h1>
                 {{ .Summary }}
             </p>
