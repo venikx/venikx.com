@@ -1,4 +1,3 @@
 #+TITLE: Todo
 
-* TODO RSS-feed
-* DONE Disqus
+* TODO Migrate to kevinrangel.com

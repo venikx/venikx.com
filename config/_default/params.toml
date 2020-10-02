@@ -1,0 +1,198 @@
+logoText = "venikx.com"
+logoType = "short" # long, short
+description = "Kevin Rangel is a freelance web developer who enjoys coding in Javascript, drawing pixel art, gaming and aspires to become a game developer when he retires. Kevin is a former Web Engineer at Epic Games."
+custom_css = []
+custom_js = []
+useFaviconGenerator = true # https://www.favicon-generator.org/
+meta_image = ""
+themecolor = "dark"
+
+themeOptions = ["dark", "light"]
+notAllowedTypesInHome = ["contact", "talks", "about", "showcase", "publication", "presentation", "resume"]
+notAllowedTypesInHomeSidebar = ["about", "archive", "showcase", "publication", "presentation", "resume"]
+notAllowedTypesInArchive = ["about", "talks", "showcase", "publication", "presentation", "resume"]
+notAllowedTypesInHomeFeed = ["about", "archive", "contact", "talks", "showcase", "publication", "presentation", "resume", "gallery"]
+
+viewportSize = "wide" # widest, wider, wide, normal, narrow
+enableUiAnimation = true
+hideSingleContentsWhenJSDisabled = false
+enablePinnedPosts = true
+minItemsToShowInTagCloud = 1 # Minimum items to show in tag cloud
+
+# header
+homeHeaderType = "text" # text, img, slide, typewriter
+
+# menu
+showMobileMenuTerms = ["tags", "categories", "series"]
+
+# body
+enableBreadcrumb = true
+enablePhotoSwipe = true
+enableSearch = true
+enableSearchHighlight = true
+enableGoToTop = true
+enableWhoami = true
+summaryShape = "classic" # card, classic, compact
+searchResultPosition = "main" # side, main
+archiveGroupByDate = "2006" # "2006-01": group by month, "2006": group by year
+archivePaginate = 20
+paginateWindow = 1
+talksPaginate = 20
+talksGroupByDate = "2006"
+pubPaginate = 20
+
+# whoami
+myname = "Kevin Rangel"
+email = "me@venikx.com"
+whoami = "Web Developer"
+bioImageUrl = ""
+useGravatar = false
+location = "Helsinki, Finland"
+organization = "Freelance"
+link = "https://venikx.com"
+
+# sidebar
+enableBio = true
+enableBioImage = true
+enableSidebar = true
+enableSidebarTags = true
+enableSidebarSeries = true
+enableSidebarCategories = true
+enableHomeSidebarTitles = true
+enableListSidebarTitles = true
+enableToc = true
+hideToc = false
+tocFolding = true
+tocPosition = "inner" # inner, outer
+enableTocSwitch = true
+itemsPerCategory = 5
+sidebarPosition = "right"
+tocLevels = ["h2", "h3", "h4"]
+enableSidebarPostsByOrder = false
+
+# footer
+showPoweredBy = false
+showFeedLinks = true
+showSocialLinks = true
+enableLangChange = false
+enableThemeChange = true
+
+# service
+googleTagManager = "" # GTM-XXXXXX
+baiduAnalytics = ""
+enableBusuanzi = false
+busuanziSiteUV = true
+busuanziSitePV = true
+busuanziPagePV = true
+
+# rss
+updatePeriod = "" # Possible values: 'hourly', 'daily', 'weekly', 'monthly', or 'yearly'.
+updateFrequency = ""
+fullContents = false
+
+# comment
+enableComment = true
+disqus_shortname = ""
+commento = false
+
+[telegram]
+  enable = false
+  siteId = ""
+  dataLimit = 5
+
+[gitment]          # Gitment is a comment system based on GitHub issues. see https://github.com/imsun/gitment
+  owner = ""              # Your GitHub ID
+  repo = ""               # The repo to store comments
+  clientId = ""           # Your client ID
+  clientSecret = ""       # Your client secret
+
+[utterances]       # https://utteranc.es/
+  owner = "venikx"              # Your GitHub ID
+  repo = "venikx.com"               # The repo to store comments
+
+[gitalk]           # Gitalk is a comment system based on GitHub issues. see https://github.com/gitalk/gitalk
+  owner = ""              # Your GitHub ID
+  repo = ""               # The repo to store comments
+  clientId = ""           # Your client ID
+  clientSecret = ""       # Your client secret
+
+# Valine.
+# You can get your appid and appkey from https://leancloud.cn
+# more info please open https://valine.js.org
+[valine]
+  enable = false
+  appId = '你的appId'
+  appKey = '你的appKey'
+  notify = false  # mail notifier , https://github.com/xCss/Valine/wiki
+  verify = false # Verification code
+  avatar = 'mm' 
+  placeholder = '说点什么吧...'
+  visitor = false
+
+[changyan]
+  changyanAppid = ""        # Changyan app id             # 畅言
+  changyanAppkey = ""       # Changyan app key
+
+[livere]
+  livereUID = ""            # LiveRe UID                  # 来必力
+
+# Isso: https://posativ.org/isso/
+[isso]
+  enable = false
+  scriptSrc = "" # "https://isso.example.com/js/embed.min.js"
+  dataAttrs = "" # "data-isso='https://isso.example.com' data-isso-require-author='true'"
+
+[socialOptions]
+  email = "mailto:me@venikx.com"
+  phone = ""
+  facebook = ""
+  twitter = "https://twitter.com/_venikx"
+  github = "https://github.com/venikx"
+  # stack-overflow = "https://stackoverflow.com/users/14380122/venikx"
+  instagram = ""
+  google-plus = ""
+  youtube = ""
+  medium = ""
+  tumblr = ""
+  linkedin = "https://www.linkedin.com/in/venikx/"
+  pinterest = ""
+  stack-exchange = ""
+  telegram = ""
+  steam = ""
+  weibo = ""
+  douban = ""
+  csdn = ""
+  gitlab = "https://gitlab.com/venikx"
+  # mastodon = "https://mastodon.social/@venikx"
+  jianshu = ""
+  zhihu = ""
+  signal = ""
+  whatsapp = ""
+  matrix = ""
+  xmpp = ""
+  dev-to = "https://dev.to/venikx"
+  gitea = ""
+  google-scholar = ""
+
+[donationOptions]
+  enable = false
+  alipay = "" 
+  wechat = ""
+  paypal = ""
+  patreon = ""
+
+[[share]]
+  name = "linkedin"
+[[share]]
+  name = "twitter"
+[[share]]
+  name = "reddit"
+[[share]]
+  name = "facebook"
+
+[[footerLinks]]
+  name = ""
+  link = ""
+[[footerLinks]]
+  name = ""
+  link = ""
