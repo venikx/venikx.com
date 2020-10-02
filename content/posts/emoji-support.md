@@ -15,6 +15,7 @@ tags:
 - namoji
 - bamoji
 - amoji
+meta_image: images/feature2/color-palette.png
 ---
 
 Emoji can be enabled in a Hugo project in a number of ways. 

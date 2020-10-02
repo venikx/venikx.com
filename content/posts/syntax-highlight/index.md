@@ -15,7 +15,8 @@ series:
 -
 categories:
 - hugo
-image: images/feature2/color-palette.png
+image: color-pallette.png
+meta_image: color-pallette.png
 ---
 
 ## Code Syntax Highlighting
