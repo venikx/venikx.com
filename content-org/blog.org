@@ -1,52 +1,44 @@
-#+hugo_base_dir: ../
-#+hugo_front_matter_format: yaml
 #+startup: indent
 #+seq_todo: TODO DRAFT DONE
-#+seq_todo: TEST__TODO | TEST__DONE
+#+orga_publish_keyword: DONE
 
 #+macro: latex @@html:<span class="latex">L<sup>a</sup>T<sub>e</sub>X</span>@@
 #+macro: youtube @@html:<div class="org-youtube"><iframe src="https://www.youtube-nocookie.com/embed/$1" allowfullscreen title="YouTube Video"></iframe></div>@@
 
-* Homepage
+* DONE Homepage
 :PROPERTIES:
-:EXPORT_HUGO_SECTION:
-:EXPORT_FILE_NAME: _index
-:EXPORT_HUGO_MENU: :menu "main"
+:EXPORT_FILE_NAME: home
+:CATEGORY: home
 :END:
 This is the home of Kevin Rangel!
-* About
+* DONE About
 :PROPERTIES:
-:EXPORT_HUGO_SECTION: about
-:EXPORT_FILE_NAME: _index
-:EXPORT_HUGO_MENU: :menu "main"
+:EXPORT_FILE_NAME: about
+:CATEGORY: about
 :END:
 Hi there!
 * Blog Posts
 :PROPERTIES:
-:EXPORT_HUGO_SECTION: blog
-:END:
-** Blog
-:PROPERTIES:
-:EXPORT_HUGO_MENU: :menu "main"
-:EXPORT_FILE_NAME: _index
+:EXPORT_FILE_NAME: blog
+:CATEGORY: blog
 :END:
 Man, look at all my blog posts.
 ** Post 1
 :PROPERTIES:
-:EXPORT_FILE_NAME: post 1
+:EXPORT_FILE_NAME: post-1
+:CATEGORY: post-1
 :END:
 Content
 ** Post 2 :@reading:testing:
 :PROPERTIES:
 :EXPORT_FILE_NAME: post-2
-:EXPORT_HUGO_IMAGES: https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80
+:CATEGORY: post-2
 :END:
 Post with tags
 ** Testing all sorts of shit
 :PROPERTIES:
-:EXPORT_HUGO_BUNDLE: testing-bundle
-:EXPORT_FILE_NAME: index
-:EXPORT_HUGO_IMAGES: images/testing-bundle/me.jpg
+:EXPORT_FILE_NAME: testing-bundle
+:CATEGORY: testing-bundle
 :END:
 *** Images
 [[file:images/testing-bundle/me.jpg]]
@@ -70,18 +62,7 @@ Duis at bibendum lectus. Nulla rhoncus condimentum ante quis pharetra. Proin dap
 
 * Projects
 :PROPERTIES:
-:EXPORT_HUGO_SECTION: projects
-:END:
-** Projects
-:PROPERTIES:
-:EXPORT_HUGO_MENU: :menu "main"
-:EXPORT_FILE_NAME: _index
+:EXPORT_FILE_NAME: projects
+CATEGORY: projects
 :END:
 Man, look at all my projects.
-
-
-* Footnotes
-* COMMENT Local Variables                          :ARCHIVE:
-# Local Variables:
-# eval: (org-hugo-auto-export-mode)
-# End:

@@ -1,3 +1,10 @@
 #+TITLE: Todo
 
-* TODO Migrate to kevinrangel.com
+* Inspect different ways of exporting org to markdown
+* Check if ox-hugo can use different way of exporting images in stead of relying on hugo
+* Check if the markdown parser can be changed to include hyperlinks to the subtitles
+** If not check of ox-hugo hyperlink shit can be disabled
+* Check if it's possible to export from one org file to include meta data such as tags
+The frontmatter in the HTML could be grouped with categories, tags, series, ... using this hierachy structure
+* Gatsby possibility to gather and link "related article" when using series, similar tags or groups.
+* In case we need to use default markdown exporter how do I write some lisp that exports the whole folder structure, but without modifying the existing markdown files if the content has been the same. Otherwise everytime we export this will trigger all markdown files to be updated, which initially could be fine, but preferably not.

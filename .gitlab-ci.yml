@@ -1,17 +1,25 @@
-variables:
-  GIT_SUBMODULE_STRATEGY: recursive
+image: node:12.13.1
+
+cache:
+  paths:
+    - node_modules/
 
 stages:
+  - setup
   - build
   - deploy
 
+setup:
+  stage: setup
+  script:
+    - npm install
+  only:
+    - master
+
 build:
   stage: build
-  image:
-    name: klakegg/hugo
-    entrypoint: [""]
   script:
-    - hugo
+    - npm run build
   artifacts:
     paths:
       - public
@@ -20,7 +28,6 @@ build:
 
 deploy:
   stage: deploy
-  image: node:12
   dependencies:
     - build
   before_script:
