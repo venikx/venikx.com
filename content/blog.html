@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-15 Mon 01:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blog</title>
+<meta name="author" content="Kevin Rangel" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Blog</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcb9b572">1. Example</a>
+<ul>
+<li><a href="#org47e4c0f">1.1. <span class="done PUBLISHED">PUBLISHED</span> Basic Example :example-tag:</a></li>
+<li><a href="#org32815a2">1.2. <span class="done PUBLISHED">PUBLISHED</span> Advanced Example</a>
+<ul>
+<li><a href="#org6261548">1.2.1. Images</a></li>
+<li><a href="#org0efa571">1.2.2. Generate results from snippets</a></li>
+<li><a href="#orgc5383e8">1.2.3. Youtube</a></li>
+<li><a href="#orgcaa6f12">1.2.4. Lispy</a></li>
+<li><a href="#org3eeecce">1.2.5. JS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgcb9b572" class="outline-2">
+<h2 id="orgcb9b572"><span class="section-number-2">1</span> Example</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org47e4c0f" class="outline-3">
+<h3 id="org47e4c0f"><span class="section-number-3">1.1</span> <span class="done PUBLISHED">PUBLISHED</span> Basic Example :example-tag:</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in libero ut lorem varius placerat. Vivamus eget risus arcu. Pellentesque vulputate nunc vitae velit sodales ullamcorper. Proin quis elit risus. Aenean dignissim, dolor eu laoreet hendrerit, libero nisi scelerisque nibh, sit amet auctor orci arcu vitae orci. Vestibulum eu egestas lorem, eget interdum eros. Nunc non eros viverra enim fermentum sagittis eget sit amet ligula. Cras rutrum mattis felis. Phasellus consequat, quam ac malesuada ullamcorper, dui magna pellentesque leo, laoreet posuere nisi quam id turpis. Etiam pellentesque quam vel quam iaculis convallis eu sit amet diam. Vestibulum pretium sem in maximus efficitur.
+</p>
+
+<p>
+Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam vel diam at mi porttitor ullamcorper id eget nisi. Donec non tempor lorem, sit amet iaculis nulla. Ut sodales fringilla luctus. Pellentesque pharetra sollicitudin lectus. Sed non elit suscipit, efficitur erat venenatis, tincidunt lacus. Morbi quam erat, pellentesque et pulvinar at, pellentesque nec elit. Integer commodo malesuada velit, eget aliquam augue malesuada ut. Quisque interdum, velit ac luctus fringilla, urna magna rutrum enim, in ultrices orci quam dapibus lacus. Integer quis bibendum sem. Curabitur consequat nisl diam, nec posuere enim dictum elementum. Vestibulum sed nunc sit amet odio rhoncus condimentum. Phasellus viverra eros sed leo sollicitudin iaculis. In hac habitasse platea dictumst. Nunc ullamcorper ultrices neque rutrum lacinia.
+</p>
+
+<p>
+Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean placerat imperdiet nisi. Morbi egestas finibus nunc nec condimentum. Donec quis tortor lorem. Ut quis risus vitae leo facilisis condimentum vitae ut ante. Etiam vehicula maximus leo. Fusce gravida ornare diam, at pretium massa tempus eu.
+</p>
+
+<p>
+Suspendisse potenti. Mauris placerat aliquam elit. Nullam mollis nibh ut venenatis semper. In dolor velit, iaculis ut ex id, dapibus sodales purus. Quisque at accumsan augue, non luctus sapien. Morbi id dignissim justo. In sed rutrum magna, sit amet mollis ante. Aliquam quis sem sodales, dignissim erat eu, porta ante. Duis eleifend velit dolor, quis consectetur lacus tristique nec. Pellentesque in lectus ac massa facilisis vehicula in ac tortor. Nullam euismod suscipit quam. Donec lacinia sodales turpis vitae pellentesque. Nulla in iaculis enim. Morbi consequat tellus eu odio elementum, sed viverra ex volutpat. Aenean ut eros ipsum.
+</p>
+
+<p>
+Duis at bibendum lectus. Nulla rhoncus condimentum ante quis pharetra. Proin dapibus lectus vel gravida accumsan. Phasellus commodo rhoncus posuere. Vestibulum id lectus ipsum. Praesent scelerisque commodo libero, at consequat nulla pulvinar et. Morbi volutpat metus ac porttitor tempor. Nam tempus lacinia ornare. Nunc eget tellus tempus, dignissim massa dapibus, laoreet orci. Vestibulum elit est, finibus at laoreet in, sodales et ante. Nulla vel blandit turpis, ac aliquam ligula. Phasellus consectetur dolor urna, non sollicitudin ipsum porttitor vitae. Pellentesque dolor sem, pulvinar feugiat ornare ac, fringilla ut orci. Quisque mattis nisi mi, id finibus nisl luctus sed.
+I&rsquo;m an example page.
+</p>
+</div>
+</div>
+<div id="outline-container-org32815a2" class="outline-3">
+<h3 id="org32815a2"><span class="section-number-3">1.2</span> <span class="done PUBLISHED">PUBLISHED</span> Advanced Example</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-org6261548" class="outline-4">
+<h4 id="org6261548"><span class="section-number-4">1.2.1</span> Images</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<div id="org2df7570" class="figure">
+<p><img src="images/testing-bundle/me.jpg" alt="me.jpg" />
+</p>
+<p><span class="figure-number">Figure 1: </span>These are the results of the above running script</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org0efa571" class="outline-4">
+<h4 id="org0efa571"><span class="section-number-4">1.2.2</span> Generate results from snippets</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+The REPL based languages usually support session arguments which allows for
+chaining code blocks to each other.
+</p>
+
+<p>
+Let&rsquo;s create a variable
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #FFFFFF;">MY_NAME</span>=<span style="color: #B4DCE7;">"Kevin Rangel"</span>
+</pre>
+</div>
+
+<p>
+And let&rsquo;s print it&rsquo;s value
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #FFE261;">echo</span> $<span style="color: #FFFFFF;">MY_NAME</span>
+</pre>
+</div>
+
+<pre class="example">
+Kevin Rangel
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc5383e8" class="outline-4">
+<h4 id="orgc5383e8"><span class="section-number-4">1.2.3</span> Youtube</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<iframe src="https://www.youtube-nocookie.com/embed/v_jDFgS2AqE" allowfullscreen title="YouTube Video"></iframe>
+</div>
+</div>
+
+<div id="outline-container-orgcaa6f12" class="outline-4">
+<h4 id="orgcaa6f12"><span class="section-number-4">1.2.4</span> Lispy</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+Sometimes you want preformat some output of a code block. The <code>:post</code> makes sure
+that another code block is executed right before displaying the results.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">  <span style="color: #40B4C4;">(</span><span style="color: #B381C5;">mapcar</span> <span style="color: #EB64B9;">(</span><span style="color: #40B4C4;">lambda</span> <span style="color: #74DFC4;">(</span>i<span style="color: #74DFC4;">)</span>
+            <span style="color: #74DFC4;">(</span><span style="color: #B381C5;">list</span> i <span style="color: #40B4C4;">(</span><span style="color: #B381C5;">+</span> <span style="color: #EB64B9;">(</span><span style="color: #B381C5;">random</span> <span style="color: #FFB85B; font-weight: bold;">4</span><span style="color: #EB64B9;">)</span> <span style="color: #EB64B9;">(</span><span style="color: #B381C5;">-</span> i <span style="color: #FFB85B; font-weight: bold;">2</span><span style="color: #EB64B9;">)</span><span style="color: #40B4C4;">)</span><span style="color: #74DFC4;">)</span><span style="color: #EB64B9;">)</span>
+          <span style="color: #EB64B9;">(</span><span style="color: #EB64B9;">number-sequence</span> <span style="color: #FFB85B; font-weight: bold;">1</span> <span style="color: #FFB85B; font-weight: bold;">20</span><span style="color: #EB64B9;">)</span><span style="color: #40B4C4;">)</span>
+</pre>
+</div>
+
+<table id="org4989813" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> Truth and Estimate</caption>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Truth</th>
+<th scope="col" class="org-right">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-right">8</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-right">6</td>
+</tr>
+
+<tr>
+<td class="org-right">9</td>
+<td class="org-right">10</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-right">11</td>
+</tr>
+
+<tr>
+<td class="org-right">11</td>
+<td class="org-right">11</td>
+</tr>
+
+<tr>
+<td class="org-right">12</td>
+<td class="org-right">11</td>
+</tr>
+
+<tr>
+<td class="org-right">13</td>
+<td class="org-right">14</td>
+</tr>
+
+<tr>
+<td class="org-right">14</td>
+<td class="org-right">13</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-right">15</td>
+</tr>
+
+<tr>
+<td class="org-right">16</td>
+<td class="org-right">16</td>
+</tr>
+
+<tr>
+<td class="org-right">17</td>
+<td class="org-right">16</td>
+</tr>
+
+<tr>
+<td class="org-right">18</td>
+<td class="org-right">18</td>
+</tr>
+
+<tr>
+<td class="org-right">19</td>
+<td class="org-right">18</td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-right">19</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+In order to get the table of data more comprehensive we utilize another block to
+post process the result. This block adds a header to the table.
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp" id="org8cd0674"><span style="color: #40B4C4;">(</span><span style="color: #B381C5;">cons</span> <span style="color: #40B4C4;">'</span><span style="color: #FFE261;">hline</span> <span style="color: #EB64B9;">(</span><span style="color: #B381C5;">cons</span> <span style="color: #40B4C4;">'</span><span style="color: #74DFC4;">(</span><span style="color: #B4DCE7;">"Truth"</span> <span style="color: #B4DCE7;">"Estimate"</span><span style="color: #74DFC4;">)</span> <span style="color: #74DFC4;">(</span><span style="color: #B381C5;">cons</span> <span style="color: #40B4C4;">'</span><span style="color: #FFE261;">hline</span> tbl<span style="color: #74DFC4;">)</span><span style="color: #EB64B9;">)</span><span style="color: #40B4C4;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3eeecce" class="outline-4">
+<h4 id="org3eeecce"><span class="section-number-4">1.2.5</span> JS</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp" id="orgddb9f56">function Hello<span style="color: #40B4C4;">(</span>name<span style="color: #40B4C4;">)</span> {
+    console.log<span style="color: #40B4C4;">(</span><span style="color: #B4DCE7;">"Hello "</span> + name<span style="color: #40B4C4;">)</span>
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #40B4C4;">function</span> <span style="color: #EB64B9;">Hello</span>(<span style="color: #FFFFFF;">name</span>) {
+    console.log(<span style="color: #B4DCE7;">"Hello "</span> + name)
+}
+Hello(<span style="color: #B4DCE7;">"Kevin"</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Kevin Rangel</p>
+<p class="date">Created: 2021-03-15 Mon 01:55</p>
+</div>
+</body>
+</html>
