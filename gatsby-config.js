@@ -24,7 +24,7 @@ module.exports = {
     ],
   },
   plugins: [
-    `gatsby-plugin-feed`,
+    // `gatsby-plugin-feed`,
     {
       resolve: `gatsby-theme-blorg`,
       options: {
