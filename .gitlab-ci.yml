@@ -5,34 +5,16 @@ cache:
     - node_modules/
 
 stages:
-  - setup
-  - build
   - deploy
-
-setup:
-  stage: setup
-  script:
-    - npm install
-  only:
-    - master
-
-build:
-  stage: build
-  script:
-    - npm run build
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
 
 deploy:
   stage: deploy
-  dependencies:
-    - build
-  before_script:
-    - npm i -g netlify-cli
-  script:
-    - netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --prod
   only:
     - master
+  environment:
+    name: production
+    url: https://venikx.com
+  script:
+    - npm i
+    - npm run build
+    - npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --prod
