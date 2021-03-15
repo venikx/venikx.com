@@ -17,4 +17,4 @@ deploy:
   script:
     - npm i
     - npm run build
-    - npm run publish
+    - npm run deploy
