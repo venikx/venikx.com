@@ -1,7 +1,7 @@
 module.exports = {
   pathPrefix: `/`,
   siteMetadata: {
-    siteUrl: `https://kevinrangel.com`,
+    siteUrl: `https://venikx.com`,
     title: `Kevin Rangel | Freelance Web Developer`,
     description: `Kevin Rangel is a freelance web developer who enjoys coding in Javascript, drawing pixel art, gaming and aspires to become a game developer when he retires. Kevin is a former Web Engineer at Epic Games.`,
     author: `Kevin Rangel`,
