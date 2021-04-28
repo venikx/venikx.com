@@ -5,16 +5,17 @@
   "version": "0.1.0",
   "author": "Kevin Rangel <code@venikx.com>",
   "dependencies": {
-    "gatsby": "^2.27.2",
-    "gatsby-plugin-feed": "^2.13.1",
-    "gatsby-theme-blorg": "^2.3.13",
+    "gatsby": "^3.4.0",
+    "gatsby-plugin-feed": "^3.4.0",
+    "gatsby-theme-blorg": "^2.4.8",
     "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-helmet": "^6.1.0"
   },
   "devDependencies": {
-    "netlify-cli": "^3.10.12",
+    "netlify-cli": "^3.22.0",
+    "npm-check": "^5.9.2",
     "prettier": "^2.2.0"
   },
   "keywords": [
