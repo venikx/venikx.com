@@ -89,10 +89,10 @@ ATTRS specify additional attributes."
 	 (rel-file (org-publish-file-relative-name file info))
          (full-url (concat link-home (file-name-sans-extension rel-file) "." extension))
          (image (concat link-home (org-publish-find-property file :meta-image project)))
-         (favicon (concat link-home "favicon.ico"))
+         (favicon (concat link-home "favicon.svg"))
          (type (org-publish-find-property file :meta-type project)))
     (mapconcat 'identity
-               `(,(venikx/org-html-tag "link" '(rel icon) '(type image/x-icon) `(href ,favicon))
+               `(,(venikx/org-html-tag "link" '(rel icon) '(type image/svg+xml) '(sizes any) `(href ,favicon))
                  ,(venikx/org-html-tag "link" '(rel alternate) '(type application/rss+xml) '(href "rss.xml") '(title "RSS feed"))
                  ,(venikx/org-html-tag "meta" '(property og:title) `(content ,title))
                  ,(venikx/org-html-tag "meta" '(property og:url) `(content ,full-url))

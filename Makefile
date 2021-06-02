@@ -16,3 +16,6 @@ publish: $(publish_el) $(orgs)
 clean:
 	rm -rf $(publish_dir)
 	rm -rf $(timestamps_dir)
+
+start:
+	simple-http-server public

@@ -4,7 +4,7 @@
 :PROPERTIES:
 :RSS_PERMALINK: blog.html
 :PUBDATE:  2021-04-24
-:ID:       92c44f81-c284-4c43-a519-e753a5e40c06
+:ID:       06c83e97-d56d-412d-a6c9-5bdb6b9912e8
 :END:
 #+description: The blog post is living documentation regarding the exporting features I'm testing out with org-mode.
 #+keywords: emacs org-mode html5
@@ -16,7 +16,7 @@
 Embedding different kind of HTML% snippets
 ** HTML5 itself
    :PROPERTIES:
-   :ID:       e41142fa-f2f8-47f6-8e3c-38c2480ea10b
+   :ID:       4e2fda96-23de-44fa-9790-239d78d0cd68
    :END:
 #+begin_aside
 Lorem ipsum
@@ -24,7 +24,7 @@ Lorem ipsum
 
 ** HTML5 Elements
    :PROPERTIES:
-   :ID:       5c727139-1a97-42fc-82e1-7b02fe62a3d9
+   :ID:       919c5d09-b235-4c55-95fe-5c5b3e17d4a0
    :END:
 #+begin_src org
   ,#+BEGIN_EXPORT html
@@ -33,7 +33,7 @@ Lorem ipsum
 #+end_src
 ** YouTube iframes
    :PROPERTIES:
-   :ID:       80d18fee-dae0-448f-94c4-db8e81c9723d
+   :ID:       5a838c3e-4923-474d-98ac-d553e9f4a36b
    :END:
 Images
 #+caption: A panoramic view of Helsinki
@@ -45,7 +45,7 @@ chaining code blocks to each other.
 
 ** Shell
    :PROPERTIES:
-   :ID:       ebf6c375-dade-41c8-9ddd-7bb806080c24
+   :ID:       986bb27b-1768-4e3d-b7e0-a9b00f4bc232
    :END:
 Let's create a variable
 #+begin_src sh :session session-shell-chain :results silent
@@ -64,7 +64,7 @@ And let's print it's value
 
 ** Lisp
    :PROPERTIES:
-   :ID:       cd3fb401-a375-4de6-8a88-340663ec59cf
+   :ID:       7d62d603-d02c-4a06-8bb3-bf145ab8cdb8
    :END:
 Sometimes you want preformat some output of a code block. The ~:post~ makes sure
 that another code block is executed right before displaying the results.
@@ -111,7 +111,7 @@ post process the result. This block adds a header to the table.
 
 ** Javascript
    :PROPERTIES:
-   :ID:       bb9fc198-4a05-4296-b1da-f75788f5e2b1
+   :ID:       d4d3952c-94e9-4d7c-9431-b0db7fbb5010
    :END:
 #+name: hello-from-js
 #+begin_src emacs-lisp

@@ -1,9 +1,10 @@
-with import <nixpkgs> {};
+{ pkgs ? import <nixpkgs> {} }:
 
-stdenv.mkDerivation {
-  name = "node";
-  nativeBuildInputs = [
+with pkgs;
+
+mkShell {
+  buildInputs = [
     gnumake
-    emacs
+    simple-http-server
   ];
 }
