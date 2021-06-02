@@ -1,0 +1,7 @@
+#+TITLE: Kevin Rangel | venikx.com
+#+OPTIONS: title:nil
+#+META_TYPE: website
+#+DESCRIPTION: A personal blog of Kevin Rangel, venikx, a freelance web developer based in Helsinki, Finland.
+
+#+ATTR_HTML: :class sitemap
+- [[file:blog.org][Experimenting with OrgMode to HTML5 exporter]] /24 April 2021/

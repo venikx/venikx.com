@@ -1,0 +1,140 @@
+#+TITLE: Kevin Rangel | venikx.com
+
+* [[file:/home/venikx/code/venikx.com/posts/blog.org][Experimenting with OrgMode to HTML5 exporter]]
+:PROPERTIES:
+:RSS_PERMALINK: blog.html
+:PUBDATE:  2021-04-24
+:ID:       92c44f81-c284-4c43-a519-e753a5e40c06
+:END:
+#+description: The blog post is living documentation regarding the exporting features I'm testing out with org-mode.
+#+keywords: emacs org-mode html5
+
+#+macro: created {{{date(%e %B %Y)}}}
+#+macro: modified {{{modification-time(%e %B %Y)}}}
+#+language: en
+
+Embedding different kind of HTML% snippets
+** HTML5 itself
+   :PROPERTIES:
+   :ID:       e41142fa-f2f8-47f6-8e3c-38c2480ea10b
+   :END:
+#+begin_aside
+Lorem ipsum
+#+end_aside
+
+** HTML5 Elements
+   :PROPERTIES:
+   :ID:       5c727139-1a97-42fc-82e1-7b02fe62a3d9
+   :END:
+#+begin_src org
+  ,#+BEGIN_EXPORT html
+    <p>All lines between these markers are exported <strong>literally.</strong></p>
+  ,#+END_EXPORT
+#+end_src
+** YouTube iframes
+   :PROPERTIES:
+   :ID:       80d18fee-dae0-448f-94c4-db8e81c9723d
+   :END:
+Images
+#+caption: A panoramic view of Helsinki
+[[file:../content/helsinki.jpg]]
+
+Generate snippets during the HTML5 export
+The REPL based languages usually support session arguments which allows for
+chaining code blocks to each other.
+
+** Shell
+   :PROPERTIES:
+   :ID:       ebf6c375-dade-41c8-9ddd-7bb806080c24
+   :END:
+Let's create a variable
+#+begin_src sh :session session-shell-chain :results silent
+  MY_NAME="Kevin Rangel"
+#+end_src
+
+And let's print it's value
+#+begin_src sh :session session-shell-chain :results ouput :exports both
+  echo $MY_NAME
+#+end_src
+
+#+name: testing
+#+caption: These are the results of the above running script
+#+results: 
+: Kevin Rangel
+
+** Lisp
+   :PROPERTIES:
+   :ID:       cd3fb401-a375-4de6-8a88-340663ec59cf
+   :END:
+Sometimes you want preformat some output of a code block. The ~:post~ makes sure
+that another code block is executed right before displaying the results.
+
+#+begin_src emacs-lisp :results value table :exports both :post add-header(*this*)
+  (mapcar (lambda (i)
+           (list i (+ (random 4) (- i 2))))
+          (number-sequence 1 20))
+#+end_src
+
+#+name: est-truth-data
+#+caption: Truth and Estimate
+#+results: 
+|-------+----------|
+| Truth | Estimate |
+|-------+----------|
+|     1 |        2 |
+|     2 |        3 |
+|     3 |        3 |
+|     4 |        2 |
+|     5 |        5 |
+|     6 |        4 |
+|     7 |        7 |
+|     8 |        7 |
+|     9 |        7 |
+|    10 |       10 |
+|    11 |        9 |
+|    12 |       12 |
+|    13 |       12 |
+|    14 |       13 |
+|    15 |       14 |
+|    16 |       16 |
+|    17 |       18 |
+|    18 |       16 |
+|    19 |       20 |
+|    20 |       19 |
+
+In order to get the table of data more comprehensive we utilize another block to
+post process the result. This block adds a header to the table.
+#+name: add-header
+#+begin_src emacs-lisp :var tbl=""
+  (cons 'hline (cons '("Truth" "Estimate") (cons 'hline tbl)))
+#+end_src
+
+** Javascript
+   :PROPERTIES:
+   :ID:       bb9fc198-4a05-4296-b1da-f75788f5e2b1
+   :END:
+#+name: hello-from-js
+#+begin_src emacs-lisp
+  function Hello(name) {
+      console.log("Hello " + name)
+  }
+#+end_src
+
+#+begin_src js :results output :noweb yes :exports code
+  <<hello-from-js>>
+  Hello("Kevin")
+#+end_src
+
+#+results: 
+: Hello Kevin
+
+
+Macros
+#+begin_src org
+  ,#+macro: created {{{date(%e %B %Y)}}}
+  ,#+macro: modified {{{modification-time(%e %B %Y)}}}
+
+  The published date is {{{date(%e %B %Y)}}} while the modified date is
+  {{{modification-time(%e %B %Y)}}}.
+#+end_src
+
