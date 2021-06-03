@@ -173,7 +173,7 @@ ATTRS specify additional attributes."
 
 PLIST contains the properties, FILENAME the source file and
   PUB-DIR the output directory."
-  (let ((project (cons 'kevr plist)))
+  (let ((project (cons 'kevr-p plist)))
     (plist-put plist :subtitle
                (venikx/format-date-subtitle filename project))
     (plist-put plist :html-head-extra
@@ -183,13 +183,16 @@ PLIST contains the properties, FILENAME the source file and
     (org-html-publish-to-html plist filename pub-dir)))
 
 (defun venikx/org-html-publish-site-to-html (plist filename pub-dir)
-  "Wraps org-html-publish-to-html. Append css to hide title to
-PLIST and other front-page styles. FILENAME and PUB-DIR are
-passed."
-  (when (equal "index.org" (venikx/project-relative-filename filename))
+  "Wrapper function to publish an file to html.
+
+PLIST contains the properties, FILENAME the source file and
+  PUB-DIR the output directory."
+  (let ((project (cons 'kevr-s plist)))
+    (plist-put plist :html-head-extra
+               (venikx/html-head-extra filename project))
     (plist-put plist :html-htmlized-css-url
-               (venikx/asset-relative-link-to "css/style.css" pub-dir t)))
-  (org-html-publish-to-html plist filename pub-dir))
+               (venikx/asset-relative-link-to "css/style.css" pub-dir t))
+    (org-html-publish-to-html plist filename pub-dir)))
 
 ;; ==============================
 ;; Logic to generate the sitemaps
@@ -317,7 +320,14 @@ PUB-DIR is when the output will be placed."
              :html-preamble t
              :html-preamble-format (venikx/pre-and-postamble-format 'preamble)
              :html-postamble t
-             :html-postamble-format (venikx/pre-and-postamble-format 'postamble))
+             :html-postamble-format (venikx/pre-and-postamble-format 'postamble)
+             :html-format-headline-function 'venikx/org-html-format-headline-function
+             :html-link-home venikx/url
+             :html-home/up-format ""
+             :author "Kevin Rangel"
+             :email "code@venikx.com"
+             :meta-image "assets/me.jpg"
+             :meta-type "article")
        (list "blog-rss"
              :base-directory (expand-file-name "posts" venikx/root)
              :base-extension "org"
