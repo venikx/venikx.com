@@ -30,7 +30,7 @@
 #+end_export
 * Images
 #+CAPTION: A panoramic view of Helsinki
-[[file:../content/helsinki.jpg]]
+[[file:../assets/helsinki.jpg]]
 
 * Generate snippets during the HTML5 export
 The REPL based languages usually support session arguments which allows for

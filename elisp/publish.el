@@ -21,6 +21,9 @@
 (require 'ox-publish)
 (require 'ox-rss)
 
+;; ==========================
+;; Setting up Basic Variables
+;; ==========================
 (defvar venikx/url "https://venikx.com/"
   "The URL where this site will be published.")
 
@@ -42,13 +45,16 @@
                           (lambda (dir)
                             (seq-every-p
                              (lambda (file) (file-exists-p (expand-file-name file dir)))
-                             '(".git" "content" "css" "elisp" "layouts" "posts"))))
+                             '(".git" "assets" "css" "elisp" "layouts" "posts"))))
   "Root directory of this project.")
 
 (defvar venikx/layouts-directory
   (expand-file-name "layouts" venikx/root)
   "Directory where layouts are found.")
 
+;; ===========================
+;; Setting up Basic Formatting
+;; ===========================
 (defun venikx/pre-and-postamble-format (type)
   "Return the content for the pre/postamble of TYPE."
   `(("en" ,(with-temp-buffer
@@ -57,8 +63,30 @@
 
 (defun venikx/format-date-subtitle (file project)
   "Format the date found in FILE of PROJECT."
-  (format-time-string "%e %B %Y" (org-publish-find-date file project)))
+  (format-time-string "%d %B %Y" (org-publish-find-date file project)))
 
+(defun venikx/org-html-format-headline-function (todo todo-type priority text tags info)
+  "Format a headline with a link to itself.
+
+This function takes six arguments:
+TODO      the todo keyword (string or nil).
+TODO-TYPE the type of todo (symbol: ‘todo’, ‘done’, nil)
+PRIORITY  the priority of the headline (integer or nil)
+TEXT      the main headline text (string).
+TAGS      the tags (string or nil).
+INFO      the export options (plist)."
+  (let* ((headline (get-text-property 0 :parent text))
+         (id (or (org-element-property :CUSTOM_ID headline)
+                 (org-export-get-reference headline info)
+                 (org-element-property :ID headline)))
+         (link (if id
+                   (format "<a href=\"#%s\">%s</a>" id text)
+                 text)))
+    (org-html-format-headline-default-function todo todo-type priority link tags info)))
+
+;; ================================
+;; Helpers for generating meta tags
+;; ================================
 (defun venikx/org-html-tag (tag &rest attrs)
   "Return close-tag for string TAG.
 ATTRS specify additional attributes."
@@ -115,38 +143,74 @@ ATTRS specify additional attributes."
                  )
                "\n")))
 
-(defun venikx/org-html-publish-to-html (plist filename pub-dir)
+;; ==========================================
+;; Helpers to generate relative path to files
+;; ==========================================
+(defun venikx/hash-for-filename (filename)
+  "Returns the sha25 for FILENAME."
+  (with-temp-buffer
+    (insert-file-contents filename)
+    (secure-hash 'sha256 (current-buffer))))
+
+(defun venikx/asset-relative-link-to (resource pub-dir &optional versioned)
+    (let* ((assets-project (assoc "assets" org-publish-project-alist 'string-equal))
+           (dst-asset (expand-file-name resource (org-publish-property :publishing-directory assets-project)))
+           (asset-relative-to-dst-file (file-relative-name dst-asset pub-dir)))
+      (if versioned
+          (format "%s?v=%s" asset-relative-to-dst-file
+                  (venikx/hash-for-filename (expand-file-name resource venikx/root)))
+        dst-asset asset-relative-to-dst-file)))
+
+(defun venikx/project-relative-filename (filename)
+  "Return the relative path of FILENAME to the project root."
+  (file-relative-name filename venikx/root))
+
+;; ====================================
+;; Wrappers to generate the HTML output
+;; ====================================
+(defun venikx/org-html-publish-post-to-html (plist filename pub-dir)
   "Wrapper function to publish an file to html.
 
 PLIST contains the properties, FILENAME the source file and
   PUB-DIR the output directory."
-  (let ((project (cons 'venikx plist)))
+  (let ((project (cons 'kevr plist)))
     (plist-put plist :subtitle
                (venikx/format-date-subtitle filename project))
     (plist-put plist :html-head-extra
                (venikx/html-head-extra filename project))
+    (plist-put plist :html-htmlized-css-url
+               (venikx/asset-relative-link-to "css/style.css" pub-dir t))
     (org-html-publish-to-html plist filename pub-dir)))
 
-(defun venikx/org-html-format-headline-function (todo todo-type priority text tags info)
-  "Format a headline with a link to itself.
+(defun venikx/org-html-publish-site-to-html (plist filename pub-dir)
+  "Wraps org-html-publish-to-html. Append css to hide title to
+PLIST and other front-page styles. FILENAME and PUB-DIR are
+passed."
+  (when (equal "index.org" (venikx/project-relative-filename filename))
+    (plist-put plist :html-htmlized-css-url
+               (venikx/asset-relative-link-to "css/style.css" pub-dir t)))
+  (org-html-publish-to-html plist filename pub-dir))
 
-This function takes six arguments:
-TODO      the todo keyword (string or nil).
-TODO-TYPE the type of todo (symbol: ‘todo’, ‘done’, nil)
-PRIORITY  the priority of the headline (integer or nil)
-TEXT      the main headline text (string).
-TAGS      the tags (string or nil).
-INFO      the export options (plist)."
-  (let* ((headline (get-text-property 0 :parent text))
-         (id (or (org-element-property :CUSTOM_ID headline)
-                 (org-export-get-reference headline info)
-                 (org-element-property :ID headline)))
-         (link (if id
-                   (format "<a href=\"#%s\">%s</a>" id text)
-                 text)))
-    (org-html-format-headline-default-function todo todo-type priority link tags info)))
+;; ==============================
+;; Logic to generate the sitemaps
+;; ==============================
+(defun venikx/sitemap-format-entry (entry style project)
+  "Format for sitemap ENTRY, as a string.
+ENTRY is a file name.  STYLE is the style of the sitemap.
+PROJECT is the current project."
+  (unless (equal entry "404.org")
+    (format "[[file:%s][%s]] /%s/"
+            entry
+            (org-publish-find-title entry project)
+            (venikx/format-date-subtitle entry project))))
 
-(defun venikx/org-publish-sitemap (title list)
+(defun venikx/latest-posts-sitemap-function (title sitemap)
+  "posts.org generation. Only publish the latest 10 posts from SITEMAP (https://orgmode.org/manual/Sitemap.html).  Skips TITLE."
+  (let* ((posts (cdr sitemap))
+         (last-five (seq-subseq posts 0 (min (length posts) 10))))
+    (org-list-to-org (cons (car sitemap) last-five))))
+
+(defun venikx/archive-sitemap-function (title list)
   "Generate sitemap as a string, having TITLE.
 LIST is an internal representation for the files to include, as
 returned by `org-list-to-lisp'."
@@ -161,16 +225,9 @@ returned by `org-list-to-lisp'."
             ; TODO use org-list-to-subtree instead
             (org-list-to-org filtered-list))))
 
-(defun venikx/org-publish-sitemap-entry (entry style project)
-  "Format for sitemap ENTRY, as a string.
-ENTRY is a file name.  STYLE is the style of the sitemap.
-PROJECT is the current project."
-  (unless (equal entry "404.org")
-    (format "[[file:%s][%s]] /%s/"
-            entry
-            (org-publish-find-title entry project)
-            (venikx/format-date-subtitle entry project))))
-
+;; ==============================
+;; Logic to generate the RSS feed
+;; ==============================
 (defun venikx/format-rss-feed-entry (entry style project)
   "Format ENTRY for the RSS feed.
 ENTRY is a file name.  STYLE is either 'list' or 'tree'.
@@ -205,49 +262,17 @@ PUB-DIR is when the output will be placed."
   (if (equal "rss.org" (file-name-nondirectory filename))
       (org-rss-publish-to-rss plist filename pub-dir)))
 
-(defun venikx/publish-redirect (plist filename pub-dir)
-  "Generate redirect files from the old routes to the new.
-PLIST contains the project info, FILENAME is the file to publish
-and PUB-DIR the output directory."
-  (let* ((regexp (org-make-options-regexp '("REDIRECT_FROM")))
-         (from (with-temp-buffer
-                 (insert-file-contents filename)
-                 (if (re-search-forward regexp nil t)
-		     (org-element-property :value (org-element-at-point))))))
-    (when from
-      (let* ((to-name (file-name-sans-extension (file-name-nondirectory filename)))
-             (to-file (format "/%s.html" to-name))
-             (from-dir (concat pub-dir from))
-             (from-file (concat from-dir "index.html"))
-             (other-dir (concat pub-dir to-name))
-             (other-file (concat other-dir "/index.html"))
-             (to (concat (file-name-sans-extension (file-name-nondirectory filename))
-                         ".html"))
-             (layout (plist-get plist :redirect-layout))
-             (content (with-temp-buffer
-                        (insert-file-contents layout)
-                        (while (re-search-forward "REDIRECT_TO" nil t)
-                          (replace-match to-file t t))
-                        (buffer-string))))
-        (make-directory from-dir t)
-        (make-directory other-dir t)
-        (with-temp-file from-file
-          (insert content)
-          (write-file other-file))))))
-
-
 (defvar venikx/publish-project-alist
       (list
-       (list "blog-posts"
+       (list "blog"
              :base-directory (expand-file-name "posts" venikx/root)
              :base-extension "org"
-             :recursive nil
-             :exclude (regexp-opt '("rss.org" "index.org"))
-             :publishing-function 'venikx/org-html-publish-to-html
-             :publishing-directory (expand-file-name "public" venikx/root)
+             :recursive t
+             :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
+             :publishing-function 'venikx/org-html-publish-post-to-html
+             :publishing-directory (expand-file-name "public/posts" venikx/root)
              :html-head-include-default-style nil
              :html-head-include-scripts nil
-             :html-htmlized-css-url "css/style.css"
              :html-preamble-format (venikx/pre-and-postamble-format 'preamble)
              :html-postamble t
              :html-postamble-format (venikx/pre-and-postamble-format 'postamble)
@@ -255,21 +280,49 @@ and PUB-DIR the output directory."
              :html-link-home venikx/url
              :html-home/up-format ""
              :auto-sitemap t
-             :sitemap-filename "index.org"
-             :sitemap-title venikx/title
+             :sitemap-filename "posts.org"
+             :sitemap-title nil
              :sitemap-style 'list
              :sitemap-sort-files 'anti-chronologically
-             :sitemap-function 'venikx/org-publish-sitemap
-             :sitemap-format-entry 'venikx/org-publish-sitemap-entry
+             :sitemap-function 'venikx/latest-posts-sitemap-function
+             :sitemap-format-entry 'venikx/sitemap-format-entry
              :author "Kevin Rangel"
              :email "code@venikx.com"
-             :meta-image "content/me.jpg"
+             :meta-image "assets/me.jpg"
              :meta-type "article")
+       (list "archive"
+             :base-directory "./posts"
+             :recursive t
+             :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
+             :base-extension "org"
+             :publishing-directory "./public"
+             :publishing-function 'ignore
+             ;;:publishing-function 'duncan/org-rss-publish-to-rss
+             :html-link-home "https://venikx.com/"
+             :html-link-use-abs-url t
+             :auto-sitemap t
+             :sitemap-style 'list
+             :sitemap-filename "archive.org"
+             :sitemap-sort-files 'anti-chronologically
+             :sitemap-function 'venikx/archive-sitemap-function
+             :sitemap-format-entry 'venikx/sitemap-format-entry)
+       (list "site"
+             :base-directory "./"
+             :include '("posts/archive.org")
+             :base-extension "org"
+             :publishing-function 'venikx/org-html-publish-site-to-html
+             :publishing-directory (expand-file-name "public" venikx/root)
+             :html-head-include-default-style nil
+             :html-head-include-scripts nil
+             :html-preamble t
+             :html-preamble-format (venikx/pre-and-postamble-format 'preamble)
+             :html-postamble t
+             :html-postamble-format (venikx/pre-and-postamble-format 'postamble))
        (list "blog-rss"
              :base-directory (expand-file-name "posts" venikx/root)
              :base-extension "org"
              :recursive nil
-             :exclude (regexp-opt '("rss.org" "index.org" "404.org"))
+             :exclude (regexp-opt '("rss.org" "archive.org" "index.org" "404.org"))
              :publishing-function 'venikx/org-rss-publish-to-rss
              :publishing-directory (expand-file-name "public" venikx/root)
              :rss-extension "xml"
@@ -292,29 +345,15 @@ and PUB-DIR the output directory."
              :publishing-directory (expand-file-name "public" venikx/root)
              :publishing-function 'org-publish-attachment
              :recursive t)
-       (list "blog-acme"
-             :base-directory (expand-file-name ".well-known" venikx/root)
-             :base-extension 'any
-             :publishing-directory (expand-file-name "public/.well-known" venikx/root)
-             :publishing-function 'org-publish-attachment
-             :recursive t)
-       (list "blog-redirects"
-             :base-directory (expand-file-name "posts" venikx/root)
-             :base-extension "org"
-             :recursive nil
-             :exclude (regexp-opt '("rss.org" "index.org" "404.org"))
-             :publishing-function 'venikx/publish-redirect
-             :publishing-directory (expand-file-name "public" venikx/root)
-             :redirect-layout (expand-file-name "layouts/redirect.html" venikx/root))
        (list "site"
-             :components '("blog-posts" "blog-rss" "blog-static" "blog-acme" "blog-redirects"))
+             :components '("blog" "archive" "site" "blog-rss" "blog-static"))
        ))
 
 (defun venikx-publish-all ()
   "Publish the blog to HTML."
   (interactive)
   (let ((org-publish-project-alist       venikx/publish-project-alist)
-        (org-publish-timestamp-directory "./.timestamps/")
+        (org-publish-use-timestamps-flag nil)
         (org-export-with-section-numbers nil)
         (org-export-with-smart-quotes    t)
         (org-export-with-toc             nil)
@@ -323,7 +362,7 @@ and PUB-DIR the output directory."
                          (content   "main"   "content")
                          (postamble "footer" "postamble")))
         (org-html-container-element         "section")
-        (org-html-metadata-timestamp-format "%Y-%m-%d")
+        (org-html-metadata-timestamp-format "%d %B %Y")
         (org-html-checkbox-type             'html)
         (org-html-html5-fancy               t)
         (org-html-validation-link           nil)
