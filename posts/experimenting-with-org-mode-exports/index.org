@@ -2,6 +2,7 @@
 #+date: [2021-04-24 Sat 01:07]
 #+description: The blog post is living documentation regarding the exporting features I'm testing out with org-mode.
 #+keywords: emacs org-mode html5
+#+category: emacs
 
 #+macro: created {{{date(%e %B %Y)}}}
 #+macro: modified {{{modification-time(%e %B %Y)}}}

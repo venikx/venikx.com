@@ -52,6 +52,20 @@
   (expand-file-name "layouts" venikx/root)
   "Directory where layouts are found.")
 
+;; ==============================
+;; Extracting metadata from files
+;; ==============================
+(defun venikx/post-get-metadata-from-frontmatter (post-filename key)
+  "Extract the KEY as`#+KEY:` from POST-FILENAME."
+  (let ((case-fold-search t))
+    (with-temp-buffer
+      (insert-file-contents post-filename)
+      (goto-char (point-min))
+      (ignore-errors
+        (progn
+          (search-forward-regexp (format "^\\#\\+%s\\:\s+\\(.+\\)$" key))
+          (match-string 1))))))
+
 ;; ===========================
 ;; Setting up Basic Formatting
 ;; ===========================
@@ -121,7 +135,7 @@ ATTRS specify additional attributes."
          (type (org-publish-find-property file :meta-type project)))
     (mapconcat 'identity
                `(,(venikx/org-html-tag "link" '(rel icon) '(type image/svg+xml) '(sizes any) `(href ,favicon))
-                 ,(venikx/org-html-tag "link" '(rel alternate) '(type application/rss+xml) '(href "rss.xml") '(title "RSS feed"))
+                 ,(venikx/org-html-tag "link" '(rel alternate) '(type application/rss+xml) '(href "posts/rss.xml") '(title "RSS feed"))
                  ,(venikx/org-html-tag "meta" '(property og:title) `(content ,title))
                  ,(venikx/org-html-tag "meta" '(property og:url) `(content ,full-url))
                  ,(and description
@@ -224,8 +238,6 @@ returned by `org-list-to-lisp'."
             "#+OPTIONS: title:nil\n"
             "#+META_TYPE: website\n"
             "#+DESCRIPTION: A personal blog of Kevin Rangel, venikx, a freelance web developer based in Helsinki, Finland.\n"
-            "\n#+ATTR_HTML: :class sitemap\n"
-            ; TODO use org-list-to-subtree instead
             (org-list-to-org filtered-list))))
 
 ;; ==============================
@@ -238,33 +250,44 @@ PROJECT is the current project."
   (cond ((not (directory-name-p entry))
          (let* ((file (org-publish--expand-file-name entry project))
                 (title (org-publish-find-title entry project))
+                (description (venikx/post-get-metadata-from-frontmatter file "description"))
+                (categories (venikx/post-get-metadata-from-frontmatter file "category"))
                 (date (format-time-string "%Y-%m-%d" (org-publish-find-date entry project)))
                 (link (concat (file-name-sans-extension entry) ".html")))
            (with-temp-buffer
              (insert (format "* [[file:%s][%s]]\n" file title))
-             (org-set-property "RSS_PERMALINK" link)
+             (goto-char (point-min))
+             (org-set-tags categories)
+             (goto-char (point-max))
+             (org-set-property "RSS_PERMALINK" (concat "posts/" (file-name-sans-extension entry) ".html"))
+             (org-set-property "RSS_TITLE" title)
              (org-set-property "PUBDATE" date)
-             (insert-file-contents file)
+             (insert description)
              (buffer-string))))
         ((eq style 'tree)
          ;; Return only last subdir.
          (file-name-nondirectory (directory-file-name entry)))
         (t entry)))
 
-(defun venikx/format-rss-feed (title list)
+(defun venikx/format-rss-feed (title sitemap)
   "Generate RSS feed, as a string.
 TITLE is the title of the RSS feed.  LIST is an internal
 representation for the files to include, as returned by
 `org-list-to-lisp'.  PROJECT is the current project."
-  (concat "#+TITLE: " title "\n\n"
-          (org-list-to-subtree list 1 '(:icount "" :istart ""))))
+  (concat "#+title: " title "\n"
+          "#+description: Come read what Kevin Rangel writes about. \n"
+          "\n"
+          (org-list-to-subtree sitemap 1 '(:icount "" :istart ""))))
 
 (defun venikx/org-rss-publish-to-rss (plist filename pub-dir)
-  "Publish RSS with PLIST, only when FILENAME is 'rss.org'.
-PUB-DIR is when the output will be placed."
+  "Wrap org-rss-publish-to-rss with PLIST and PUB-DIR, publishing
+only when FILENAME is 'archive.org'."
   (if (equal "rss.org" (file-name-nondirectory filename))
       (org-rss-publish-to-rss plist filename pub-dir)))
 
+;; ===============================
+;; Setting the Publishing Pipeline
+;; ===============================
 (defvar venikx/publish-project-alist
       (list
        (list "blog"
@@ -300,7 +323,6 @@ PUB-DIR is when the output will be placed."
              :base-extension "org"
              :publishing-directory "./public"
              :publishing-function 'ignore
-             ;;:publishing-function 'duncan/org-rss-publish-to-rss
              :html-link-home "https://venikx.com/"
              :html-link-use-abs-url t
              :auto-sitemap t
@@ -309,6 +331,38 @@ PUB-DIR is when the output will be placed."
              :sitemap-sort-files 'anti-chronologically
              :sitemap-function 'venikx/archive-sitemap-function
              :sitemap-format-entry 'venikx/sitemap-format-entry)
+
+       (list "sitemap-for-rss"
+             :base-directory "./posts"
+             :recursive t
+             :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
+             :base-extension "org"
+             :publishing-directory "./public"
+             :publishing-function 'ignore
+             :auto-sitemap t
+             :sitemap-title "Kevin Rangel Blog RSS Feed"
+             :sitemap-description "Kevin Rangel Blog RSS Feed"
+             :sitemap-style 'list
+             :sitemap-function 'venikx/format-rss-feed
+             :sitemap-format-entry 'venikx/format-rss-feed-entry
+             :author "Kevin Rangel"
+             :email "code@venikx.com"
+             :sitemap-filename "rss.org")
+       (list "rss"
+             :base-directory "./"
+             :recursive t
+             :exclude "."
+             :include '("posts/rss.org")
+             :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
+             :base-extension "org"
+             :publishing-directory "./public"
+             :publishing-function 'venikx/org-rss-publish-to-rss
+             :rss-image-url (concat venikx/url "assets/me.jpg")
+             :html-link-home venikx/url
+             :author "Kevin Rangel"
+             :email "code@venikx.com"
+             :html-link-use-abs-url t)
+
        (list "site"
              :base-directory "./"
              :include '("posts/archive.org")
@@ -328,35 +382,17 @@ PUB-DIR is when the output will be placed."
              :email "code@venikx.com"
              :meta-image "assets/me.jpg"
              :meta-type "article")
-       (list "blog-rss"
-             :base-directory (expand-file-name "posts" venikx/root)
-             :base-extension "org"
-             :recursive nil
-             :exclude (regexp-opt '("rss.org" "archive.org" "index.org" "404.org"))
-             :publishing-function 'venikx/org-rss-publish-to-rss
-             :publishing-directory (expand-file-name "public" venikx/root)
-             :rss-extension "xml"
-             :html-link-home venikx/url
-             :html-link-use-abs-url t
-             :html-link-org-files-as-html t
-             :auto-sitemap t
-             :sitemap-filename "rss.org"
-             :sitemap-title venikx/title
-             :sitemap-style 'list
-             :sitemap-sort-files 'anti-chronologically
-             :sitemap-function 'venikx/format-rss-feed
-             :sitemap-format-entry 'venikx/format-rss-feed-entry
-             :author "Kevin Rangel"
-             :email "code@venikx.com")
-       (list "blog-static"
+
+       (list "assets"
              :base-directory venikx/root
-             :exclude (regexp-opt '("public/" "layouts/"))
+             :exclude (regexp-opt '("public" "layouts" "assets"))
              :base-extension venikx/site-attachments
              :publishing-directory (expand-file-name "public" venikx/root)
              :publishing-function 'org-publish-attachment
              :recursive t)
+
        (list "site"
-             :components '("blog" "archive" "site" "blog-rss" "blog-static"))
+             :components '("blog" "archive" "site" "sitemap-for-rss" "rss" "assets"))
        ))
 
 (defun venikx-publish-all ()
