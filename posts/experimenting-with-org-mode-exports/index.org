@@ -9,7 +9,7 @@
 #+options: toc:nil html5-fancy:t
 #+language: en
 
-* Embedding different kind of HTML% snippets
+* Embedding different kind of HTML5 snippets
 ** HTML5 itself
 #+BEGIN_aside
   Lorem ipsum
