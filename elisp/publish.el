@@ -262,7 +262,7 @@ PROJECT is the current project."
              (org-set-property "RSS_PERMALINK" (concat "posts/" (file-name-sans-extension entry) ".html"))
              (org-set-property "RSS_TITLE" title)
              (org-set-property "PUBDATE" date)
-             (insert "#+include: " entry)
+             (insert description)
              (buffer-string))))
         ((eq style 'tree)
          ;; Return only last subdir.
