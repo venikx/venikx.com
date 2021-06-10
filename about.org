@@ -1,9 +1,23 @@
-#+TITLE: Kevin Rangel | Freelance Web Developer
+#+title: About | Kevin Rangel
+#+description: My name is Kevin Rangel, I'm a freelance web developer based in Helsinki, Finland.
 
-I'm a horse
+I'm a *freelance web developer*, gamer, and an aspiring game developer; based in
+[[https://www.openstreetmap.org/node/25474663#map=16/60.1718/24.9413][Helsinki, Finland]]. I'm a 90s kid and lived most of my life in Belgium. I studied
+electronics, and worked as a service technician, before realizing programming is
+too much fun. So, I have been working as a frontend web developer ever since.
 
-My horse is amazingk
+I've developed websites and web applications for [[https://freebility.be/index][Freebility]], [[https://www.famoco.com/][Famoco]], and [[https://www.epicgames.com/][Epic
+Games]]. In 2020 /(amazing timing)/, I decided to become *self-employed*, and
+currently work as a consultant for [[https://www.equinor.com/][Equinor]].
 
+Currently, I devote most of my time to web development, but in the future I want
+to focus on *game development* topics. Additionally, I wish to write blog posts
+using the learning notes from my [[https://github.com/venikx/braindump][second brain]].
 
-** Give it a lick
-Small like raisins
+If you enjoy what you see, you can also find me:
+- [[https://twitter.com/_venikx][@_venikx]] for random tweets (come say hi)
+- random streaming on [[https://www.twitch.tv/venikx_][Twitch]]
+- my spaghetti code floats in [[https://github.com/venikx][GitHub]]
+- or you could [[https://buymeacoffee.com/venikx][buy]] me a coffee
+
+For business inquiries, you can contact me via my [[mailto:sales@babo.digital][business email]].
