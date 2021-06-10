@@ -24,14 +24,20 @@
 ;; ==========================
 ;; Setting up Basic Variables
 ;; ==========================
+(defvar venikx/name "Kevin Rangel"
+  "My name.")
+
+(defvar venikx/twitter "@_venikx"
+  "My Twitter handle for reference in the twitter meta tags.")
+
+(defvar venikx/email "code@venikx.com"
+  "My contact email for coding related topics.")
+
 (defvar venikx/url "https://venikx.com/"
   "The URL where this site will be published.")
 
-(defvar venikx/title "Kevin Rangel | venikx.com"
-  "The title of this site (sets the Browser Tab).")
-
-(defvar venikx/description "Kevin Rangel, venikx, is a freelance web developer based in Helsinki, Finland. "
-  "The description of the site, mainly used for SEO.")
+(defvar venikx/image "assets/me.jpg"
+  "The image used when no meta-image is given.")
 
 (defvar venikx/site-attachments
   (regexp-opt '("jpg" "jpeg" "gif" "png" "svg"
@@ -52,9 +58,9 @@
   (expand-file-name "layouts" venikx/root)
   "Directory where layouts are found.")
 
-;; ==============================
-;; Extracting metadata from files
-;; ==============================
+;; ================
+;; Helper Functions
+;; ================
 (defun venikx/post-get-metadata-from-frontmatter (post-filename key)
   "Extract the KEY as`#+KEY:` from POST-FILENAME."
   (let ((case-fold-search t))
@@ -66,9 +72,38 @@
           (search-forward-regexp (format "^\\#\\+%s\\:\s+\\(.+\\)$" key))
           (match-string 1))))))
 
-;; ===========================
-;; Setting up Basic Formatting
-;; ===========================
+(defun venikx/org-html-tag (tag &rest attrs)
+  "Return close-tag for string TAG.
+ATTRS specify additional attributes."
+  (concat "<" tag " "
+          (mapconcat (lambda (attr)
+                       (format "%s=\"%s\"" (car attr) (cadr attr)))
+                     attrs
+                     " ")
+	  ">"))
+
+(defun venikx/hash-for-filename (filename)
+  "Returns the sha25 for FILENAME."
+  (with-temp-buffer
+    (insert-file-contents filename)
+    (secure-hash 'sha256 (current-buffer))))
+
+(defun venikx/asset-relative-link-to (resource pub-dir &optional versioned)
+    (let* ((assets-project (assoc "assets" org-publish-project-alist 'string-equal))
+           (dst-asset (expand-file-name resource (org-publish-property :publishing-directory assets-project)))
+           (asset-relative-to-dst-file (file-relative-name dst-asset pub-dir)))
+      (if versioned
+          (format "%s?v=%s" asset-relative-to-dst-file
+                  (venikx/hash-for-filename (expand-file-name resource venikx/root)))
+        dst-asset asset-relative-to-dst-file)))
+
+(defun venikx/project-relative-filename (filename)
+  "Return the relative path of FILENAME to the project root."
+  (file-relative-name filename venikx/root))
+
+;; ==================
+;; Generic Formatting
+;; ==================
 (defun venikx/pre-and-postamble-format (type)
   "Return the content for the pre/postamble of TYPE."
   `(("en" ,(with-temp-buffer
@@ -98,20 +133,10 @@ INFO      the export options (plist)."
                  text)))
     (org-html-format-headline-default-function todo todo-type priority link tags info)))
 
-;; ================================
-;; Helpers for generating meta tags
-;; ================================
-(defun venikx/org-html-tag (tag &rest attrs)
-  "Return close-tag for string TAG.
-ATTRS specify additional attributes."
-  (concat "<" tag " "
-          (mapconcat (lambda (attr)
-                       (format "%s=\"%s\"" (car attr) (cadr attr)))
-                     attrs
-                     " ")
-	  ">"))
-
-(defun venikx/html-head-extra (file project)
+;; =====================================
+;; Generating the Content for the <head>
+;; =====================================
+(defun venikx/html-head (file project)
   "Return <meta> elements for nice thumbnails."
   (let* ((info (cdr project))
          (org-export-options-alist
@@ -134,7 +159,8 @@ ATTRS specify additional attributes."
          (favicon (concat link-home "favicon.svg"))
          (type (org-publish-find-property file :meta-type project)))
     (mapconcat 'identity
-               `(,(venikx/org-html-tag "link" '(rel icon) '(type image/svg+xml) '(sizes any) `(href ,favicon))
+               `(,(venikx/org-html-tag "link" '(rel canonical) `(href ,full-url))
+                 ,(venikx/org-html-tag "link" '(rel icon) '(type image/svg+xml) '(sizes any) `(href ,favicon))
                  ,(venikx/org-html-tag "link" '(rel alternate) '(type application/rss+xml) '(href "posts/rss.xml") '(title "RSS feed"))
                  ,(venikx/org-html-tag "meta" '(property og:title) `(content ,title))
                  ,(venikx/org-html-tag "meta" '(property og:url) `(content ,full-url))
@@ -153,36 +179,19 @@ ATTRS specify additional attributes."
                  ,(and description
                        (venikx/org-html-tag "meta" '(property twitter:description) `(content ,description)))
                  ,(and description
-                       (venikx/org-html-tag "meta" '(property twitter:card) '(content summary)))
+                       (if (equal type "article")
+                           (venikx/org-html-tag "meta" '(property twitter:card) '(content summary_large_image))
+                         (venikx/org-html-tag "meta" '(property twitter:card) '(content summary))))
+                 ,(venikx/org-html-tag "meta" '(property twitter:site) `(content ,venikx/twitter))
+                 ,(venikx/org-html-tag "meta" '(property twitter:creator) `(content ,venikx/twitter))
                  )
                "\n")))
 
-;; ==========================================
-;; Helpers to generate relative path to files
-;; ==========================================
-(defun venikx/hash-for-filename (filename)
-  "Returns the sha25 for FILENAME."
-  (with-temp-buffer
-    (insert-file-contents filename)
-    (secure-hash 'sha256 (current-buffer))))
 
-(defun venikx/asset-relative-link-to (resource pub-dir &optional versioned)
-    (let* ((assets-project (assoc "assets" org-publish-project-alist 'string-equal))
-           (dst-asset (expand-file-name resource (org-publish-property :publishing-directory assets-project)))
-           (asset-relative-to-dst-file (file-relative-name dst-asset pub-dir)))
-      (if versioned
-          (format "%s?v=%s" asset-relative-to-dst-file
-                  (venikx/hash-for-filename (expand-file-name resource venikx/root)))
-        dst-asset asset-relative-to-dst-file)))
-
-(defun venikx/project-relative-filename (filename)
-  "Return the relative path of FILENAME to the project root."
-  (file-relative-name filename venikx/root))
-
-;; ====================================
-;; Wrappers to generate the HTML output
-;; ====================================
-(defun venikx/org-html-publish-post-to-html (plist filename pub-dir)
+;; ================================
+;; Generating the Posts of the Blog
+;; ================================
+(defun venikx/posts--org-html-publish-to-html (plist filename pub-dir)
   "Wrapper function to publish an file to html.
 
 PLIST contains the properties, FILENAME the source file and
@@ -190,28 +199,13 @@ PLIST contains the properties, FILENAME the source file and
   (let ((project (cons 'kevr-p plist)))
     (plist-put plist :subtitle
                (venikx/format-date-subtitle filename project))
-    (plist-put plist :html-head-extra
-               (venikx/html-head-extra filename project))
+    (plist-put plist :html-head
+               (venikx/html-head filename project))
     (plist-put plist :html-htmlized-css-url
                (venikx/asset-relative-link-to "css/style.css" pub-dir t))
     (org-html-publish-to-html plist filename pub-dir)))
 
-(defun venikx/org-html-publish-site-to-html (plist filename pub-dir)
-  "Wrapper function to publish an file to html.
-
-PLIST contains the properties, FILENAME the source file and
-  PUB-DIR the output directory."
-  (let ((project (cons 'kevr-s plist)))
-    (plist-put plist :html-head-extra
-               (venikx/html-head-extra filename project))
-    (plist-put plist :html-htmlized-css-url
-               (venikx/asset-relative-link-to "css/style.css" pub-dir t))
-    (org-html-publish-to-html plist filename pub-dir)))
-
-;; ==============================
-;; Logic to generate the sitemaps
-;; ==============================
-(defun venikx/sitemap-format-entry (entry style project)
+(defun venikx/posts--sitemap-format-entry (entry style project)
   "Format for sitemap ENTRY, as a string.
 ENTRY is a file name.  STYLE is the style of the sitemap.
 PROJECT is the current project."
@@ -221,13 +215,13 @@ PROJECT is the current project."
             (org-publish-find-title entry project)
             (venikx/format-date-subtitle entry project))))
 
-(defun venikx/latest-posts-sitemap-function (title sitemap)
+(defun venikx/latest-posts--sitemap-function (title sitemap)
   "posts.org generation. Only publish the latest 10 posts from SITEMAP (https://orgmode.org/manual/Sitemap.html).  Skips TITLE."
   (let* ((posts (cdr sitemap))
          (last-five (seq-subseq posts 0 (min (length posts) 10))))
     (org-list-to-org (cons (car sitemap) last-five))))
 
-(defun venikx/archive-sitemap-function (title list)
+(defun venikx/archive--sitemap-function (title list)
   "Generate sitemap as a string, having TITLE.
 LIST is an internal representation for the files to include, as
 returned by `org-list-to-lisp'."
@@ -240,9 +234,24 @@ returned by `org-list-to-lisp'."
             "#+DESCRIPTION: A personal blog of Kevin Rangel, venikx, a freelance web developer based in Helsinki, Finland.\n"
             (org-list-to-org filtered-list))))
 
-;; ==============================
-;; Logic to generate the RSS feed
-;; ==============================
+;; ===================================
+;; Generating the Pages of the Website
+;; ===================================
+(defun venikx/site--org-html-publish-to-html (plist filename pub-dir)
+  "Wrapper function to publish an file to html.
+
+PLIST contains the properties, FILENAME the source file and
+  PUB-DIR the output directory."
+  (let ((project (cons 'kevr-s plist)))
+    (plist-put plist :html-head
+               (venikx/html-head filename project))
+    (plist-put plist :html-htmlized-css-url
+               (venikx/asset-relative-link-to "css/style.css" pub-dir t))
+    (org-html-publish-to-html plist filename pub-dir)))
+
+;; ===========================================
+;; Logic to generate the RSS feed for the Blog
+;; ===========================================
 (defun venikx/format-rss-feed-entry (entry style project)
   "Format ENTRY for the RSS feed.
 ENTRY is a file name.  STYLE is either 'list' or 'tree'.
@@ -295,10 +304,8 @@ only when FILENAME is 'archive.org'."
              :base-extension "org"
              :recursive t
              :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
-             :publishing-function 'venikx/org-html-publish-post-to-html
+             :publishing-function 'venikx/posts--org-html-publish-to-html
              :publishing-directory (expand-file-name "public/posts" venikx/root)
-             :html-head-include-default-style nil
-             :html-head-include-scripts nil
              :html-preamble-format (venikx/pre-and-postamble-format 'preamble)
              :html-postamble t
              :html-postamble-format (venikx/pre-and-postamble-format 'postamble)
@@ -310,11 +317,11 @@ only when FILENAME is 'archive.org'."
              :sitemap-title nil
              :sitemap-style 'list
              :sitemap-sort-files 'anti-chronologically
-             :sitemap-function 'venikx/latest-posts-sitemap-function
-             :sitemap-format-entry 'venikx/sitemap-format-entry
-             :author "Kevin Rangel"
-             :email "code@venikx.com"
-             :meta-image "assets/me.jpg"
+             :sitemap-function 'venikx/latest-posts--sitemap-function
+             :sitemap-format-entry 'venikx/posts--sitemap-format-entry
+             :author venikx/name
+             :email venikx/email
+             :meta-image venikx/image
              :meta-type "article")
        (list "archive"
              :base-directory "./posts"
@@ -329,8 +336,12 @@ only when FILENAME is 'archive.org'."
              :sitemap-style 'list
              :sitemap-filename "archive.org"
              :sitemap-sort-files 'anti-chronologically
-             :sitemap-function 'venikx/archive-sitemap-function
-             :sitemap-format-entry 'venikx/sitemap-format-entry)
+             :sitemap-function 'venikx/archive--sitemap-function
+             :sitemap-format-entry 'venikx/posts--sitemap-format-entry
+             :author venikx/name
+             :email venikx/email
+             :meta-image venikx/image
+             :meta-type "website")
 
        (list "sitemap-for-rss"
              :base-directory "./posts"
@@ -339,14 +350,14 @@ only when FILENAME is 'archive.org'."
              :base-extension "org"
              :publishing-directory "./public"
              :publishing-function 'ignore
+             :author venikx/name
+             :email venikx/email
              :auto-sitemap t
              :sitemap-title "Kevin Rangel Blog RSS Feed"
              :sitemap-description "Kevin Rangel Blog RSS Feed"
              :sitemap-style 'list
              :sitemap-function 'venikx/format-rss-feed
              :sitemap-format-entry 'venikx/format-rss-feed-entry
-             :author "Kevin Rangel"
-             :email "code@venikx.com"
              :sitemap-filename "rss.org")
        (list "rss"
              :base-directory "./"
@@ -357,17 +368,17 @@ only when FILENAME is 'archive.org'."
              :base-extension "org"
              :publishing-directory "./public"
              :publishing-function 'venikx/org-rss-publish-to-rss
+             :author venikx/name
+             :email venikx/email
              :rss-image-url (concat venikx/url "assets/me.jpg")
              :html-link-home venikx/url
-             :author "Kevin Rangel"
-             :email "code@venikx.com"
              :html-link-use-abs-url t)
 
        (list "site"
              :base-directory "./"
              :include '("posts/archive.org")
              :base-extension "org"
-             :publishing-function 'venikx/org-html-publish-site-to-html
+             :publishing-function 'venikx/site--org-html-publish-to-html
              :publishing-directory (expand-file-name "public" venikx/root)
              :html-head-include-default-style nil
              :html-head-include-scripts nil
@@ -378,10 +389,10 @@ only when FILENAME is 'archive.org'."
              :html-format-headline-function 'venikx/org-html-format-headline-function
              :html-link-home venikx/url
              :html-home/up-format ""
-             :author "Kevin Rangel"
-             :email "code@venikx.com"
-             :meta-image "assets/me.jpg"
-             :meta-type "article")
+             :author venikx/name
+             :email venikx/email
+             :meta-image venikx/image
+             :meta-type "website")
 
        (list "assets"
              :base-directory venikx/root
@@ -398,23 +409,27 @@ only when FILENAME is 'archive.org'."
 (defun venikx-publish-all ()
   "Publish the blog to HTML."
   (interactive)
-  (let ((org-publish-project-alist       venikx/publish-project-alist)
-        (org-publish-use-timestamps-flag nil)
+  (let (;;; Export
         (org-export-with-section-numbers nil)
-        (org-export-with-smart-quotes    t)
-        (org-export-with-toc             nil)
+        (org-export-with-smart-quotes t)
+        (org-export-with-toc nil)
         (org-export-with-sub-superscripts '{})
+        ;;; Publish
+        (org-publish-project-alist venikx/publish-project-alist)
+        (org-publish-use-timestamps-flag nil)
+        ;; HTML
+        (org-html-head-include-default-style nil)
+        (org-html-head-include-scripts nil)
+        (org-html-html5-fancy t)
+        (org-html-htmlize-output-type 'css)
         (org-html-divs '((preamble  "header" "top")
                          (content   "main"   "content")
                          (postamble "footer" "postamble")))
-        (org-html-container-element         "section")
+        (org-html-container-element "section")
         (org-html-metadata-timestamp-format "%d %B %Y")
-        (org-html-checkbox-type             'html)
-        (org-html-html5-fancy               t)
-        (org-html-validation-link           nil)
-        (org-html-doctype                   "html5")
-        (org-html-htmlize-output-type       'css)
+        (org-html-checkbox-type 'html)
+        (org-html-validation-link nil)
+        (org-html-doctype "html5")
         (org-confirm-babel-evaluate))
     (org-publish-all)))
-
 ;;; publish.el ends here
