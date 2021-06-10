@@ -16,7 +16,7 @@
   (unless (package-installed-p pkg)
     (package-install pkg)))
 
-(require 'cl-lib)
+(require 'cl)
 (require 'org)
 (require 'ox-publish)
 (require 'ox-rss)
@@ -33,7 +33,7 @@
 (defvar venikx/email "code@venikx.com"
   "My contact email for coding related topics.")
 
-(defvar venikx/url "https://venikx.com/"
+(defvar venikx/url "https://venikx.com"
   "The URL where this site will be published.")
 
 (defvar venikx/image "assets/me.jpg"
@@ -228,10 +228,10 @@ returned by `org-list-to-lisp'."
   (let ((filtered-list (cl-remove-if (lambda (x)
                                        (and (sequencep x) (null (car x))))
                                      list)))
-    (concat "#+TITLE: " title "\n"
-            "#+OPTIONS: title:nil\n"
-            "#+META_TYPE: website\n"
-            "#+DESCRIPTION: A personal blog of Kevin Rangel, venikx, a freelance web developer based in Helsinki, Finland.\n"
+    (concat "#+title: " title "\n"
+            "#+options: title:nil\n"
+            "#+meta_type: website\n"
+            "#+description: A personal blog of Kevin Rangel, venikx, a freelance web developer based in Helsinki, Finland.\n"
             (org-list-to-org filtered-list))))
 
 ;; ===================================
@@ -294,6 +294,25 @@ only when FILENAME is 'archive.org'."
   (if (equal "rss.org" (file-name-nondirectory filename))
       (org-rss-publish-to-rss plist filename pub-dir)))
 
+
+;; ======================================
+;; Generate a full sitemap of the website
+;; ======================================
+(defun venikx/templated-html-create-sitemap-xml (output directory base-url &rest regexp)
+  (let* ((rx (or regexp "\\.html")))
+    (with-temp-file output
+      (insert "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<urlset
+      xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"
+      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+      xsi:schemaLocation=\"
+            http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/09/sitemap.xsd\">\n")
+      (loop for file in (directory-files-recursively directory rx)
+            do (insert (format "<url>\n <loc>%s/%s</loc>\n <priority>0.5</priority>\n</url>\n"
+                               base-url (file-relative-name file directory))))
+      (insert "</urlset>"))))
+
 ;; ===============================
 ;; Setting the Publishing Pipeline
 ;; ===============================
@@ -312,19 +331,13 @@ only when FILENAME is 'archive.org'."
              :html-format-headline-function 'venikx/org-html-format-headline-function
              :html-link-home venikx/url
              :html-home/up-format ""
-             :auto-sitemap t
-             :sitemap-filename "posts.org"
-             :sitemap-title nil
-             :sitemap-style 'list
-             :sitemap-sort-files 'anti-chronologically
-             :sitemap-function 'venikx/latest-posts--sitemap-function
-             :sitemap-format-entry 'venikx/posts--sitemap-format-entry
              :author venikx/name
              :email venikx/email
              :meta-image venikx/image
              :meta-type "article")
+
        (list "archive"
-             :base-directory "./posts"
+             :base-directory (expand-file-name "posts" venikx/root)
              :recursive t
              :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
              :base-extension "org"
@@ -333,6 +346,7 @@ only when FILENAME is 'archive.org'."
              :html-link-home "https://venikx.com/"
              :html-link-use-abs-url t
              :auto-sitemap t
+             :sitemap-title "Blog | Kevin Rangel"
              :sitemap-style 'list
              :sitemap-filename "archive.org"
              :sitemap-sort-files 'anti-chronologically
@@ -342,6 +356,21 @@ only when FILENAME is 'archive.org'."
              :email venikx/email
              :meta-image venikx/image
              :meta-type "website")
+       (list "generate-latest-posts"
+             :base-directory (expand-file-name "posts" venikx/root)
+             :recursive t
+             :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
+             :base-extension "org"
+             :publishing-function 'ignore
+             :publishing-directory (expand-file-name "public/posts" venikx/root)
+             :html-link-home venikx/url
+             :html-link-use-abs-url t
+             :auto-sitemap t
+             :sitemap-filename "posts.org"
+             :sitemap-style 'list
+             :sitemap-sort-files 'anti-chronologically
+             :sitemap-function 'venikx/latest-posts--sitemap-function
+             :sitemap-format-entry 'venikx/posts--sitemap-format-entry)
 
        (list "sitemap-for-rss"
              :base-directory "./posts"
@@ -401,9 +430,6 @@ only when FILENAME is 'archive.org'."
              :publishing-directory (expand-file-name "public" venikx/root)
              :publishing-function 'org-publish-attachment
              :recursive t)
-
-       (list "site"
-             :components '("blog" "archive" "site" "sitemap-for-rss" "rss" "assets"))
        ))
 
 (defun venikx-publish-all ()
@@ -431,5 +457,6 @@ only when FILENAME is 'archive.org'."
         (org-html-validation-link nil)
         (org-html-doctype "html5")
         (org-confirm-babel-evaluate))
-    (org-publish-all)))
+    (org-publish-all))
+  (venikx/templated-html-create-sitemap-xml "public/sitemap.xml" "public" venikx/url))
 ;;; publish.el ends here
