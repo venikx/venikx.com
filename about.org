@@ -20,4 +20,4 @@ If you enjoy what you see, you can also find me:
 - my spaghetti code floats in [[https://github.com/venikx][GitHub]]
 - or you could [[https://buymeacoffee.com/venikx][buy]] me a coffee
 
-For business inquiries, you can contact me via my [[mailto:sales@babo.digital][business email]].
+For business inquiries, you can contact me via my [[mailto:hello@babo.digital][business email]].
