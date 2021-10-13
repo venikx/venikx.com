@@ -399,7 +399,7 @@ only when FILENAME is 'archive.org'."
              :publishing-function 'venikx/org-rss-publish-to-rss
              :author venikx/name
              :email venikx/email
-             :rss-image-url (concat venikx/url "assets/me.jpg")
+             :rss-image-url (concat venikx/url "/assets/me.jpg")
              :html-link-home venikx/url
              :html-link-use-abs-url t)
 
