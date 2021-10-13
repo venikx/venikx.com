@@ -425,7 +425,7 @@ only when FILENAME is 'archive.org'."
 
        (list "assets"
              :base-directory venikx/root
-             :exclude (regexp-opt '("public" "layouts" "assets"))
+             :exclude (regexp-opt '("public/" "layouts/"))
              :base-extension venikx/site-attachments
              :publishing-directory (expand-file-name "public" venikx/root)
              :publishing-function 'org-publish-attachment
