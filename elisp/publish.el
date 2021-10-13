@@ -309,8 +309,8 @@ only when FILENAME is 'archive.org'."
             http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/09/sitemap.xsd\">\n")
       (loop for file in (directory-files-recursively directory rx)
-            do (insert (format "<url>\n <loc>%s/%s</loc>\n <priority>0.5</priority>\n</url>\n"
-                               base-url (file-relative-name file directory))))
+            do (insert (format "<url>\n <loc>%s</loc>\n <priority>0.5</priority>\n <changefreq>monthly</changefreq>\n</url>\n"
+                               (concat base-url "/" (file-relative-name file directory)))))
       (insert "</urlset>"))))
 
 ;; ===============================
