@@ -51,8 +51,12 @@
                           (lambda (dir)
                             (seq-every-p
                              (lambda (file) (file-exists-p (expand-file-name file dir)))
-                             '(".git" "assets" "css" "elisp" "layouts" "posts"))))
+                             '(".git" "assets" "css" "elisp" "layouts" "pages"))))
   "Root directory of this project.")
+
+(defvar venikx/pages
+  (expand-file-name "pages" venikx/root)
+  "Directory where layouts are found.")
 
 (defvar venikx/layouts-directory
   (expand-file-name "layouts" venikx/root)
@@ -99,7 +103,7 @@ ATTRS specify additional attributes."
 
 (defun venikx/project-relative-filename (filename)
   "Return the relative path of FILENAME to the project root."
-  (file-relative-name filename venikx/root))
+  (file-relative-name filename venikx/pages))
 
 ;; ==================
 ;; Generic Formatting
@@ -319,7 +323,7 @@ only when FILENAME is 'archive.org'."
 (defvar venikx/publish-project-alist
       (list
        (list "blog"
-             :base-directory (expand-file-name "posts" venikx/root)
+             :base-directory (expand-file-name "posts" venikx/pages)
              :base-extension "org"
              :recursive t
              :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
@@ -337,7 +341,7 @@ only when FILENAME is 'archive.org'."
              :meta-type "article")
 
        (list "archive"
-             :base-directory (expand-file-name "posts" venikx/root)
+             :base-directory (expand-file-name "posts" venikx/pages)
              :recursive t
              :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
              :base-extension "org"
@@ -357,7 +361,7 @@ only when FILENAME is 'archive.org'."
              :meta-image venikx/image
              :meta-type "website")
        (list "generate-latest-posts"
-             :base-directory (expand-file-name "posts" venikx/root)
+             :base-directory (expand-file-name "posts" venikx/pages)
              :recursive t
              :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
              :base-extension "org"
@@ -373,7 +377,7 @@ only when FILENAME is 'archive.org'."
              :sitemap-format-entry 'venikx/posts--sitemap-format-entry)
 
        (list "sitemap-for-rss"
-             :base-directory "./posts"
+             :base-directory (expand-file-name "posts" venikx/pages)
              :recursive t
              :exclude (regexp-opt '("posts.org" "archive.org" "rss.org"))
              :base-extension "org"
@@ -389,7 +393,7 @@ only when FILENAME is 'archive.org'."
              :sitemap-format-entry 'venikx/format-rss-feed-entry
              :sitemap-filename "rss.org")
        (list "rss"
-             :base-directory "./"
+             :base-directory venikx/pages
              :recursive t
              :exclude "."
              :include '("posts/rss.org")
@@ -404,7 +408,7 @@ only when FILENAME is 'archive.org'."
              :html-link-use-abs-url t)
 
        (list "site"
-             :base-directory "./"
+             :base-directory venikx/pages
              :include '("posts/archive.org")
              :base-extension "org"
              :publishing-function 'venikx/site--org-html-publish-to-html
