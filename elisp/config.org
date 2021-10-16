@@ -1,0 +1,151 @@
+#+TITLE: test.org
+
+* Dependencies
+** Setting up Repositories
+- Add ~org~, ~melpa~ and ~elpa~ archives.
+- Sets the package archives directory so that packages aren't installed in
+  ~~/.emacs.d/elpa~.
+
+#+begin_src emacs-lisp +n :results silent
+(require 'package)
+
+(setq package-user-dir (expand-file-name ".packages" venikx.com--root))
+
+(package-initialize)
+(unless package-archive-contents
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
+  (package-refresh-contents))
+#+end_src
+
+** Packages
+#+begin_src emacs-lisp +n :results silent
+(dolist (pkg '(esxml htmlize webfeeder))
+  (unless (package-installed-p pkg)
+    (package-install pkg)))
+
+(require 'esxml)
+(require 'htmlize)
+(require 'webfeeder)
+(require 'ox-publish)
+#+end_src
+
+*** esxml
+The [[https://github.com/tali713/esxml][esxml]] package provides elisp function to declarativly generate HTML markup. The ~concat~ and ~format~ are ugly compared to declarative nature of esxml.
+
+#+begin_src emacs-lisp +n :results silent
+(require 'esxml)
+#+end_src
+
+*** htmlimze
+Generate a css theme for the code-blocks based on your own emacs theme.
+
+#+begin_src emacs-lisp +n :results silent
+(require 'htmlize)
+#+end_src
+
+*** webfeeder
+The webfeeder is used to generate RSS and Atom feeds.
+
+#+begin_src emacs-lisp +n :results silent
+(require 'webfeeder)
+#+end_src
+
+*** ox-publish
+The built-in org-mode publishing system (aka how you build your project).
+
+#+begin_src emacs-lisp +n :results silent
+(require 'ox-publish)
+#+end_src
+
+* Variables
+** Common Variables
+The ~venikx.com--root~ variable has been declared inside the ~venikx.com.el~
+function, because the root was needed to load the current org-mode file to parse
+it through babel.
+
+#+begin_src emacs-lisp +n :results silent
+(defvar venikx.com--pages (expand-file-name "pages" venikx.com--root)
+  "Directory where the pages of the website are found.")
+
+(defvar venikx.com--site-attachments
+  (regexp-opt '("jpg" "jpeg" "gif" "png" "svg"
+                "ico" "cur" "css" "js"
+                "eot" "woff" "woff2" "ttf"
+                "html" "pdf")))
+#+end_src
+
+** Site Variables
+
+#+begin_src emacs-lisp +n :results silent
+(defvar venikx/url "https://venikx.com"
+  "The URL where this site will be published.")
+
+(defvar venikx.com--name "Kevin Rangel"
+  "My name.")
+
+(setq
+ user-full-name "Kevin Rangel"
+ user-mail-address "code@venikx.com")
+#+end_src
+
+*** Socials
+#+begin_src emacs-lisp +n :results silent
+(defvar venikx.com--personal-email "code@venikx.com"
+  "My contact email for coding related topics.")
+
+(defvar venikx.com--business-email "hello@babo.digital"
+  "My contact email for business inquiries.")
+
+(defvar venikx/twitter "@_venikx"
+  "My Twitter handle for reference in the twitter meta tags.")
+
+#+end_src
+
+
+** Org Variables
+#+begin_src emacs-lisp +n :results silent
+(setq org-publish-use-timestamps-flag t
+      org-publish-timestamp-directory "./.org-cache/"
+      org-export-with-section-numbers nil
+      org-export-use-babel nil
+      org-export-with-smart-quotes t
+      org-export-with-sub-superscripts nil
+      org-export-with-tags 'not-in-toc
+      org-export-with-toc t)
+#+end_src
+
+** Others
+
+#+begin_src emacs-lisp +n :results silent
+(setq make-backup-files nil)
+#+end_src
+
+* Publishing
+** The project alist
+
+#+begin_src emacs-lisp +n :results silent
+(setq org-publish-project-alist
+      (list
+       (list "content"
+             :base-extension "org"
+             :recursive t
+             :base-directory venikx.com--pages
+             :publishing-function 'org-html-publish-to-html
+             :publishing-directory (expand-file-name "public" venikx.com--root)
+             :with-title nil)
+       (list "assets"
+             :base-directory venikx.com--root
+             :exclude (regexp-opt '("public/" "layouts/"))
+             :base-extension venikx.com--site-attachments
+             :publishing-directory (expand-file-name "public" venikx.com--root)
+             :publishing-function 'org-publish-attachment
+             :recursive t)
+       (list "site" :components '("content" "assets"))))
+
+(defun venikx.com--publish ()
+  "Calling the script builds the venikx.com website."
+  (interactive)
+  (org-publish-all t))
+#+end_src

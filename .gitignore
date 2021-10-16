@@ -1,5 +1,7 @@
 public/
 .packages/
+elisp/config.el
+
 
 # Logs
 logs
