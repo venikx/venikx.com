@@ -103,7 +103,6 @@ it through babel.
 
 #+end_src
 
-
 ** Org Variables
 #+begin_src emacs-lisp +n :results silent
 (setq org-publish-use-timestamps-flag t
@@ -113,7 +112,22 @@ it through babel.
       org-export-with-smart-quotes t
       org-export-with-sub-superscripts nil
       org-export-with-tags 'not-in-toc
-      org-export-with-toc t)
+      org-export-with-toc t
+      org-id-locations-file "./.org-id-locations"
+      org-id-track-globally t)
+#+end_src
+
+** HTML Exporter
+#+begin_src emacs-lisp +n :results silent
+(setq org-html-metadata-timestamp-format "%Y-%m-%d"
+      org-html-checkbox-type 'venikx-html
+      org-html-html5-fancy nil
+      org-html-htmlize-output-type 'css
+      org-html-self-link-headlines t
+      org-html-validation-link nil
+      org-html-inline-images t
+      ;org-html-doctype "html5"
+      )
 #+end_src
 
 ** Others
@@ -123,6 +137,123 @@ it through babel.
 #+end_src
 
 * Publishing
+** Things to remember
+*** TODO Add RSS feed file + link in header
+It's possibly only needed on the posts page.
+*** TODO Add icons to header
+** HTML Template
+#+begin_src emacs-lisp +n :results silent
+(defun  venikx.com--org-html-template (contents info)
+  (concat
+   "<!DOCTYPE html>"
+
+   (sxml-to-xml
+    `(html (@ (lang "en"))
+           (head
+            (meta (@ (charset "utf-8")))
+            (meta (@ (name "viewport")
+                     (content "width=device-width, initial-scale=1")))
+
+            (title ,(plist-get info :title))
+            (meta (@ (name "description")
+                     (content ,(plist-get info :description))))
+            (link (@ (rel "canonical")
+                     (href ,(plist-get info :site-url))))
+
+            (meta (@ (name "og:title")
+                     (content ,(plist-get info :title))))
+            (meta (@ (name "og:description")
+                     (content ,(plist-get info :description))))
+;;            (meta (@ (name "og:type")
+;;                     (content ,(plist-get info :title))))
+            (meta (@ (name "og:image")
+                     (content ,(plist-get info :image))))
+            (meta (@ (name "og:image:alt")
+                     (content ,(plist-get info :image-alt))))
+            (meta (@ (name "og:url")
+                     (href ,(plist-get info :site-url))))
+
+            (meta (@ (name "twitter:card")
+                     (content "summary_large_image")))
+            (meta (@ (name "twitter:site")
+                     (content ,(concat "@" (plist-get info :socials-twitter)))))
+            (meta (@ (name "twitter:creator")
+                     (content ,(concat "@" (plist-get info :socials-twitter)))))
+            (meta (@ (name "twitter:title")
+                     (content ,(plist-get info :title))))
+            (meta (@ (name "twitter:description")
+                     (content ,(plist-get info :description))))
+            (meta (@ (name "twitter:image")
+                     (content ,(plist-get info :image))))
+            (meta (@ (name "twitter:image:alt")
+                     (content ,(plist-get info :image-alt))))
+
+            (meta (@ (name "author")
+                     (content ,(plist-get info :author))))
+            (meta (@ (name "generator")
+                     (content ,(plist-get info :creator)))))
+           (body (div ,contents))))))
+
+
+(defun  venikx.com--org-html-headline (contents info)
+  )
+#+end_src
+
+** Custom HTML functions
+#+begin_src emacs-lisp +n :results silent
+(defun venikx-html-bold (bold contents info)
+  "Transcode BOLD from Org to HTML.
+CONTENTS is the text with bold markup.
+INFO is a plist holding contextual information."
+  (when contents (format "<strong>%s</strong>" contents)))
+
+(defun ox-slimhtml-italic (italic contents info)
+  "Transcode ITALIC from Org to HTML.
+CONTENTS is the text with italic markup.
+INFO is a plist holding contextual information."
+  (when contents (format "<em>%s</em>" contents)))
+
+(defun ox-slimhtml-verbatim (verbatim contents info)
+  "Transcode VERBATIM string from Org to HTML.
+CONTENTS is nil.
+INFO is a plist holding contextual information."
+  (let ((contents (org-html-encode-plain-text (org-element-property :value verbatim))))
+    (when contents (format "<kbd>%s</kbd>" contents))))
+#+end_src
+
+** The custom backend
+#+begin_src emacs-lisp +n :results silent
+(org-export-define-backend 'venikx-html
+ '((bold . venikx-html-bold)
+   (template . venikx.com--org-html-template)
+   )
+ :options-alist
+ '((:title "TITLE" nil nil t)
+   (:description "DESCRIPTION" nil nil newline)
+   (:author "AUTHOR" nil user-full-name)
+   (:creator "CREATOR" nil org-export-creator-string)
+   (:html-doctype "HTML_DOCTYPE" nil org-html-doctype)
+   (:html-head-include-default-style nil nil nil)
+   (:site-url nil nil "https://venikx.com" t)
+   (:socials-twitter "SOCIALS_TWITTER" nil "_venikx" t)
+   ))
+#+end_src
+
+** The custom function to use said backend
+#+begin_src emacs-lisp +n :results silent
+(defun org-venikx-html-publish-to-html (plist filename pub-dir)
+  "Publish an org file to HTML.
+FILENAME is the filename of the Org file to be published. PLIST is the property
+list for the given project. PUB-DIR is the publishing directory. Return output
+file name."
+  (org-publish-org-to 'venikx-html filename
+                      (concat "." (or (plist-get plist :html-extension)
+                                      org-html-extension
+                                      "html"))
+                      (plist-put plist :this-file filename)
+                      pub-dir))
+#+end_src
+
 ** The project alist
 
 #+begin_src emacs-lisp +n :results silent
@@ -132,9 +263,8 @@ it through babel.
              :base-extension "org"
              :recursive t
              :base-directory venikx.com--pages
-             :publishing-function 'org-html-publish-to-html
-             :publishing-directory (expand-file-name "public" venikx.com--root)
-             :with-title nil)
+             :publishing-function 'org-venikx-html-publish-to-html
+             :publishing-directory (expand-file-name "public" venikx.com--root))
        (list "assets"
              :base-directory venikx.com--root
              :exclude (regexp-opt '("public/" "layouts/"))
