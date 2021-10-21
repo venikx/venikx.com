@@ -195,38 +195,54 @@ It's possibly only needed on the posts page.
            (body (div ,contents))))))
 
 
-(defun  venikx.com--org-html-headline (contents info)
-  )
 #+end_src
 
 ** Custom HTML functions
 #+begin_src emacs-lisp +n :results silent
-(defun venikx-html-bold (bold contents info)
-  "Transcode BOLD from Org to HTML.
-CONTENTS is the text with bold markup.
-INFO is a plist holding contextual information."
+(defun vx--html-bold (bold contents info)
   (when contents (format "<strong>%s</strong>" contents)))
 
-(defun ox-slimhtml-italic (italic contents info)
-  "Transcode ITALIC from Org to HTML.
-CONTENTS is the text with italic markup.
-INFO is a plist holding contextual information."
+(defun vx--html-italic (italic contents info)
   (when contents (format "<em>%s</em>" contents)))
 
-(defun ox-slimhtml-verbatim (verbatim contents info)
-  "Transcode VERBATIM string from Org to HTML.
-CONTENTS is nil.
-INFO is a plist holding contextual information."
-  (let ((contents (org-html-encode-plain-text (org-element-property :value verbatim))))
-    (when contents (format "<kbd>%s</kbd>" contents))))
+(defun vx--html-underline (underline contents info)
+  (when contents (format "<span class=\"underline\">%s</span>" contents)))
+
+(defun vx--html-strike-through (strike-through contents info)
+  (message contents)
+  (when contents (format "<del>%s</del>" contents)))
+
+(defun vx--html-code (code contents info)
+  (setq contents (org-html-encode-plain-text (org-element-property :value code)))
+  (when contents (format "<code>%s</code>" contents)))
+
+(defun vx--html-verbatim (verbatim contents info)
+  (setq contents (org-html-encode-plain-text (org-element-property :value verbatim)))
+  (when contents (format "<code>%s</code>" contents)))
+
+(defun vx--html-quote-block (quote-block contents info)
+  (let ((caption (car (car (org-element-property :caption quote-block))))
+        (caption-url (car (car (org-element-property :caption-url quote-block)))))
+
+    (if caption (sxml-to-xml `(figure (blockquote ,contents) (figcaption ,(car caption))))
+      (sxml-to-xml `(blockquote ,contents)))
+
+
+    ))
 #+end_src
 
 ** The custom backend
 #+begin_src emacs-lisp +n :results silent
-(org-export-define-backend 'venikx-html
- '((bold . venikx-html-bold)
+(org-export-define-derived-backend 'venikx-html 'html
+  :translate-alist
+ '((bold . vx--html-bold)
+   (code . vx--html-code)
+   (italic . vx--html-italic)
+   (quote-block . vx--html-quote-block)
+   (strike-through . vx--html-strike-through)
    (template . venikx.com--org-html-template)
-   )
+   (underline . vx--html-underline)
+   (verbatim . vx--html-verbatim))
  :options-alist
  '((:title "TITLE" nil nil t)
    (:description "DESCRIPTION" nil nil newline)
