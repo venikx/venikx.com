@@ -104,7 +104,7 @@ function Hello(name) {
 }
 #+end_src
 
-#+begin_src js :results output :noweb yes :exports code
+#+begin_src js :results output :noweb yes :exports both
 <<hello-from-js>>
 Hello("Kevin")
 #+end_src
