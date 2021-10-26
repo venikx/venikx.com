@@ -108,10 +108,12 @@ it through babel.
 (setq org-publish-use-timestamps-flag t
       org-publish-timestamp-directory "./.org-cache/"
       org-export-with-section-numbers nil
-      org-export-use-babel nil
+      org-confirm-babel-evaluate nil
+      org-export-use-babel t
       org-export-with-smart-quotes t
       org-export-with-sub-superscripts nil
       org-export-with-tags 'not-in-toc
+      org-export-headline-levels 7
       org-export-with-toc t
       org-id-locations-file "./.org-id-locations"
       org-id-track-globally t)
@@ -141,9 +143,12 @@ it through babel.
 *** TODO Add RSS feed file + link in header
 It's possibly only needed on the posts page.
 *** TODO Add icons to header
+*** TODO Use ~vx--html-export-block~ to embed iframe for react, vue, etc snippets and webpages
+*** TODO Start the heading elements from h2 for articles
+*** TODO Only add toc when there's a lot of content
 ** HTML Template
 #+begin_src emacs-lisp +n :results silent
-(defun  venikx.com--org-html-template (contents info)
+(defun  vx--html-template (contents info)
   (concat
    "<!DOCTYPE html>"
 
@@ -193,65 +198,209 @@ It's possibly only needed on the posts page.
             (meta (@ (name "generator")
                      (content ,(plist-get info :creator)))))
            (body (div ,contents))))))
-
-
 #+end_src
 
 ** Custom HTML functions
 #+begin_src emacs-lisp +n :results silent
-(defun vx--html-bold (bold contents info)
+(defun vx--html-bold (_bold contents _info)
   (when contents (format "<strong>%s</strong>" contents)))
 
-(defun vx--html-italic (italic contents info)
+(defun vx--html-italic (_italic contents _info)
   (when contents (format "<em>%s</em>" contents)))
 
-(defun vx--html-underline (underline contents info)
+(defun vx--html-underline (_underline contents _info)
   (when contents (format "<span class=\"underline\">%s</span>" contents)))
 
-(defun vx--html-strike-through (strike-through contents info)
-  (message contents)
+(defun vx--html-strike-through (_strike-through contents _info)
   (when contents (format "<del>%s</del>" contents)))
 
-(defun vx--html-code (code contents info)
+(defun vx--html-code (code contents _info)
   (setq contents (org-html-encode-plain-text (org-element-property :value code)))
   (when contents (format "<code>%s</code>" contents)))
 
-(defun vx--html-verbatim (verbatim contents info)
+(defun vx--html-verbatim (verbatim contents _info)
   (setq contents (org-html-encode-plain-text (org-element-property :value verbatim)))
   (when contents (format "<code>%s</code>" contents)))
 
-(defun vx--html-quote-block (quote-block contents info)
+(defun vx--html-quote-block (quote-block contents _info)
   (let ((caption (car (car (org-element-property :caption quote-block))))
         (caption-url (car (car (org-element-property :caption-url quote-block)))))
 
     (if caption (sxml-to-xml `(figure (blockquote ,contents) (figcaption ,(car caption))))
-      (sxml-to-xml `(blockquote ,contents)))
+      (sxml-to-xml `(blockquote ,contents)))))
 
+(defun vx--html-example-block (example-block _contents info)
+  (let ((code (org-html-format-code example-block info)))
+    (when code (format "<pre class=\"example\">%s</pre>" code))))
 
-    ))
+(defun vx--html-export-block (export-block contents _info)
+  (let ((contents (org-element-property :value export-block))
+        (language (org-element-property :type export-block)))
+    (when contents
+      (cond ((string= "JAVASCRIPT" language)
+             (format "<script>%s</script>" contents))
+            ((string= "CSS" language)
+             (format "<style type=\"text/css\">%s</style>" contents))
+            (t
+             (org-remove-indentation contents))))))
+
+(defun vx--html-export-snippet (export-snippet contents _info)
+  (let ((contents (org-element-property :value export-snippet)))
+    (when contents contents)))
+
+(defun vx--html-fixed-width (fixed-width contents info)
+  (format "<pre class=\"example\">\n%s</pre>"
+          (org-html-do-format-code
+           (org-remove-indentation
+            (org-element-property :value fixed-width)))))
+
+(require 'subr-x)
+(defun vx--html-anchor-from-headline (headline-text)
+  (thread-last headline-text
+    (downcase)
+    (replace-regexp-in-string " " "-")
+    (replace-regexp-in-string "</?code>" "")
+    (replace-regexp-in-string "[^[:alnum:]_-]" "")))
+(defun vx--html-headline (headline contents info)
+  (let* ((text (org-export-data (org-element-property :title headline) info))
+         (level (org-export-get-relative-level headline info))
+         (anchor (vx--html-anchor-from-headline text))
+         (attributes (org-element-property :ATTR_HTML headline))
+         (container (org-element-property :HTML_CONTAINER headline))
+         (container-class (and container (org-element-property :HTML_CONTAINER_CLASS headline))))
+    (when attributes
+      (setq attributes
+            (format " %s" (org-html--make-attribute-string
+                           (org-export-read-attribute 'attr_html `(nil
+                                                                   (attr_html ,(split-string attributes))))))))
+    (concat
+     (when (and container (not (string= "" container)))
+       (format "<%s%s>" container (if container-class (format " class=\"%s\"" container-class) "")))
+     (if (not (org-export-low-level-p headline info))
+         (format "<h%d%s id=\"%s\"><a href=\"#%s\">%s</a></h%d>%s" level (or attributes "") anchor anchor text level (or contents ""))
+       (concat
+        (when (org-export-first-sibling-p headline info) "<ul>")
+        (format "<li>%s%s</li>" text (or contents ""))
+        (when (org-export-last-sibling-p headline info) "</ul>")))
+     (when (and container (not (string= "" container)))
+       (format "</%s>" (cl-subseq container 0 (cl-search " " container)))))))
+
+(defun vx--html-horizontal-rule (_horizontal-rule _contents _info) "<hr /")
+
+(defun vx--html-inner-template (contents info)
+  (concat
+   ;; Table of contents.
+   (let ((depth (plist-get info :with-toc)))
+     (when depth (org-html-toc depth info)))
+   ;; Document contents.
+   contents
+   ;; Footnotes section.
+   (org-html-footnote-section info)))
+
+(defun vx--html-content (_whatever contents _info) contents)
+
+(defun vx--html-clock (clock contents info)
+  (format "<p>
+<span class=\"timestamp-wrapper\">
+<span class=\"timestamp-kwd\">%s</span> <span class=\"timestamp\">%s</span>%s
+</span>
+</p>"
+          org-clock-string
+          (org-timestamp-translate (org-element-property :value clock))
+          (let ((time (org-element-property :duration clock)))
+            (and time (format " <span class=\"timestamp\">(%s)</span>" time)))))
+
+(defun vx--html-not-implemented (whatever contents info)
+  (message "NOT IMPLEMENTED")
+  (format "<div style=\"background-color: red;\">
+             <p>NOT IMPLEMENTED!!</p>
+             <p>TYPE %S</p>
+             <p>KEY %S</p>
+             <p>VALUE %S</p>
+          </div>"
+          (org-element-type whatever)
+          (org-element-property :key whatever)
+          (org-element-property :value whatever)))
+
+(defun vx--html-section (section contents info) contents)
 #+end_src
 
 ** The custom backend
 #+begin_src emacs-lisp +n :results silent
-(org-export-define-derived-backend 'venikx-html 'html
-  :translate-alist
+(org-export-define-backend 'venikx-html
  '((bold . vx--html-bold)
+   (center-block . vx--html-not-implemented)
+   (clock . vx--html-not-implemented)
    (code . vx--html-code)
+   (drawer . vx--html-not-implemented)
+   (dynamic-block . vx--html-not-implemented)
+   (entity . vx--html-not-implemented)
+   (example-block . vx--html-example-block)
+   (export-block . vx--html-export-block)
+   (export-snippet . vx--html-export-snippet)
+   (fixed-width . vx--html-export-snippet) ;; RESULTS
+   (footnote-definition . vx--html-not-implemented)
+   (footnote-reference . vx--html-not-implemented)
+   (headline . vx--html-headline)
+   (horizontal-rule . vx--html-horizontal-rule)
+   (inline-src-block . vx--html-not-implemented)
+   (inlinetask . vx--html-not-implemented)
+   (inner-template . vx--html-inner-template)
    (italic . vx--html-italic)
+   (item . vx--html-not-implemented)
+   (keyword . vx--html-not-implemented)
+   (latex-environment . vx--html-not-implemented)
+   (latex-fragment . vx--html-not-implemented)
+   (line-break . vx--html-not-implemented)
+   (link . org-html-link)
+   (node-property . org-html-node-property)
+   (paragraph . org-html-paragraph)
+   (plain-list . org-html-plain-list)
+   (plain-text . org-html-plain-text)
+   (planning . org-html-line-break)
+   (property-drawer . vx--html-not-implemented)
+   (radio-target . vx--html-not-implemented)
+   (section . vx--html-section)
+   (special-block . vx--html-not-implemented)
+   (src-block . vx--html-not-implemented)
+   (statistics-cookie . vx--html-not-implemented)
    (quote-block . vx--html-quote-block)
    (strike-through . vx--html-strike-through)
-   (template . venikx.com--org-html-template)
+   (subscript . vx--html-not-implemented)
+   (superscript . vx--html-not-implemented)
+   (table . vx--html-not-implemented)
+   (table-cell . vx--html-not-implemented)
+   (table-row . vx--html-not-implemented)
+   (target . vx--html-not-implemented)
+   (template . vx--html-template)
+   (timestamp . vx--html-not-implemented)
    (underline . vx--html-underline)
-   (verbatim . vx--html-verbatim))
+   (verbatim . vx--html-verbatim)
+   (verse-block . vx--html-not-implemented))
  :options-alist
  '((:title "TITLE" nil nil t)
+   (:subtitle "SUBTITLE" nil nil parse)
    (:description "DESCRIPTION" nil nil newline)
    (:author "AUTHOR" nil user-full-name)
    (:creator "CREATOR" nil org-export-creator-string)
-   (:html-doctype "HTML_DOCTYPE" nil org-html-doctype)
-   (:html-head-include-default-style nil nil nil)
    (:site-url nil nil "https://venikx.com" t)
    (:socials-twitter "SOCIALS_TWITTER" nil "_venikx" t)
+   (:keywords "KEYWORDS" nil nil space)
+   (:html-container "HTML_CONTAINER" nil org-html-container-element)
+   (:html-postamble nil "html-postamble" org-html-postamble)
+   (:html-preamble nil "html-preamble" org-html-preamble)
+   (:html-head "HTML_HEAD" nil org-html-head newline)
+   (:html-head-extra "HTML_HEAD_EXTRA" nil org-html-head-extra newline)
+
+   ;; possibly getting rid of these
+   (:html-doctype "HTML_DOCTYPE" nil org-html-doctype)
+   (:html-link-use-abs-url nil "html-link-use-abs-url" org-html-link-use-abs-url)
+   (:html-link-home "HTML_LINK_HOME" nil org-html-link-home)
+   (:html-link-up "HTML_LINK_UP" nil org-html-link-up)
+   (:html-format-headline-function nil nil org-html-format-headline-function)
+   (:html-toplevel-hlevel nil nil org-html-toplevel-hlevel)
+   (:html-inline-image-rules nil nil org-html-inline-image-rules)
+   (:html-inline-images nil nil org-html-inline-images)
    ))
 #+end_src
 
