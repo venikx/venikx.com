@@ -28,6 +28,7 @@
 (require 'esxml)
 (require 'htmlize)
 (require 'webfeeder)
+(require 'ox-html)
 (require 'ox-publish)
 #+end_src
 
@@ -57,6 +58,7 @@ The built-in org-mode publishing system (aka how you build your project).
 
 #+begin_src emacs-lisp +n :results silent
 (require 'ox-publish)
+(require 'ox-html)
 #+end_src
 
 * Variables
@@ -299,17 +301,6 @@ It's possibly only needed on the posts page.
 
 (defun vx--html-content (_whatever contents _info) contents)
 
-(defun vx--html-clock (clock contents info)
-  (format "<p>
-<span class=\"timestamp-wrapper\">
-<span class=\"timestamp-kwd\">%s</span> <span class=\"timestamp\">%s</span>%s
-</span>
-</p>"
-          org-clock-string
-          (org-timestamp-translate (org-element-property :value clock))
-          (let ((time (org-element-property :duration clock)))
-            (and time (format " <span class=\"timestamp\">(%s)</span>" time)))))
-
 (defun vx--html-not-implemented (whatever contents info)
   (message "NOT IMPLEMENTED")
   (format "<div style=\"background-color: red;\">
@@ -323,6 +314,74 @@ It's possibly only needed on the posts page.
           (org-element-property :value whatever)))
 
 (defun vx--html-section (section contents info) contents)
+
+(defun vx--html--attr (element &optional property)
+  (let ((attributes (org-export-read-attribute :attr_html element property)))
+    (if attributes (concat " " (org-html--make-attribute-string attributes)) "")))
+
+(defun vx--html-plain-list (plain-list contents info)
+  (when contents
+    (let ((type (cl-case (org-element-property :type plain-list)
+                  (ordered "ol")
+                  (unordered "ul")
+                  (descriptive "dl"))))
+      (format "<%s%s>%s</%s>" type (vx--html--attr plain-list) contents type))))
+
+;; TODO Use figcaption when adding labels
+(defun vx--html-src-block (src-block contents info)
+  (let ((code (org-html-format-code src-block info))
+        (language (org-element-property :language src-block)))
+    (when code
+      (format "<pre><code class=\"language-%s\"%s>%s</code></pre>"
+              language (vx--html--attr src-block) code))))
+
+(defun vx--html-special-block (special-block contents info)
+  "Transcode SPECIAL-BLOCK from Org to HTML.
+CONTENTS is the text within the #+BEGIN_ and #+END_ markers.
+INFO is a plist holding contextual information."
+  (when contents
+    (let ((block-type (downcase (org-element-property :type special-block))))
+      (format "<%s%s>%s</%s>" block-type (vx--html--attr special-block) contents block-type))))
+
+(defun my/format-path-for-anchor-tag (path)
+  (concat "/"
+          (downcase
+           (file-name-sans-extension
+            path)) ".html"))
+
+(defun vx--html-link (link contents info)
+  (if (string= 'fuzzy (org-element-property :type link))
+      (let ((path (gethash (s-replace "id:" "" (org-element-property :path link)) my/org-id-locations)))
+        (print path)
+        (if path
+            (org-element-put-property link :path
+                                      (my/format-path-for-anchor-tag
+                                       (car (last (s-split "/" path))))))))
+  (when (and (string= 'file (org-element-property :type link))
+            (string= "org" (file-name-extension (org-element-property :path link))))
+    (org-element-put-property link :path
+                              (my/format-path-for-anchor-tag
+                                        (org-element-property :path link))))
+
+  (if (and (string= 'file (org-element-property :type link))
+          (file-name-extension (org-element-property :path link))
+          (string-match "png\\|jpg\\|svg"
+                        (file-name-extension
+                          (org-element-property :path link)))
+          (equal contents nil))
+      (format "<img src=/%s >" (org-element-property :path link))
+    (if (and (equal contents nil)
+            (or (not (file-name-extension (org-element-property :path link)))
+                (and (file-name-extension (org-element-property :path link))
+                      (not (string-match "png\\|jpg\\|svg"
+                                        (file-name-extension
+                                          (org-element-property :path link)))))))
+        (format "<a href=\"%s\">%s</a>"
+                (org-element-property :raw-link link)
+                (org-element-property :raw-link link))
+      (format "<a href=\"%s\">%s</a>"
+              (org-element-property :path link)
+              contents))))
 #+end_src
 
 ** The custom backend
@@ -347,22 +406,22 @@ It's possibly only needed on the posts page.
    (inlinetask . vx--html-not-implemented)
    (inner-template . vx--html-inner-template)
    (italic . vx--html-italic)
-   (item . vx--html-not-implemented)
-   (keyword . vx--html-not-implemented)
+   (item . org-html-item)
+   (keyword . org-html-keyword)
    (latex-environment . vx--html-not-implemented)
    (latex-fragment . vx--html-not-implemented)
    (line-break . vx--html-not-implemented)
-   (link . org-html-link)
-   (node-property . org-html-node-property)
+   (link . vx--html-link)
+   (node-property . vx-html-not-implemented)
    (paragraph . org-html-paragraph)
-   (plain-list . org-html-plain-list)
+   (plain-list . vx--html-plain-list)
    (plain-text . org-html-plain-text)
-   (planning . org-html-line-break)
+   (planning . vx-html-not-implemented)
    (property-drawer . vx--html-not-implemented)
    (radio-target . vx--html-not-implemented)
    (section . vx--html-section)
-   (special-block . vx--html-not-implemented)
-   (src-block . vx--html-not-implemented)
+   (special-block . vx--html-special-block)
+   (src-block . vx--html-src-block)
    (statistics-cookie . vx--html-not-implemented)
    (quote-block . vx--html-quote-block)
    (strike-through . vx--html-strike-through)

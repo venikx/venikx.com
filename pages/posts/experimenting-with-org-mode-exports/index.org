@@ -3,11 +3,70 @@
 #+description: The blog post is living documentation regarding the exporting features I'm testing out with org-mode.
 #+keywords: emacs org-mode html5
 #+category: emacs
-
+#+image: [[file:./test.jpg]]
+#+image-alt: A testing image
 #+macro: created {{{date(%e %B %Y)}}}
 #+macro: modified {{{modification-time(%e %B %Y)}}}
-#+options: toc:nil html5-fancy:t
+#+options: html5-fancy:t
 #+language: en
+
+* Features
+** Headings
+*** Another Heading
+**** Anothers Heading
+***** Anothers Heading
+****** Anothers Heading
+******* Anothers Heading
+******** Anothers Heading
+********* Anothers Heading
+********** Anothers Heading
+Hello
+** Paragraphs
+Hello, I'm a paragraph.
+** Emphasis
+Paragraph with *bold*, /italic/, _underline_, +strikethrough+, =verbatim= texts.
+** Blockquotes
+*** Without Caption
+#+BEGIN_QUOTE
+Some quote where the attributation happens in the text itself. Or even ~code~.
+#+END_QUOTE
+
+*** With Caption
+#+CAPTION: Albert Einstein
+#+BEGIN_QUOTE
+Everything should be made as simple as possible,
+but /not/ any simpler.
+#+END_QUOTE
+** Lists
+*** Ordered Lists
+1. First item
+2. Second item
+3. Third item
+*** Unordered Lists
+- Do dishes
+- Some other things
+** Code
+*** Inline Code
+Some inline ~<code class="nice innit?" />~ text.
+
+*** Code Block
+#+name: hellow
+#+begin_src js
+function Hellow(name) {
+  const t = "yoo";
+  t.toString();
+}
+#+end_src
+
+#+begin_src js :results output :noweb yes :exports both
+<<hellow>>
+Hellow("Kevin")
+#+end_src
+
+#+RESULTS:
+: Hello Kevin
+
+** TODO Testing
 
 * Embedding different kind of HTML5 snippets
 ** HTML5 itself
@@ -16,11 +75,11 @@
 #+END_aside
 
 ** HTML5 Elements
-#+begin_src org
+#+begin_example
 #+BEGIN_EXPORT html
   <p>All lines between these markers are exported <strong>literally.</strong></p>
 #+END_EXPORT
-#+end_src
+#+end_example
 #+BEGIN_EXPORT html
   <p>All lines between these markers are exported <strong>literally.</strong></p>
 #+END_EXPORT
@@ -98,7 +157,7 @@ post process the result. This block adds a header to the table.
 
 ** Javascript
 #+name: hello-from-js
-#+begin_src emacs-lisp
+#+begin_src js
 function Hello(name) {
     console.log("Hello " + name)
 }
