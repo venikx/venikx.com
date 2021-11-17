@@ -101,20 +101,11 @@ it through babel.
 #+end_src
 
 ** Others
-
 #+begin_src emacs-lisp +n :results silent
 (setq make-backup-files nil)
 #+end_src
 
 * Publishing
-** Things to remember
-*** TODO Add RSS feed file + link in header
-It's possibly only needed on the posts page.
-*** TODO Add icon to head
-*** TODO Handle og:type and twitter equivalent for articles and other pages
-*** TODO Use ~venikx.com-html-export-block~ to embed iframe for react, vue, etc snippets and webpages
-*** TODO Start the heading elements from h2 for articles
-*** TODO Only add toc when there's a lot of content
 ** HTML Template
 #+begin_src emacs-lisp +n :results silent
 (defun venikx.com-full-url (info)
