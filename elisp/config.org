@@ -1,5 +1,6 @@
-#+TITLE: test.org
+#+TITLE: Publishing via Org Mode
 
+* Overview
 * Dependencies
 ** Setting up Repositories
 - Add ~org~, ~melpa~ and ~elpa~ archives.
@@ -9,7 +10,7 @@
 #+begin_src emacs-lisp +n :results silent
 (require 'package)
 
-(setq package-user-dir (expand-file-name ".packages" venikx.com--root))
+(setq package-user-dir (expand-file-name ".packages" venikx.com-root))
 
 (package-initialize)
 (unless package-archive-contents
@@ -24,12 +25,6 @@
 (dolist (pkg '(esxml htmlize webfeeder))
   (unless (package-installed-p pkg)
     (package-install pkg)))
-
-(require 'esxml)
-(require 'htmlize)
-(require 'webfeeder)
-(require 'ox-html)
-(require 'ox-publish)
 #+end_src
 
 *** esxml
@@ -46,13 +41,6 @@ Generate a css theme for the code-blocks based on your own emacs theme.
 (require 'htmlize)
 #+end_src
 
-*** webfeeder
-The webfeeder is used to generate RSS and Atom feeds.
-
-#+begin_src emacs-lisp +n :results silent
-(require 'webfeeder)
-#+end_src
-
 *** ox-publish
 The built-in org-mode publishing system (aka how you build your project).
 
@@ -62,30 +50,26 @@ The built-in org-mode publishing system (aka how you build your project).
 #+end_src
 
 * Variables
-** Common Variables
-The ~venikx.com--root~ variable has been declared inside the ~venikx.com.el~
+** Common
+The ~venikx.com-root~ variable has been declared inside the ~venikx.com.el~
 function, because the root was needed to load the current org-mode file to parse
 it through babel.
 
 #+begin_src emacs-lisp +n :results silent
-(defvar venikx.com--pages (expand-file-name "pages" venikx.com--root)
+(defvar venikx.com-pages (expand-file-name "pages" venikx.com-root)
   "Directory where the pages of the website are found.")
 
-(defvar venikx.com--site-attachments
+(defvar venikx.com-site-attachments
   (regexp-opt '("jpg" "jpeg" "gif" "png" "svg"
                 "ico" "cur" "css" "js"
                 "eot" "woff" "woff2" "ttf"
                 "html" "pdf")))
 #+end_src
 
-** Site Variables
-
+** Site Defaults
 #+begin_src emacs-lisp +n :results silent
-(defvar venikx/url "https://venikx.com"
-  "The URL where this site will be published.")
-
-(defvar venikx.com--name "Kevin Rangel"
-  "My name.")
+(defvar venikx.com-default-site-image "assets/me.jpg"
+  "The image used when no meta-image is given.")
 
 (setq
  user-full-name "Kevin Rangel"
@@ -94,21 +78,17 @@ it through babel.
 
 *** Socials
 #+begin_src emacs-lisp +n :results silent
-(defvar venikx.com--personal-email "code@venikx.com"
+(defvar venikx.com-personal-email "code@venikx.com"
   "My contact email for coding related topics.")
 
-(defvar venikx.com--business-email "hello@babo.digital"
+(defvar venikx.com-business-email "hello@babo.digital"
   "My contact email for business inquiries.")
-
-(defvar venikx/twitter "@_venikx"
-  "My Twitter handle for reference in the twitter meta tags.")
 
 #+end_src
 
 ** Org Variables
 #+begin_src emacs-lisp +n :results silent
-(setq org-publish-use-timestamps-flag t
-      org-publish-timestamp-directory "./.org-cache/"
+(setq org-publish-use-timestamps-flag nil
       org-export-with-section-numbers nil
       org-confirm-babel-evaluate nil
       org-export-use-babel t
@@ -117,21 +97,7 @@ it through babel.
       org-export-with-tags 'not-in-toc
       org-export-headline-levels 7
       org-export-with-toc t
-      org-id-locations-file "./.org-id-locations"
       org-id-track-globally t)
-#+end_src
-
-** HTML Exporter
-#+begin_src emacs-lisp +n :results silent
-(setq org-html-metadata-timestamp-format "%Y-%m-%d"
-      org-html-checkbox-type 'venikx-html
-      org-html-html5-fancy nil
-      org-html-htmlize-output-type 'css
-      org-html-self-link-headlines t
-      org-html-validation-link nil
-      org-html-inline-images t
-      ;org-html-doctype "html5"
-      )
 #+end_src
 
 ** Others
@@ -144,16 +110,78 @@ it through babel.
 ** Things to remember
 *** TODO Add RSS feed file + link in header
 It's possibly only needed on the posts page.
-*** TODO Add icons to header
-*** TODO Use ~vx--html-export-block~ to embed iframe for react, vue, etc snippets and webpages
+*** TODO Add icon to head
+*** TODO Handle og:type and twitter equivalent for articles and other pages
+*** TODO Use ~venikx.com-html-export-block~ to embed iframe for react, vue, etc snippets and webpages
 *** TODO Start the heading elements from h2 for articles
 *** TODO Only add toc when there's a lot of content
 ** HTML Template
 #+begin_src emacs-lisp +n :results silent
-(defun  vx--html-template (contents info)
-  (concat
-   "<!DOCTYPE html>"
+(defun venikx.com-full-url (info)
+  (concat (plist-get info :site-url) "/"
+          (file-name-sans-extension (file-relative-name
+                                     (plist-get info :this-file)
+                                     (plist-get info :base-directory)))
+          ".html"))
 
+(defun venikx.com-org-element-link-parser (link)
+  (with-temp-buffer
+    (insert link)
+    (delay-mode-hooks (org-mode))
+    (goto-char (point-min))
+    (org-element-link-parser)))
+
+(defun venikx.com-head-image (info)
+  (concat (plist-get info :site-url) "/"
+          (if (not (venikx.com-org-element-link-parser (plist-get info :image)))
+              (plist-get info :image)
+            (concat
+             (file-relative-name
+              (file-name-directory (plist-get info :this-file))
+              (plist-get info :base-directory))
+             (plist-get
+              (car (cdr
+                    (venikx.com-org-element-link-parser (plist-get info :image)))) :path)))))
+
+(defun venikx.com-site-header (info)
+  (sxml-to-xml
+   `(header
+     (div (@ (class "header-left"))
+          (a (@ (href "/")) "Kevin Rangel")
+          (nav (ul
+           (li (a (@ (href "/about/index.html")) "About"))
+           ;(li (a (@ (href "/projects/index.html")) "Projects"))
+           (li (a (@ (href "/posts/index.html")) "Posts")))))
+     (div (@ (class "header-right"))
+          ;(button (@ (aria-label "Toggle Mode")))
+          ;(a (@ (href "/rss.xml")) "RSS")
+          ))))
+
+(defun venikx.com-site-footer (info)
+  (sxml-to-xml
+   `(footer
+     (div (@ (class "footer-left"))
+          (div (a (@ (href "/")) "Kevin Rangel"))
+          (span "&copy; 2021 Kevin 'Rangel' De Baerdemaeaker, licensed under "
+                (a (@ (href "https://creativecommons.org/licenses/by-nc/4.0/"     )
+                      (rel "noreferrer noopener")
+                      (target "_blank"))
+                   (strong "Creative Commons BY-NC 4.0"))
+                "."))
+     (div (@ (class "footer-right"))
+          (p "Links")
+          (ul
+           (li (a (@ (href ,(concat "https://twitter.com/"
+                                    (plist-get info :socials-twitter)))) "Twitter"))
+           (li (a (@ (href ,(concat "https://github.com/"
+                                    (plist-get info :socials-github)))) "GitHub"))
+           (li (a (@ (href ,(concat "mailto:" (plist-get info :email)))) "Contact"))
+           ;(li (a (@ (href "/rss.xml")) "R"))
+           )))))
+
+(defun venikx.com-html-template (contents info)
+  (concat
+   (org-html-doctype info)
    (sxml-to-xml
     `(html (@ (lang "en"))
            (head
@@ -161,24 +189,24 @@ It's possibly only needed on the posts page.
             (meta (@ (name "viewport")
                      (content "width=device-width, initial-scale=1")))
 
-            (title ,(plist-get info :title))
+            (title ,(substring-no-properties (car (plist-get info :title))))
             (meta (@ (name "description")
                      (content ,(plist-get info :description))))
             (link (@ (rel "canonical")
-                     (href ,(plist-get info :site-url))))
+                     (href ,(venikx.com-full-url info))))
 
             (meta (@ (name "og:title")
-                     (content ,(plist-get info :title))))
+                     (content ,(substring-no-properties (car (plist-get info :title))))))
             (meta (@ (name "og:description")
                      (content ,(plist-get info :description))))
-;;            (meta (@ (name "og:type")
-;;                     (content ,(plist-get info :title))))
+            ;;            (meta (@ (name "og:type")
+            ;;                     (content ,(plist-get info :title))))
             (meta (@ (name "og:image")
-                     (content ,(plist-get info :image))))
+                     (content ,(venikx.com-head-image info))))
             (meta (@ (name "og:image:alt")
                      (content ,(plist-get info :image-alt))))
             (meta (@ (name "og:url")
-                     (href ,(plist-get info :site-url))))
+                     (href ,(venikx.com-full-url info))))
 
             (meta (@ (name "twitter:card")
                      (content "summary_large_image")))
@@ -187,55 +215,36 @@ It's possibly only needed on the posts page.
             (meta (@ (name "twitter:creator")
                      (content ,(concat "@" (plist-get info :socials-twitter)))))
             (meta (@ (name "twitter:title")
-                     (content ,(plist-get info :title))))
+                     (content ,(substring-no-properties (car (plist-get info :title))))))
             (meta (@ (name "twitter:description")
                      (content ,(plist-get info :description))))
             (meta (@ (name "twitter:image")
-                     (content ,(plist-get info :image))))
+                     (content ,(venikx.com-head-image info))))
             (meta (@ (name "twitter:image:alt")
                      (content ,(plist-get info :image-alt))))
 
             (meta (@ (name "author")
-                     (content ,(plist-get info :author))))
+                     (content ,(substring-no-properties (car (plist-get info :author))))))
             (meta (@ (name "generator")
-                     (content ,(plist-get info :creator)))))
-           (body (div ,contents))))))
+                     (content ,(format "Emacs %s (Org mode %s)"
+                                       emacs-version
+                                       (if (fboundp 'org-version) (org-version) "unknown version"))))))
+           (body (div ,(venikx.com-site-header info)
+                      (main (h1 ,(substring-no-properties (car (plist-get info :title))))
+                            ,contents)
+                      ,(venikx.com-site-footer info)))))))
 #+end_src
 
 ** Custom HTML functions
 #+begin_src emacs-lisp +n :results silent
-(defun vx--html-bold (_bold contents _info)
-  (when contents (format "<strong>%s</strong>" contents)))
-
-(defun vx--html-italic (_italic contents _info)
-  (when contents (format "<em>%s</em>" contents)))
-
-(defun vx--html-underline (_underline contents _info)
-  (when contents (format "<span class=\"underline\">%s</span>" contents)))
-
-(defun vx--html-strike-through (_strike-through contents _info)
-  (when contents (format "<del>%s</del>" contents)))
-
-(defun vx--html-code (code contents _info)
-  (setq contents (org-html-encode-plain-text (org-element-property :value code)))
-  (when contents (format "<code>%s</code>" contents)))
-
-(defun vx--html-verbatim (verbatim contents _info)
-  (setq contents (org-html-encode-plain-text (org-element-property :value verbatim)))
-  (when contents (format "<code>%s</code>" contents)))
-
-(defun vx--html-quote-block (quote-block contents _info)
+(defun venikx.com-html-quote-block (quote-block contents _info)
   (let ((caption (car (car (org-element-property :caption quote-block))))
         (caption-url (car (car (org-element-property :caption-url quote-block)))))
 
     (if caption (sxml-to-xml `(figure (blockquote ,contents) (figcaption ,(car caption))))
       (sxml-to-xml `(blockquote ,contents)))))
 
-(defun vx--html-example-block (example-block _contents info)
-  (let ((code (org-html-format-code example-block info)))
-    (when code (format "<pre class=\"example\">%s</pre>" code))))
-
-(defun vx--html-export-block (export-block contents _info)
+(defun venikx.com-html-export-block (export-block contents _info)
   (let ((contents (org-element-property :value export-block))
         (language (org-element-property :type export-block)))
     (when contents
@@ -246,27 +255,17 @@ It's possibly only needed on the posts page.
             (t
              (org-remove-indentation contents))))))
 
-(defun vx--html-export-snippet (export-snippet contents _info)
-  (let ((contents (org-element-property :value export-snippet)))
-    (when contents contents)))
-
-(defun vx--html-fixed-width (fixed-width contents info)
-  (format "<pre class=\"example\">\n%s</pre>"
-          (org-html-do-format-code
-           (org-remove-indentation
-            (org-element-property :value fixed-width)))))
-
 (require 'subr-x)
-(defun vx--html-anchor-from-headline (headline-text)
+(defun venikx.com-html-anchor-from-headline (headline-text)
   (thread-last headline-text
     (downcase)
     (replace-regexp-in-string " " "-")
     (replace-regexp-in-string "</?code>" "")
     (replace-regexp-in-string "[^[:alnum:]_-]" "")))
-(defun vx--html-headline (headline contents info)
+(defun venikx.com-html-headline (headline contents info)
   (let* ((text (org-export-data (org-element-property :title headline) info))
          (level (org-export-get-relative-level headline info))
-         (anchor (vx--html-anchor-from-headline text))
+         (anchor (venikx.com-html-anchor-from-headline text))
          (attributes (org-element-property :ATTR_HTML headline))
          (container (org-element-property :HTML_CONTAINER headline))
          (container-class (and container (org-element-property :HTML_CONTAINER_CLASS headline))))
@@ -287,9 +286,9 @@ It's possibly only needed on the posts page.
      (when (and container (not (string= "" container)))
        (format "</%s>" (cl-subseq container 0 (cl-search " " container)))))))
 
-(defun vx--html-horizontal-rule (_horizontal-rule _contents _info) "<hr /")
+(defun venikx.com-html-horizontal-rule (_horizontal-rule _contents _info) "<hr /")
 
-(defun vx--html-inner-template (contents info)
+(defun venikx.com-html-inner-template (contents info)
   (concat
    ;; Table of contents.
    (let ((depth (plist-get info :with-toc)))
@@ -299,9 +298,9 @@ It's possibly only needed on the posts page.
    ;; Footnotes section.
    (org-html-footnote-section info)))
 
-(defun vx--html-content (_whatever contents _info) contents)
+(defun venikx.com-html-content (_whatever contents _info) contents)
 
-(defun vx--html-not-implemented (whatever contents info)
+(defun venikx.com-html-not-implemented (whatever contents info)
   (message "NOT IMPLEMENTED")
   (format "<div style=\"background-color: red;\">
              <p>NOT IMPLEMENTED!!</p>
@@ -313,35 +312,35 @@ It's possibly only needed on the posts page.
           (org-element-property :key whatever)
           (org-element-property :value whatever)))
 
-(defun vx--html-section (section contents info) contents)
+(defun venikx.com-html-section (section contents info) contents)
 
-(defun vx--html--attr (element &optional property)
+(defun venikx.com-html--attr (element &optional property)
   (let ((attributes (org-export-read-attribute :attr_html element property)))
     (if attributes (concat " " (org-html--make-attribute-string attributes)) "")))
 
-(defun vx--html-plain-list (plain-list contents info)
+(defun venikx.com-html-plain-list (plain-list contents info)
   (when contents
     (let ((type (cl-case (org-element-property :type plain-list)
                   (ordered "ol")
                   (unordered "ul")
                   (descriptive "dl"))))
-      (format "<%s%s>%s</%s>" type (vx--html--attr plain-list) contents type))))
+      (format "<%s%s>%s</%s>" type (venikx.com-html--attr plain-list) contents type))))
 
 ;; TODO Use figcaption when adding labels
-(defun vx--html-src-block (src-block contents info)
+(defun venikx.com-html-src-block (src-block contents info)
   (let ((code (org-html-format-code src-block info))
         (language (org-element-property :language src-block)))
     (when code
       (format "<pre><code class=\"language-%s\"%s>%s</code></pre>"
-              language (vx--html--attr src-block) code))))
+              language (venikx.com-html--attr src-block) code))))
 
-(defun vx--html-special-block (special-block contents info)
+(defun venikx.com-html-special-block (special-block contents info)
   "Transcode SPECIAL-BLOCK from Org to HTML.
 CONTENTS is the text within the #+BEGIN_ and #+END_ markers.
 INFO is a plist holding contextual information."
   (when contents
     (let ((block-type (downcase (org-element-property :type special-block))))
-      (format "<%s%s>%s</%s>" block-type (vx--html--attr special-block) contents block-type))))
+      (format "<%s%s>%s</%s>" block-type (venikx.com-html--attr special-block) contents block-type))))
 
 (defun my/format-path-for-anchor-tag (path)
   (concat "/"
@@ -349,7 +348,7 @@ INFO is a plist holding contextual information."
            (file-name-sans-extension
             path)) ".html"))
 
-(defun vx--html-link (link contents info)
+(defun venikx.com-html-link (link contents info)
   (if (string= 'fuzzy (org-element-property :type link))
       (let ((path (gethash (s-replace "id:" "" (org-element-property :path link)) my/org-id-locations)))
         (print path)
@@ -386,84 +385,56 @@ INFO is a plist holding contextual information."
 
 ** The custom backend
 #+begin_src emacs-lisp +n :results silent
-(org-export-define-backend 'venikx-html
- '((bold . vx--html-bold)
-   (center-block . vx--html-not-implemented)
-   (clock . vx--html-not-implemented)
-   (code . vx--html-code)
-   (drawer . vx--html-not-implemented)
-   (dynamic-block . vx--html-not-implemented)
-   (entity . vx--html-not-implemented)
-   (example-block . vx--html-example-block)
-   (export-block . vx--html-export-block)
-   (export-snippet . vx--html-export-snippet)
-   (fixed-width . vx--html-export-snippet) ;; RESULTS
-   (footnote-definition . vx--html-not-implemented)
-   (footnote-reference . vx--html-not-implemented)
-   (headline . vx--html-headline)
-   (horizontal-rule . vx--html-horizontal-rule)
-   (inline-src-block . vx--html-not-implemented)
-   (inlinetask . vx--html-not-implemented)
-   (inner-template . vx--html-inner-template)
-   (italic . vx--html-italic)
-   (item . org-html-item)
-   (keyword . org-html-keyword)
-   (latex-environment . vx--html-not-implemented)
-   (latex-fragment . vx--html-not-implemented)
-   (line-break . vx--html-not-implemented)
-   (link . vx--html-link)
-   (node-property . vx-html-not-implemented)
-   (paragraph . org-html-paragraph)
-   (plain-list . vx--html-plain-list)
-   (plain-text . org-html-plain-text)
-   (planning . vx-html-not-implemented)
-   (property-drawer . vx--html-not-implemented)
-   (radio-target . vx--html-not-implemented)
-   (section . vx--html-section)
-   (special-block . vx--html-special-block)
-   (src-block . vx--html-src-block)
-   (statistics-cookie . vx--html-not-implemented)
-   (quote-block . vx--html-quote-block)
-   (strike-through . vx--html-strike-through)
-   (subscript . vx--html-not-implemented)
-   (superscript . vx--html-not-implemented)
-   (table . vx--html-not-implemented)
-   (table-cell . vx--html-not-implemented)
-   (table-row . vx--html-not-implemented)
-   (target . vx--html-not-implemented)
-   (template . vx--html-template)
-   (timestamp . vx--html-not-implemented)
-   (underline . vx--html-underline)
-   (verbatim . vx--html-verbatim)
-   (verse-block . vx--html-not-implemented))
- :options-alist
- '((:title "TITLE" nil nil t)
-   (:subtitle "SUBTITLE" nil nil parse)
-   (:description "DESCRIPTION" nil nil newline)
-   (:author "AUTHOR" nil user-full-name)
-   (:creator "CREATOR" nil org-export-creator-string)
-   (:site-url nil nil "https://venikx.com" t)
-   (:socials-twitter "SOCIALS_TWITTER" nil "_venikx" t)
-   (:keywords "KEYWORDS" nil nil space)
-   (:html-container "HTML_CONTAINER" nil org-html-container-element)
-   (:html-postamble nil "html-postamble" org-html-postamble)
-   (:html-preamble nil "html-preamble" org-html-preamble)
-   (:html-head "HTML_HEAD" nil org-html-head newline)
-   (:html-head-extra "HTML_HEAD_EXTRA" nil org-html-head-extra newline)
-
-   ;; possibly getting rid of these
-   (:html-doctype "HTML_DOCTYPE" nil org-html-doctype)
-   (:html-link-use-abs-url nil "html-link-use-abs-url" org-html-link-use-abs-url)
-   (:html-link-home "HTML_LINK_HOME" nil org-html-link-home)
-   (:html-link-up "HTML_LINK_UP" nil org-html-link-up)
-   (:html-format-headline-function nil nil org-html-format-headline-function)
-   (:html-toplevel-hlevel nil nil org-html-toplevel-hlevel)
-   (:html-inline-image-rules nil nil org-html-inline-image-rules)
-   (:html-inline-images nil nil org-html-inline-images)
-   ))
+(org-export-define-derived-backend
+    'venikx-html 'html
+  :translate-alist
+  '(
+    (headline . venikx.com-html-headline)
+    (link . venikx.com-html-link)
+    (quote-block . venikx.com-html-quote-block)
+    (template . venikx.com-html-template)
+    )
+  :options-alist
+  '(
+    (:site-url nil nil "https://venikx.com" t)
+    (:socials-twitter "SOCIALS_TWITTER" nil "_venikx" t)
+    (:image "IMAGE" nil venikx.com-default-site-image t)
+    (:image-alt "IMAGE_ALT" nil "Test" t)
+    (:business-email nil nil venikx.com-business-email)
+    ))
 #+end_src
 
-** The custom function to use said backend
+*** Modifying ox-html variables
+**** Use modern defaults in ox-html
+#+begin_src emacs-lisp +n :results silent
+(setq org-html-doctype "html5"
+      org-html-html5-fancy t
+      org-html-checkbox-type 'html
+      org-html-head-include-default-style t
+      org-html-head-include-scripts t
+      org-html-container-element "section")
+#+end_src
+**** Use semantic HTML for text markup
+#+begin_src emacs-lisp +n :results silent
+(setq org-html-text-markup-alist
+  '((bold . "<strong>%s</strong>")
+    (code . "<code>%s</code>")
+    (italic . "<em>%s</em>")
+    (strike-through . "<del>%s</del>")
+    (underline . "<span class=\"underline\">%s</span>")
+    (verbatim . "<code>%s</code>")))
+#+end_src
+
+**** TODO check what these do
+#+begin_src emacs-lisp +n :results silent
+(setq
+      org-html-htmlize-output-type 'css
+      org-html-self-link-headlines t
+      org-html-inline-images t
+      )
+#+end_src
+
+*** Function to load the custom backend
 #+begin_src emacs-lisp +n :results silent
 (defun org-venikx-html-publish-to-html (plist filename pub-dir)
   "Publish an org file to HTML.
@@ -479,26 +450,32 @@ file name."
 #+end_src
 
 ** The project alist
-
 #+begin_src emacs-lisp +n :results silent
 (setq org-publish-project-alist
       (list
        (list "content"
              :base-extension "org"
              :recursive t
-             :base-directory venikx.com--pages
+             :base-directory venikx.com-pages
              :publishing-function 'org-venikx-html-publish-to-html
-             :publishing-directory (expand-file-name "public" venikx.com--root))
-       (list "assets"
-             :base-directory venikx.com--root
-             :exclude (regexp-opt '("public/" "layouts/"))
-             :base-extension venikx.com--site-attachments
-             :publishing-directory (expand-file-name "public" venikx.com--root)
+             :publishing-directory (expand-file-name "public" venikx.com-root)
+             :with-title t
+             :with-toc nil)
+       (list "global-assets"
+             :base-directory (expand-file-name "assets" venikx.com-root)
+             :base-extension venikx.com-site-attachments
+             :publishing-directory (expand-file-name "public/assets" venikx.com-root)
              :publishing-function 'org-publish-attachment
              :recursive t)
-       (list "site" :components '("content" "assets"))))
+       (list "assets-from-pages"
+             :base-directory venikx.com-pages
+             :base-extension venikx.com-site-attachments
+             :publishing-directory (expand-file-name "public" venikx.com-root)
+             :publishing-function 'org-publish-attachment
+             :recursive t)
+       (list "site" :components '("content" "global-assets" "assets-from-pages"))))
 
-(defun venikx.com--publish ()
+(defun venikx.com-publish ()
   "Calling the script builds the venikx.com website."
   (interactive)
   (org-publish-all t))

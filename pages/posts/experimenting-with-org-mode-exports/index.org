@@ -3,11 +3,10 @@
 #+description: The blog post is living documentation regarding the exporting features I'm testing out with org-mode.
 #+keywords: emacs org-mode html5
 #+category: emacs
-#+image: [[file:./test.jpg]]
+#+image: [[file:helsinki.jpg]]
 #+image-alt: A testing image
 #+macro: created {{{date(%e %B %Y)}}}
 #+macro: modified {{{modification-time(%e %B %Y)}}}
-#+options: html5-fancy:t
 #+language: en
 
 * Features
@@ -90,7 +89,7 @@ Hellow("Kevin")
 #+end_export
 * Images
 #+CAPTION: A panoramic view of Helsinki
-[[file:../../assets/helsinki.jpg]]
+[[file:../../assets/me.jpg]]
 
 * Generate snippets during the HTML5 export
 The REPL based languages usually support session arguments which allows for

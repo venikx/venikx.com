@@ -1,0 +1,37 @@
+#+title: Blog | Kevin Rangel
+#+date: [2021-04-24 Sat 01:07]
+#+options: title:nil
+#+meta_type: website
+#+description: A personal blog of Kevin Rangel, venikx, a freelance web developer based in Helsinki, Finland.
+- [[file:experimenting-with-org-mode-exports/index.org][Experimenting with OrgMode to HTML5 exporter]] /24 April 2021/
+
+#+begin_src emacs-lisp :results raw :exports results
+(defun get-keywords-from-file (path)
+  (with-temp-buffer
+    (insert-file-contents path)
+    (delay-mode-hooks (org-mode))
+    (org-element-map (org-element-parse-buffer 'element) 'keyword
+      (lambda (keyword) (cons (org-element-property :key keyword)
+                              (org-element-property :value keyword))))))
+
+;(defun format-post-entry (path)
+;  (format "- [[file:%s][%s]] /%s/"
+;          path
+;          (cdr (assoc "TITLE" (get-keywords-from-file path)))
+;          (cdr (assoc "DATE" (get-keywords-from-file path)))
+;          ))
+
+;(cdr (assoc "TITLE" (get-keywords-from-file "./rss.org")))
+
+(with-temp-buffer
+  (dolist (path (directory-files-recursively "." ".org") result)
+    (insert (format "[[file:%s][%s]] /%s/"
+          path
+          (cdr (assoc "TITLE" (get-keywords-from-file path)))
+          (cdr (assoc "DATE" (get-keywords-from-file path)))
+          ))
+    ))
+#+end_src
+
+#+RESULTS:
+(- [[file:./experimenting-with-org-mode-exports/index.org][Experimenting with OrgMode to HTML5 exporter]] /[2021-04-24 Sat 01:07]/ - [[file:./index.org][Blog | Kevin Rangel]] /[2021-04-24 Sat 01:07]/ - [[file:./rss.org][Kevin Rangel Blog RSS Feed]] /[2021-04-24 Sat 01:07]/)

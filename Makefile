@@ -7,7 +7,7 @@ EMACS.funcall = emacs -Q --batch -l elisp/venikx.com.el --funcall
 all: clean publish
 
 publish:
-	$(EMACS.funcall) venikx.com--publish
+	$(EMACS.funcall) venikx.com-publish
 
 clean:
 	rm -rf $(publish_dir)
