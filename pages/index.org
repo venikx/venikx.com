@@ -1,6 +1,6 @@
 #+TITLE: Kevin Rangel
 #+date: [2021-04-24 Sat 01:07]
 
-- [[file:experimenting-with-org-mode-exports/index.org][Experimenting with OrgMode to HTML5 exporter]] /24 April 2021/
+- [[file:posts/experimenting-with-org-mode-exports/index.org][Experimenting with OrgMode to HTML5 exporter]] /24 April 2021/
 
 Full list at my [[file:posts/index.org][my Blog]].

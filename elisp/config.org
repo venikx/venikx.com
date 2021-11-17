@@ -343,10 +343,10 @@ INFO is a plist holding contextual information."
       (format "<%s%s>%s</%s>" block-type (venikx.com-html--attr special-block) contents block-type))))
 
 (defun my/format-path-for-anchor-tag (path)
-  (concat "/"
-          (downcase
+  (concat (downcase
            (file-name-sans-extension
-            path)) ".html"))
+            path))
+          ".html"))
 
 (defun venikx.com-html-link (link contents info)
   (if (string= 'fuzzy (org-element-property :type link))
