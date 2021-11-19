@@ -219,14 +219,6 @@ some links referring to socials (github, twitter, ...).
   (let ((attributes (org-export-read-attribute :attr_html element property)))
     (if attributes (concat " " (org-html--make-attribute-string attributes)) "")))
 
-(defun venikx.com-html-plain-list (plain-list contents info)
-  (when contents
-    (let ((type (cl-case (org-element-property :type plain-list)
-                  (ordered "ol")
-                  (unordered "ul")
-                  (descriptive "dl"))))
-      (format "<%s%s>%s</%s>" type (venikx.com-html--attr plain-list) contents type))))
-
 ;; TODO Use figcaption when adding labels
 (defun venikx.com-html-src-block (src-block contents info)
   (let ((code (org-html-format-code src-block info))
@@ -253,6 +245,7 @@ INFO is a plist holding contextual information."
     (export-block . venikx.com-html-export-block)
     (headline . venikx.com-html-headline)
     (link . venikx.com-html-link)
+    (plain-list . venikx.com-html-plain-list)
     (quote-block . venikx.com-html-quote-block)
     (section . venikx.com-html-section)
     (template . venikx.com-html-template)
@@ -386,6 +379,24 @@ holding contextual information."
      (when (and container (not (string= "" container)))
        (format "</%s>" (cl-subseq container 0 (cl-search " " container)))))))
 #+end_src
+**** Plain List
+In ~ox-html~ the plain lists receive an extra class, which is not needed.
+However additional attributes still need to be accounted for.
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-html-plain-list (plain-list contents _info)
+  "Transcode a PLAIN-LIST element from Org to HTML.
+CONTENTS is the contents of the list.  INFO is a plist holding
+contextual information."
+  (when contents
+    (let ((type (cl-case (org-element-property :type plain-list)
+                  (ordered "ol")
+                  (unordered "ul")
+                  (descriptive "dl")
+                  (other (error "Unknown HTML list type: %s" other)))))
+      (format "<%s%s>\n%s</%s>" type (venikx.com-html--attr plain-list) contents type))))
+#+end_src
+
 **** Section
 I don't care about adding extra divs across section, they are already separated
 via the headlines.

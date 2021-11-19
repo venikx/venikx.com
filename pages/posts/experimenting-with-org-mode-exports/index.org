@@ -47,6 +47,8 @@ but /not/ any simpler.
 *** Unordered Lists
 - Do dishes
 - Some other things
+#+ATTR_HTML: :style border:2px solid black;
+    - hello
 ** Code
 *** Inline Code
 Some inline ~<code class="nice innit?" />~ text.
