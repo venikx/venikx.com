@@ -25,6 +25,9 @@ Hello, I'm a paragraph.
 ** Emphasis
 Paragraph with *bold*, /italic/, _underline_, +strikethrough+, =verbatim= texts.
 ** Blockquotes
+:PROPERTIES:
+:CUSTOM_ID: 1234567mol
+:END:
 *** Without Caption
 #+BEGIN_QUOTE
 Some quote where the attributation happens in the text itself. Or even ~code~.
@@ -81,6 +84,10 @@ Hellow("Kevin")
 #+end_example
 #+BEGIN_EXPORT html
   <p>All lines between these markers are exported <strong>literally.</strong></p>
+#+END_EXPORT
+
+#+BEGIN_EXPORT javascript
+console.log("HELLO")
 #+END_EXPORT
 ** YouTube iframes
 #+CAPTION: An example of a working YouTube video embedded from org-mode

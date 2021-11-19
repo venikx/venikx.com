@@ -49,8 +49,7 @@ The built-in org-mode publishing system (aka how you build your project).
 (require 'ox-html)
 #+end_src
 
-* Variables
-** Common
+* Defining Variables
 The ~venikx.com-root~ variable has been declared inside the ~venikx.com.el~
 function, because the root was needed to load the current org-mode file to parse
 it through babel.
@@ -64,49 +63,72 @@ it through babel.
                 "ico" "cur" "css" "js"
                 "eot" "woff" "woff2" "ttf"
                 "html" "pdf")))
-#+end_src
 
-** Site Defaults
-#+begin_src emacs-lisp +n :results silent
 (defvar venikx.com-default-site-image "assets/me.jpg"
   "The image used when no meta-image is given.")
 
 (setq
  user-full-name "Kevin Rangel"
  user-mail-address "code@venikx.com")
-#+end_src
 
-*** Socials
-#+begin_src emacs-lisp +n :results silent
 (defvar venikx.com-personal-email "code@venikx.com"
   "My contact email for coding related topics.")
 
 (defvar venikx.com-business-email "hello@babo.digital"
   "My contact email for business inquiries.")
 
-#+end_src
-
-** Org Variables
-#+begin_src emacs-lisp +n :results silent
-(setq org-publish-use-timestamps-flag nil
-      org-export-with-section-numbers nil
-      org-confirm-babel-evaluate nil
-      org-export-use-babel t
-      org-export-with-smart-quotes t
-      org-export-with-sub-superscripts nil
-      org-export-with-tags 'not-in-toc
-      org-export-headline-levels 7
-      org-export-with-toc t
-      org-id-track-globally t)
-#+end_src
-
-** Others
-#+begin_src emacs-lisp +n :results silent
 (setq make-backup-files nil)
 #+end_src
 
-* Publishing
-** HTML Template
+* Templates
+** Header
+The header defines the bar at top of the page which includes the logo and the
+navigation. It's visible on every page.
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-site-header (info)
+  (sxml-to-xml
+   `(header
+     (div (@ (class "header-left"))
+          (a (@ (href "/")) "Kevin Rangel")
+          (nav (ul
+           (li (a (@ (href "/about/index.html")) "About"))
+           ;(li (a (@ (href "/projects/index.html")) "Projects"))
+           (li (a (@ (href "/posts/index.html")) "Posts")))))
+     (div (@ (class "header-right"))
+          ;(button (@ (aria-label "Toggle Mode")))
+          ;(a (@ (href "/rss.xml")) "RSS")
+          ))))
+#+end_src
+
+** Footer
+The footer defines the license, some links of the site, a potential logo, and
+some links referring to socials (github, twitter, ...).
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-site-footer (info)
+  (sxml-to-xml
+   `(footer
+     (div (@ (class "footer-left"))
+          (div (a (@ (href "/")) "Kevin Rangel"))
+          (span "&copy; 2021 Kevin 'Rangel' De Baerdemaeaker, licensed under "
+                (a (@ (href "https://creativecommons.org/licenses/by-nc/4.0/"     )
+                      (rel "noreferrer noopener")
+                      (target "_blank"))
+                   (strong "Creative Commons BY-NC 4.0"))
+                "."))
+     (div (@ (class "footer-right"))
+          (p "Links")
+          (ul
+           (li (a (@ (href ,(concat "https://twitter.com/"
+                                    (plist-get info :socials-twitter)))) "Twitter"))
+           (li (a (@ (href ,(concat "https://github.com/"
+                                    (plist-get info :socials-github)))) "GitHub"))
+           (li (a (@ (href ,(concat "mailto:" (plist-get info :email)))) "Contact"))
+           ;(li (a (@ (href "/rss.xml")) "R"))
+           )))))
+#+end_src
+** The big boy one
 #+begin_src emacs-lisp +n :results silent
 (defun venikx.com-full-url (info)
   (concat (plist-get info :site-url) "/"
@@ -134,41 +156,6 @@ it through babel.
               (car (cdr
                     (venikx.com-org-element-link-parser (plist-get info :image)))) :path)))))
 
-(defun venikx.com-site-header (info)
-  (sxml-to-xml
-   `(header
-     (div (@ (class "header-left"))
-          (a (@ (href "/")) "Kevin Rangel")
-          (nav (ul
-           (li (a (@ (href "/about/index.html")) "About"))
-           ;(li (a (@ (href "/projects/index.html")) "Projects"))
-           (li (a (@ (href "/posts/index.html")) "Posts")))))
-     (div (@ (class "header-right"))
-          ;(button (@ (aria-label "Toggle Mode")))
-          ;(a (@ (href "/rss.xml")) "RSS")
-          ))))
-
-(defun venikx.com-site-footer (info)
-  (sxml-to-xml
-   `(footer
-     (div (@ (class "footer-left"))
-          (div (a (@ (href "/")) "Kevin Rangel"))
-          (span "&copy; 2021 Kevin 'Rangel' De Baerdemaeaker, licensed under "
-                (a (@ (href "https://creativecommons.org/licenses/by-nc/4.0/"     )
-                      (rel "noreferrer noopener")
-                      (target "_blank"))
-                   (strong "Creative Commons BY-NC 4.0"))
-                "."))
-     (div (@ (class "footer-right"))
-          (p "Links")
-          (ul
-           (li (a (@ (href ,(concat "https://twitter.com/"
-                                    (plist-get info :socials-twitter)))) "Twitter"))
-           (li (a (@ (href ,(concat "https://github.com/"
-                                    (plist-get info :socials-github)))) "GitHub"))
-           (li (a (@ (href ,(concat "mailto:" (plist-get info :email)))) "Contact"))
-           ;(li (a (@ (href "/rss.xml")) "R"))
-           )))))
 
 (defun venikx.com-html-template (contents info)
   (concat
@@ -225,86 +212,9 @@ it through babel.
                             ,contents)
                       ,(venikx.com-site-footer info)))))))
 #+end_src
-
+* Publishing
 ** Custom HTML functions
 #+begin_src emacs-lisp +n :results silent
-(defun venikx.com-html-quote-block (quote-block contents _info)
-  (let ((caption (car (car (org-element-property :caption quote-block))))
-        (caption-url (car (car (org-element-property :caption-url quote-block)))))
-
-    (if caption (sxml-to-xml `(figure (blockquote ,contents) (figcaption ,(car caption))))
-      (sxml-to-xml `(blockquote ,contents)))))
-
-(defun venikx.com-html-export-block (export-block contents _info)
-  (let ((contents (org-element-property :value export-block))
-        (language (org-element-property :type export-block)))
-    (when contents
-      (cond ((string= "JAVASCRIPT" language)
-             (format "<script>%s</script>" contents))
-            ((string= "CSS" language)
-             (format "<style type=\"text/css\">%s</style>" contents))
-            (t
-             (org-remove-indentation contents))))))
-
-(require 'subr-x)
-(defun venikx.com-html-anchor-from-headline (headline-text)
-  (thread-last headline-text
-    (downcase)
-    (replace-regexp-in-string " " "-")
-    (replace-regexp-in-string "</?code>" "")
-    (replace-regexp-in-string "[^[:alnum:]_-]" "")))
-(defun venikx.com-html-headline (headline contents info)
-  (let* ((text (org-export-data (org-element-property :title headline) info))
-         (level (org-export-get-relative-level headline info))
-         (anchor (venikx.com-html-anchor-from-headline text))
-         (attributes (org-element-property :ATTR_HTML headline))
-         (container (org-element-property :HTML_CONTAINER headline))
-         (container-class (and container (org-element-property :HTML_CONTAINER_CLASS headline))))
-    (when attributes
-      (setq attributes
-            (format " %s" (org-html--make-attribute-string
-                           (org-export-read-attribute 'attr_html `(nil
-                                                                   (attr_html ,(split-string attributes))))))))
-    (concat
-     (when (and container (not (string= "" container)))
-       (format "<%s%s>" container (if container-class (format " class=\"%s\"" container-class) "")))
-     (if (not (org-export-low-level-p headline info))
-         (format "<h%d%s id=\"%s\"><a href=\"#%s\">%s</a></h%d>%s" level (or attributes "") anchor anchor text level (or contents ""))
-       (concat
-        (when (org-export-first-sibling-p headline info) "<ul>")
-        (format "<li>%s%s</li>" text (or contents ""))
-        (when (org-export-last-sibling-p headline info) "</ul>")))
-     (when (and container (not (string= "" container)))
-       (format "</%s>" (cl-subseq container 0 (cl-search " " container)))))))
-
-(defun venikx.com-html-horizontal-rule (_horizontal-rule _contents _info) "<hr /")
-
-(defun venikx.com-html-inner-template (contents info)
-  (concat
-   ;; Table of contents.
-   (let ((depth (plist-get info :with-toc)))
-     (when depth (org-html-toc depth info)))
-   ;; Document contents.
-   contents
-   ;; Footnotes section.
-   (org-html-footnote-section info)))
-
-(defun venikx.com-html-content (_whatever contents _info) contents)
-
-(defun venikx.com-html-not-implemented (whatever contents info)
-  (message "NOT IMPLEMENTED")
-  (format "<div style=\"background-color: red;\">
-             <p>NOT IMPLEMENTED!!</p>
-             <p>TYPE %S</p>
-             <p>KEY %S</p>
-             <p>VALUE %S</p>
-          </div>"
-          (org-element-type whatever)
-          (org-element-property :key whatever)
-          (org-element-property :value whatever)))
-
-(defun venikx.com-html-section (section contents info) contents)
-
 (defun venikx.com-html--attr (element &optional property)
   (let ((attributes (org-export-read-attribute :attr_html element property)))
     (if attributes (concat " " (org-html--make-attribute-string attributes)) "")))
@@ -332,46 +242,6 @@ INFO is a plist holding contextual information."
   (when contents
     (let ((block-type (downcase (org-element-property :type special-block))))
       (format "<%s%s>%s</%s>" block-type (venikx.com-html--attr special-block) contents block-type))))
-
-(defun my/format-path-for-anchor-tag (path)
-  (concat (downcase
-           (file-name-sans-extension
-            path))
-          ".html"))
-
-(defun venikx.com-html-link (link contents info)
-  (if (string= 'fuzzy (org-element-property :type link))
-      (let ((path (gethash (s-replace "id:" "" (org-element-property :path link)) my/org-id-locations)))
-        (print path)
-        (if path
-            (org-element-put-property link :path
-                                      (my/format-path-for-anchor-tag
-                                       (car (last (s-split "/" path))))))))
-  (when (and (string= 'file (org-element-property :type link))
-            (string= "org" (file-name-extension (org-element-property :path link))))
-    (org-element-put-property link :path
-                              (my/format-path-for-anchor-tag
-                                        (org-element-property :path link))))
-
-  (if (and (string= 'file (org-element-property :type link))
-          (file-name-extension (org-element-property :path link))
-          (string-match "png\\|jpg\\|svg"
-                        (file-name-extension
-                          (org-element-property :path link)))
-          (equal contents nil))
-      (format "<img src=/%s >" (org-element-property :path link))
-    (if (and (equal contents nil)
-            (or (not (file-name-extension (org-element-property :path link)))
-                (and (file-name-extension (org-element-property :path link))
-                      (not (string-match "png\\|jpg\\|svg"
-                                        (file-name-extension
-                                          (org-element-property :path link)))))))
-        (format "<a href=\"%s\">%s</a>"
-                (org-element-property :raw-link link)
-                (org-element-property :raw-link link))
-      (format "<a href=\"%s\">%s</a>"
-              (org-element-property :path link)
-              contents))))
 #+end_src
 
 ** The custom backend
@@ -380,9 +250,11 @@ INFO is a plist holding contextual information."
     'venikx-html 'html
   :translate-alist
   '(
+    (export-block . venikx.com-html-export-block)
     (headline . venikx.com-html-headline)
     (link . venikx.com-html-link)
     (quote-block . venikx.com-html-quote-block)
+    (section . venikx.com-html-section)
     (template . venikx.com-html-template)
     )
   :options-alist
@@ -395,37 +267,224 @@ INFO is a plist holding contextual information."
     ))
 #+end_src
 
-*** Modifying ox-html variables
-**** Use modern defaults in ox-html
+*** Modifying ox variables
+**** Enable babel when exporting
+#+begin_src emacs-lisp +n :results silent
+(setq org-confirm-babel-evaluate nil
+      org-export-use-babel t)
+#+end_src
+
+**** TODO Figure out what these do
+Not particurlary sure what these do yet, aside from they seem to work fine for others
+
+#+begin_src emacs-lisp +n :results silent
+(setq org-publish-use-timestamps-flag nil
+      org-export-with-section-numbers nil
+      org-export-with-smart-quotes t
+      org-export-with-sub-superscripts nil
+      org-export-with-tags 'not-in-toc
+      org-export-headline-levels 7
+      org-export-with-toc t
+      org-id-track-globally t)
+#+end_src
+
+*** Modifying ~ox-html~ variables
+**** Use modern defaults
+The ~ox-html~ package includes a lot of legacy and I prefer using all the new
+HTML5 capbilities, and don't want the package to include it's own scripts or
+styling.
+
 #+begin_src emacs-lisp +n :results silent
 (setq org-html-doctype "html5"
       org-html-html5-fancy t
       org-html-checkbox-type 'html
-      org-html-head-include-default-style t
-      org-html-head-include-scripts t
-      org-html-container-element "section")
+      org-html-use-infojs nil
+      org-html-head-include-default-style nil
+      org-html-head-include-scripts nil)
 #+end_src
+
 **** Use semantic HTML for text markup
+The main changes compared to the defaults are for *bold* and /italic/. I prefer
+to use the sematic meaning of these HTML elements, because in generally I want
+to convey the same semantic meaning as I write in org-mode.
+
 #+begin_src emacs-lisp +n :results silent
 (setq org-html-text-markup-alist
-  '((bold . "<strong>%s</strong>")
-    (code . "<code>%s</code>")
-    (italic . "<em>%s</em>")
-    (strike-through . "<del>%s</del>")
-    (underline . "<span class=\"underline\">%s</span>")
-    (verbatim . "<code>%s</code>")))
+      '((bold . "<strong>%s</strong>")
+        (code . "<code>%s</code>")
+        (italic . "<em>%s</em>")
+        (strike-through . "<del>%s</del>")
+        (underline . "<span class=\"underline\">%s</span>")
+        (verbatim . "<code>%s</code>")))
 #+end_src
 
 **** TODO check what these do
+No idea what these do lol. Stole them from someone else.
+
 #+begin_src emacs-lisp +n :results silent
-(setq
-      org-html-htmlize-output-type 'css
-      org-html-self-link-headlines t
-      org-html-inline-images t
-      )
+(setq org-html-htmlize-output-type 'css
+      org-html-inline-images t)
+#+end_src
+
+*** Modifying Transcoders
+**** Export Block
+In case I want to export CSS or Javascript inline randomly in the document. In
+other cases, just export it as usual.
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-html-export-block (export-block _contents _info)
+  "Transcode a EXPORT-BLOCK element from Org to HTML.
+CONTENTS is nil.  INFO is a plist holding contextual information."
+  (let ((block (org-element-property :value export-block))
+        (language (org-element-property :type export-block)))
+    (when block
+      (cond ((string= "JAVASCRIPT" language)
+             (format "<script async>%s</script>" block))
+            ((string= "CSS" language)
+             (format "<style type=\"text/css\">%s</style>" block))
+            (t
+             (org-remove-indentation block))))))
+#+end_src
+
+**** Headline
+The headline adds a self-referencing link to the headline. The link is generated
+by sanitzing the title.
+
+#+begin_src emacs-lisp +n :results silent
+(require 'subr-x)
+(defun venikx.com-html-anchor-from-headline (headline-text)
+  (thread-last headline-text
+    (downcase)
+    (replace-regexp-in-string " " "-")
+    (replace-regexp-in-string "</?code>" "")
+    (replace-regexp-in-string "[^[:alnum:]_-]" "")))
+
+(defun venikx.com-html-headline (headline contents info)
+  "Transcode a HEADLINE element from Org to HTML.
+CONTENTS holds the contents of the headline.  INFO is a plist
+holding contextual information."
+  (let* ((text (org-export-data (org-element-property :title headline) info))
+         (level (org-export-get-relative-level headline info))
+         (anchor (venikx.com-html-anchor-from-headline text))
+         (attributes (org-element-property :ATTR_HTML headline))
+         (container (org-element-property :HTML_CONTAINER headline))
+         (container-class (and container (org-element-property :HTML_CONTAINER_CLASS headline))))
+    (when attributes
+      (setq attributes
+            (format " %s" (org-html--make-attribute-string
+                           (org-export-read-attribute 'attr_html `(nil
+                                                                   (attr_html ,(split-string attributes))))))))
+    (concat
+     (when (and container (not (string= "" container)))
+       (format "<%s%s>" container (if container-class (format " class=\"%s\"" container-class) "")))
+     (if (not (org-export-low-level-p headline info))
+         (format "<h%d%s id=\"%s\"><a href=\"#%s\">%s</a></h%d>%s" level (or attributes "") anchor anchor text level (or contents ""))
+       (concat
+        (when (org-export-first-sibling-p headline info) "<ul>")
+        (format "<li>%s%s</li>" text (or contents ""))
+        (when (org-export-last-sibling-p headline info) "</ul>")))
+     (when (and container (not (string= "" container)))
+       (format "</%s>" (cl-subseq container 0 (cl-search " " container)))))))
+#+end_src
+**** Section
+I don't care about adding extra divs across section, they are already separated
+via the headlines.
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-html-section (_section contents _info)
+  "Transcode a SECTION element from Org to HTML.
+CONTENTS holds the contents of the section.  INFO is a plist
+holding contextual information."
+  contents)
+#+end_src
+
+**** Link
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-format-path-for-anchor-tag (path)
+  (concat (downcase
+           (file-name-sans-extension
+            path))
+          ".html"))
+
+(defun venikx.com-html-link (link contents info)
+  "Transcode a LINK object from Org to HTML.
+CONTENT is the description part of the link, or the empty string.
+INFO is a plist holding contextual information.  See
+`org-export-data'."
+  (if (string= 'fuzzy (org-element-property :type link))
+      (let ((path (gethash (s-replace "id:" "" (org-element-property :path link)) venikx.com-org-id-locations)))
+        (print path)
+        (if path
+            (org-element-put-property link :path
+                                      (venikx.com-format-path-for-anchor-tag
+                                       (car (last (s-split "/" path))))))))
+  (when (and (string= 'file (org-element-property :type link))
+             (string= "org" (file-name-extension (org-element-property :path link))))
+    (org-element-put-property link :path
+                              (venikx.com-format-path-for-anchor-tag
+                               (org-element-property :path link))))
+
+  (if (and (string= 'file (org-element-property :type link))
+           (file-name-extension (org-element-property :path link))
+           (string-match "png\\|jpg\\|svg"
+                         (file-name-extension
+                          (org-element-property :path link)))
+           (equal contents nil))
+      (format "<img src=/%s >" (org-element-property :path link))
+    (if (and (equal contents nil)
+             (or (not (file-name-extension (org-element-property :path link)))
+                 (and (file-name-extension (org-element-property :path link))
+                      (not (string-match "png\\|jpg\\|svg"
+                                         (file-name-extension
+                                          (org-element-property :path link)))))))
+        (format "<a href=\"%s\">%s</a>"
+                (org-element-property :raw-link link)
+                (org-element-property :raw-link link))
+      (format "<a href=\"%s\">%s</a>"
+              (org-element-property :path link)
+              contents))))
+#+end_src
+
+**** Quote Block
+The blockquote is wrapped in a ~<figure />~, when a caption is attached to the
+blockquote. If no caption is attached, it renders a simple blockquote.
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-html-quote-block (quote-block contents _info)
+  "Transcode a QUOTE-BLOCK element from Org to HTML.
+CONTENTS holds the contents of the block.  INFO is a plist
+holding contextual information."
+  (let ((caption (car (car (org-element-property :caption quote-block))))
+        (caption-url (car (car (org-element-property :caption-url quote-block)))))
+
+    (if caption (sxml-to-xml `(figure
+                               (blockquote ,contents)
+                               (figcaption ,(car caption))))
+      (sxml-to-xml `(blockquote ,contents)))))
+#+end_src
+
+**** Not Implemented
+The transcoder is only used in development to find what the effect is of
+completely disabling a transcoder.
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-html-not-implemented (whatever contents info)
+  (message "NOT IMPLEMENTED")
+  (format "<div style=\"background-color: red;\">
+             <p>NOT IMPLEMENTED!!</p>
+             <p>TYPE %S</p>
+             <p>KEY %S</p>
+             <p>VALUE %S</p>
+          </div>"
+          (org-element-type whatever)
+          (org-element-property :key whatever)
+          (org-element-property :value whatever)))
 #+end_src
 
 *** Function to load the custom backend
+The function is used in the project alist and defines which backend to use, in
+our case, our ox-html derived backend.
+
 #+begin_src emacs-lisp +n :results silent
 (defun org-venikx-html-publish-to-html (plist filename pub-dir)
   "Publish an org file to HTML.
@@ -441,6 +500,11 @@ file name."
 #+end_src
 
 ** The project alist
+The =assets= load the assets of the posts in the folder of the posts, which
+makes it possible to have duplicate names for pictures on the website as they
+are unique due to being in a separate path. The =global-assets= is only used for
+common assets amongst multiple pages.
+
 #+begin_src emacs-lisp +n :results silent
 (setq org-publish-project-alist
       (list
