@@ -1,0 +1,12 @@
+#+title: Kevin Rangel Blog RSS Feed
+#+description: Come read what Kevin Rangel writes about.
+#+date: [2021-04-24 Sat 01:07]
+
+* [[file:/home/venikx/code/venikx.com/posts/experimenting-with-org-mode-exports/index.org][Experimenting with OrgMode to HTML5 exporter]] :emacs:
+:PROPERTIES:
+:RSS_PERMALINK: posts/experimenting-with-org-mode-exports/index.html
+:RSS_TITLE: Experimenting with OrgMode to HTML5 exporter
+:PUBDATE:  2021-04-24
+:ID:       31b39916-107a-43fe-9283-e2861e868802
+:END:
+The blog post is living documentation regarding the exporting features I'm testing out with org-mode.

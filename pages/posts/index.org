@@ -1,0 +1,27 @@
+#+title: Blog | Kevin Rangel
+#+date: [2021-04-24 Sat 01:07]
+#+options: title:nil
+#+meta_type: website
+#+description: A personal blog of Kevin Rangel, venikx, a freelance web developer based in Helsinki, Finland.
+
+#+begin_src emacs-lisp :results raw :exports results
+(defun get-keywords-from-file (path)
+  (with-temp-buffer
+    (insert-file-contents path)
+    (delay-mode-hooks (org-mode))
+    (org-element-map (org-element-parse-buffer 'element) 'keyword
+      (lambda (keyword) (cons (org-element-property :key keyword)
+                              (org-element-property :value keyword))))))
+
+(with-temp-buffer
+  (dolist (path (delete "./index.org" (directory-files-recursively "." ".org")))
+    (insert (format "- [[file:%s][%s]] /%s/\n"
+          (file-relative-name path)
+          (cdr (assoc "TITLE" (get-keywords-from-file path)))
+          (cdr (assoc "DATE" (get-keywords-from-file path)))
+          )))
+  (buffer-string))
+#+end_src
+
+#+RESULTS:
+- [[file:experimenting-with-org-mode-exports/index.org][Experimenting with OrgMode to HTML5 exporter]] /[2021-04-24 Sat 01:07]/

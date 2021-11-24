@@ -1,21 +1,18 @@
 publish_dir := public
-timestamps_dir := .timestamps
-orgs := $(wildcard *.org)
-emacs_pkgs := org
+org-cache_dir := .org-cache
+packages_dir := .packages
 
-publish_el := elisp/publish.el
-
-^el = $(filter %.el,$^)
-EMACS.funcall = emacs --batch --no-init-file $(addprefix --load ,$(^el)) --funcall
+EMACS.funcall = emacs -Q --batch -l elisp/venikx.com.el --funcall
 
 all: clean publish
 
-publish: $(publish_el) $(orgs)
-	$(EMACS.funcall) venikx-publish-all
+publish:
+	$(EMACS.funcall) venikx.com-publish
 
 clean:
 	rm -rf $(publish_dir)
-	rm -rf $(timestamps_dir)
+	rm -rf $(packages_dir)
+	rm -rf $(org-cache_dir)
 
 start:
 	simple-http-server public

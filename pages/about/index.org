@@ -1,4 +1,5 @@
 #+title: About | Kevin Rangel
+#+date: [2021-04-24 Sat 01:07]
 #+description: My name is Kevin Rangel, I'm a freelance web developer based in Helsinki, Finland.
 
 I'm a *freelance web developer*, gamer, and an aspiring game developer; based in

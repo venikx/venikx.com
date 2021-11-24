@@ -1,0 +1,4 @@
+#+TITLE: Kevin Rangel's Personal Hackerspace
+
+Built with [[https://www.gnu.org/software/emacs/][Emacs]] and the amazing [[https://orgmode.org/][Org Mode]]. Go checkout the [[file:elisp/config.org][configuration]] to
+understand how the website was generated.
