@@ -491,7 +491,7 @@ some links referring to socials (github, twitter, ...).
    `(footer
      (div (@ (class "footer-left"))
           (div (a (@ (href "/")) "Kevin Rangel"))
-          (span "&copy; 2021 Kevin 'Rangel' De Baerdemaeaker, licensed under "
+          (span "© 2021 Kevin 'Rangel' De Baerdemaeaker, licensed under "
                 (a (@ (href "https://creativecommons.org/licenses/by-nc/4.0/"     )
                       (rel "noreferrer noopener")
                       (target "_blank"))
