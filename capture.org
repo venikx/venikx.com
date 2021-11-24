@@ -1,6 +1,5 @@
 * Inbox
-** TODO Add RSS feed file + link in header
-It's possibly only needed on the posts page.
+** TODO Add RSS feed file
 ** TODO Add icon to head
 ** TODO Handle og:type and twitter equivalent for articles and other pages
 ** TODO Use ~venikx.com-html-export-block~ to embed iframe for react, vue, etc snippets and webpages
