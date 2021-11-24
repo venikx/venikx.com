@@ -19,9 +19,11 @@
 ;;
 ;;; Code:
 
-(defvar venikx.com-root "~/code/venikx.com")
+(defvar venikx.com-root
+  (locate-dominating-file default-directory ".git"))
+
 ;; (setq org-confirm-babel-evaluate nil)
-(org-babel-load-file (expand-file-name "elisp/config.org"))
+(org-babel-load-file (expand-file-name "elisp/config.org" venikx.com-root))
 
 (provide 'venikx.com)
 ;;; venikx.com.el ends here

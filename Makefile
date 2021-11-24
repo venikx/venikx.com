@@ -1,6 +1,6 @@
 publish_dir := public
-org-cache_dir := .org-cache
-packages_dir := .packages
+org-cache_dir := elisp/.org-cache
+packages_dir := elisp/.packages
 
 EMACS.funcall = emacs -Q --batch -l elisp/venikx.com.el --funcall
 

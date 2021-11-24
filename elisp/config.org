@@ -20,7 +20,8 @@ inspirational resources of building a static website with org-mode.
 #+begin_src emacs-lisp +n :results silent
 (require 'package)
 
-(setq package-user-dir (expand-file-name ".packages" venikx.com-root))
+(setq package-user-dir (expand-file-name "elisp/.packages" venikx.com-root))
+(message package-user-dir)
 
 (package-initialize)
 (unless package-archive-contents
@@ -90,137 +91,6 @@ it through babel.
 (setq make-backup-files nil)
 #+end_src
 
-* Templates
-** Header
-The header defines the bar at top of the page which includes the logo and the
-navigation. It's visible on every page.
-
-#+begin_src emacs-lisp +n :results silent
-(defun venikx.com-site-header (info)
-  (sxml-to-xml
-   `(header
-     (div (@ (class "header-left"))
-          (a (@ (href "/")) "Kevin Rangel")
-          (nav (ul
-           (li (a (@ (href "/about/index.html")) "About"))
-           ;(li (a (@ (href "/projects/index.html")) "Projects"))
-           (li (a (@ (href "/posts/index.html")) "Posts")))))
-     (div (@ (class "header-right"))
-          ;(button (@ (aria-label "Toggle Mode")))
-          ;(a (@ (href "/rss.xml")) "RSS")
-          ))))
-#+end_src
-
-** Footer
-The footer defines the license, some links of the site, a potential logo, and
-some links referring to socials (github, twitter, ...).
-
-#+begin_src emacs-lisp +n :results silent
-(defun venikx.com-site-footer (info)
-  (sxml-to-xml
-   `(footer
-     (div (@ (class "footer-left"))
-          (div (a (@ (href "/")) "Kevin Rangel"))
-          (span "&copy; 2021 Kevin 'Rangel' De Baerdemaeaker, licensed under "
-                (a (@ (href "https://creativecommons.org/licenses/by-nc/4.0/"     )
-                      (rel "noreferrer noopener")
-                      (target "_blank"))
-                   (strong "Creative Commons BY-NC 4.0"))
-                "."))
-     (div (@ (class "footer-right"))
-          (p "Links")
-          (ul
-           (li (a (@ (href ,(concat "https://twitter.com/"
-                                    (plist-get info :socials-twitter)))) "Twitter"))
-           (li (a (@ (href ,(concat "https://github.com/"
-                                    (plist-get info :socials-github)))) "GitHub"))
-           (li (a (@ (href ,(concat "mailto:" (plist-get info :email)))) "Contact"))
-           ;(li (a (@ (href "/rss.xml")) "R"))
-           )))))
-#+end_src
-** The big boy one
-#+begin_src emacs-lisp +n :results silent
-(defun venikx.com-full-url (info)
-  (concat (plist-get info :site-url) "/"
-          (file-name-sans-extension (file-relative-name
-                                     (plist-get info :this-file)
-                                     (plist-get info :base-directory)))
-          ".html"))
-
-(defun venikx.com-org-element-link-parser (link)
-  (with-temp-buffer
-    (insert link)
-    (delay-mode-hooks (org-mode))
-    (goto-char (point-min))
-    (org-element-link-parser)))
-
-(defun venikx.com-head-image (info)
-  (concat (plist-get info :site-url) "/"
-          (if (not (venikx.com-org-element-link-parser (plist-get info :image)))
-              (plist-get info :image)
-            (concat
-             (file-relative-name
-              (file-name-directory (plist-get info :this-file))
-              (plist-get info :base-directory))
-             (plist-get
-              (car (cdr
-                    (venikx.com-org-element-link-parser (plist-get info :image)))) :path)))))
-
-(defun venikx.com-html-template (contents info)
-  (concat
-   (org-html-doctype info)
-   (sxml-to-xml
-    `(html (@ (lang "en"))
-           (head
-            (meta (@ (charset "utf-8")))
-            (meta (@ (name "viewport")
-                     (content "width=device-width, initial-scale=1")))
-
-            (title ,(substring-no-properties (car (plist-get info :title))))
-            (meta (@ (name "description")
-                     (content ,(plist-get info :description))))
-            (link (@ (rel "canonical")
-                     (href ,(venikx.com-full-url info))))
-
-            (meta (@ (name "og:title")
-                     (content ,(substring-no-properties (car (plist-get info :title))))))
-            (meta (@ (name "og:description")
-                     (content ,(plist-get info :description))))
-            ;;            (meta (@ (name "og:type")
-            ;;                     (content ,(plist-get info :title))))
-            (meta (@ (name "og:image")
-                     (content ,(venikx.com-head-image info))))
-            (meta (@ (name "og:image:alt")
-                     (content ,(plist-get info :image-alt))))
-            (meta (@ (name "og:url")
-                     (href ,(venikx.com-full-url info))))
-
-            (meta (@ (name "twitter:card")
-                     (content "summary_large_image")))
-            (meta (@ (name "twitter:site")
-                     (content ,(concat "@" (plist-get info :socials-twitter)))))
-            (meta (@ (name "twitter:creator")
-                     (content ,(concat "@" (plist-get info :socials-twitter)))))
-            (meta (@ (name "twitter:title")
-                     (content ,(substring-no-properties (car (plist-get info :title))))))
-            (meta (@ (name "twitter:description")
-                     (content ,(plist-get info :description))))
-            (meta (@ (name "twitter:image")
-                     (content ,(venikx.com-head-image info))))
-            (meta (@ (name "twitter:image:alt")
-                     (content ,(plist-get info :image-alt))))
-
-            (meta (@ (name "author")
-                     (content ,(substring-no-properties (car (plist-get info :author))))))
-            (meta (@ (name "generator")
-                     (content ,(format "Emacs %s (Org mode %s)"
-                                       emacs-version
-                                       (if (fboundp 'org-version) (org-version) "unknown version"))))))
-           (body (div ,(venikx.com-site-header info)
-                      (main (h1 ,(substring-no-properties (car (plist-get info :title))))
-                            ,contents)
-                      ,(venikx.com-site-footer info)))))))
-#+end_src
 * Publishing
 ** The custom backend
 #+begin_src emacs-lisp +n :results silent
@@ -228,13 +98,13 @@ some links referring to socials (github, twitter, ...).
     'venikx-html 'html
   :translate-alist
   '((export-block . venikx.com-html-export-block)
-    (headline . venikx.com-html-headline)
-    (link . venikx.com-html-link)
-    (plain-list . venikx.com-html-plain-list)
-    (quote-block . venikx.com-html-quote-block)
-    (src-block . venikx.com-html-src-block)
-    (section . venikx.com-html-section)
-    (template . venikx.com-html-template))
+   (headline . venikx.com-html-headline)
+   (link . venikx.com-html-link)
+   (plain-list . venikx.com-html-plain-list)
+   (quote-block . venikx.com-html-quote-block)
+   (src-block . venikx.com-html-src-block)
+   (section . venikx.com-html-section)
+   (template . venikx.com-html-template))
   :options-alist
   '((:site-url nil nil "https://venikx.com" t)
     (:socials-twitter "SOCIALS_TWITTER" nil "_venikx" t)
@@ -368,6 +238,7 @@ holding contextual information."
      (when (and container (not (string= "" container)))
        (format "</%s>" (cl-subseq container 0 (cl-search " " container)))))))
 #+end_src
+
 **** Plain List
 In ~ox-html~ the plain lists receive an extra class, which is not needed.
 However additional attributes still need to be accounted for.
@@ -385,6 +256,7 @@ contextual information."
                   (other (error "Unknown HTML list type: %s" other)))))
       (format "<%s%s>\n%s</%s>" type (venikx.com-html--attr plain-list) contents type))))
 #+end_src
+
 **** Source Block
 I prefer my source blocks wrapped inside a figure, so I can easily add a caption
 when I feel like it. It also strips some of the classes org-mode adds by
@@ -476,10 +348,165 @@ holding contextual information."
   (let ((caption (car (car (org-element-property :caption quote-block))))
         (caption-url (car (car (org-element-property :caption-url quote-block)))))
 
-    (if caption (sxml-to-xml `(figure
-                               (blockquote ,contents)
-                               (figcaption ,(car caption))))
-      (sxml-to-xml `(blockquote ,contents)))))
+    (if caption (format "<figure>\n<blockquote>%s</blockquote>\n<figcaption>%s</figcaption>\n</figure>"
+                        contents caption)
+      (format "<blockquote>%s</blockquote>" contents))))
+
+#+end_src
+
+**** Template
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-html-template (contents info)
+  (concat
+   (org-html-doctype info)
+   "\n"
+   (format "<html lang=\"%s\">\n" (plist-get info :language))
+   "<head>"
+   (venikx.com-build-head contents info)
+   "</head>"
+   "<body>"
+   "<div>"
+   (venikx.com-site-header info)
+   (venikx.com-site-content contents info)
+   (venikx.com-site-footer info)
+   "</div>"
+   "</body>"
+   "</html>"))
+#+end_src
+
+***** Head Builder
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-full-url (info)
+  (concat (plist-get info :site-url) "/"
+          (file-name-sans-extension (file-relative-name
+                                     (plist-get info :this-file)
+                                     (plist-get info :base-directory)))
+          ".html"))
+
+(defun venikx.com-org-element-link-parser (link)
+  (with-temp-buffer
+    (insert link)
+    (delay-mode-hooks (org-mode))
+    (goto-char (point-min))
+    (org-element-link-parser)))
+
+(defun venikx.com-head-image (info)
+  (concat (plist-get info :site-url) "/"
+          (if (not (venikx.com-org-element-link-parser (plist-get info :image)))
+              (plist-get info :image)
+            (concat
+             (file-relative-name
+              (file-name-directory (plist-get info :this-file))
+              (plist-get info :base-directory))
+             (plist-get
+              (car (cdr
+                    (venikx.com-org-element-link-parser (plist-get info :image)))) :path)))))
+
+(defun venikx.com-build-head (contents info)
+  (concat
+   "")
+  (sxml-to-xml
+   `(head
+     (meta (@ (charset "utf-8")))
+     (meta (@ (name "viewport")
+              (content "width=device-width, initial-scale=1")))
+
+     (title ,(substring-no-properties (car (plist-get info :title))))
+     (meta (@ (name "description")
+              (content ,(plist-get info :description))))
+     (link (@ (rel "canonical")
+              (href ,(venikx.com-full-url info))))
+
+     (meta (@ (name "og:title")
+              (content ,(substring-no-properties (car (plist-get info :title))))))
+     (meta (@ (name "og:description")
+              (content ,(plist-get info :description))))
+     ;;            (meta (@ (name "og:type")
+     ;;                     (content ,(plist-get info :title))))
+     (meta (@ (name "og:image")
+              (content ,(venikx.com-head-image info))))
+     (meta (@ (name "og:image:alt")
+              (content ,(plist-get info :image-alt))))
+     (meta (@ (name "og:url")
+              (href ,(venikx.com-full-url info))))
+
+     (meta (@ (name "twitter:card")
+              (content "summary_large_image")))
+     (meta (@ (name "twitter:site")
+              (content ,(concat "@" (plist-get info :socials-twitter)))))
+     (meta (@ (name "twitter:creator")
+              (content ,(concat "@" (plist-get info :socials-twitter)))))
+     (meta (@ (name "twitter:title")
+              (content ,(substring-no-properties (car (plist-get info :title))))))
+     (meta (@ (name "twitter:description")
+              (content ,(plist-get info :description))))
+     (meta (@ (name "twitter:image")
+              (content ,(venikx.com-head-image info))))
+     (meta (@ (name "twitter:image:alt")
+              (content ,(plist-get info :image-alt))))
+
+     (meta (@ (name "author")
+              (content ,(substring-no-properties (car (plist-get info :author))))))
+     (meta (@ (name "generator")
+              (content ,(format "Emacs %s (Org mode %s)"
+                                emacs-version
+                                (if (fboundp 'org-version) (org-version) "unknown version"))))))))
+#+end_src
+
+***** Top Header
+The header defines the bar at top of the page which includes the logo and the
+navigation. It's visible on every page.
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-site-header (info)
+  (sxml-to-xml
+   `(header
+     (div (@ (class "header-left"))
+          (a (@ (href "/")) "Kevin Rangel")
+          (nav (ul
+                (li (a (@ (href "/about/index.html")) "About"))
+                                        ;(li (a (@ (href "/projects/index.html")) "Projects"))
+                (li (a (@ (href "/posts/index.html")) "Posts")))))
+     (div (@ (class "header-right"))
+                                        ;(button (@ (aria-label "Toggle Mode")))
+                                        ;(a (@ (href "/rss.xml")) "RSS")
+          ))))
+#+end_src
+
+***** Content
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-site-content (contents info)
+  (format "<main><h1>%s</h1>%s</main>"
+          (substring-no-properties (car (plist-get info :title)))
+          contents))
+#+end_src
+
+***** Footer
+The footer defines the license, some links of the site, a potential logo, and
+some links referring to socials (github, twitter, ...).
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-site-footer (info)
+  (sxml-to-xml
+   `(footer
+     (div (@ (class "footer-left"))
+          (div (a (@ (href "/")) "Kevin Rangel"))
+          (span "&copy; 2021 Kevin 'Rangel' De Baerdemaeaker, licensed under "
+                (a (@ (href "https://creativecommons.org/licenses/by-nc/4.0/"     )
+                      (rel "noreferrer noopener")
+                      (target "_blank"))
+                   (strong "Creative Commons BY-NC 4.0"))
+                "."))
+     (div (@ (class "footer-right"))
+          (p "Links")
+          (ul
+           (li (a (@ (href ,(concat "https://twitter.com/"
+                                    (plist-get info :socials-twitter)))) "Twitter"))
+           (li (a (@ (href ,(concat "https://github.com/"
+                                    (plist-get info :socials-github)))) "GitHub"))
+           (li (a (@ (href ,(concat "mailto:" (plist-get info :email)))) "Contact"))
+                                        ;(li (a (@ (href "/rss.xml")) "R"))
+           )))))
 #+end_src
 
 **** Not Implemented
