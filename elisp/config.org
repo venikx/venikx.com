@@ -395,8 +395,6 @@ default, which are not needed for my use-case.
   "Transcode a SRC-BLOCK element from Org to HTML.
 CONTENTS holds the contents of the item.  INFO is a plist holding
 contextual information."
-  (message (org-export-read-attribute :attr_html src-block))
-
   (let ((code (org-html-format-code src-block info))
         (caption (org-export-get-caption src-block))
         (language (org-element-property :language src-block)))
