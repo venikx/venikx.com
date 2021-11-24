@@ -156,7 +156,6 @@ some links referring to socials (github, twitter, ...).
               (car (cdr
                     (venikx.com-org-element-link-parser (plist-get info :image)))) :path)))))
 
-
 (defun venikx.com-html-template (contents info)
   (concat
    (org-html-doctype info)
@@ -213,51 +212,25 @@ some links referring to socials (github, twitter, ...).
                       ,(venikx.com-site-footer info)))))))
 #+end_src
 * Publishing
-** Custom HTML functions
-#+begin_src emacs-lisp +n :results silent
-(defun venikx.com-html--attr (element &optional property)
-  (let ((attributes (org-export-read-attribute :attr_html element property)))
-    (if attributes (concat " " (org-html--make-attribute-string attributes)) "")))
-
-;; TODO Use figcaption when adding labels
-(defun venikx.com-html-src-block (src-block contents info)
-  (let ((code (org-html-format-code src-block info))
-        (language (org-element-property :language src-block)))
-    (when code
-      (format "<pre><code class=\"language-%s\"%s>%s</code></pre>"
-              language (venikx.com-html--attr src-block) code))))
-
-(defun venikx.com-html-special-block (special-block contents info)
-  "Transcode SPECIAL-BLOCK from Org to HTML.
-CONTENTS is the text within the #+BEGIN_ and #+END_ markers.
-INFO is a plist holding contextual information."
-  (when contents
-    (let ((block-type (downcase (org-element-property :type special-block))))
-      (format "<%s%s>%s</%s>" block-type (venikx.com-html--attr special-block) contents block-type))))
-#+end_src
-
 ** The custom backend
 #+begin_src emacs-lisp +n :results silent
 (org-export-define-derived-backend
     'venikx-html 'html
   :translate-alist
-  '(
-    (export-block . venikx.com-html-export-block)
+  '((export-block . venikx.com-html-export-block)
     (headline . venikx.com-html-headline)
     (link . venikx.com-html-link)
     (plain-list . venikx.com-html-plain-list)
     (quote-block . venikx.com-html-quote-block)
+    (src-block . venikx.com-html-src-block)
     (section . venikx.com-html-section)
-    (template . venikx.com-html-template)
-    )
+    (template . venikx.com-html-template))
   :options-alist
-  '(
-    (:site-url nil nil "https://venikx.com" t)
+  '((:site-url nil nil "https://venikx.com" t)
     (:socials-twitter "SOCIALS_TWITTER" nil "_venikx" t)
     (:image "IMAGE" nil venikx.com-default-site-image t)
     (:image-alt "IMAGE_ALT" nil "Test" t)
-    (:business-email nil nil venikx.com-business-email)
-    ))
+    (:business-email nil nil venikx.com-business-email)))
 #+end_src
 
 *** Modifying ox variables
@@ -320,6 +293,12 @@ No idea what these do lol. Stole them from someone else.
 #+end_src
 
 *** Modifying Transcoders
+**** Helper Functions
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-html--attr (element &optional property)
+  (let ((attributes (org-export-read-attribute :attr_html element property)))
+    (if attributes (concat " " (org-html--make-attribute-string attributes)) "")))
+#+end_src
 **** Export Block
 In case I want to export CSS or Javascript inline randomly in the document. In
 other cases, just export it as usual.
@@ -395,6 +374,27 @@ contextual information."
                   (descriptive "dl")
                   (other (error "Unknown HTML list type: %s" other)))))
       (format "<%s%s>\n%s</%s>" type (venikx.com-html--attr plain-list) contents type))))
+#+end_src
+**** Source Block
+I prefer my source blocks wrapped inside a figure, so I can easily add a caption
+when I feel like it. It also strips some of the classes org-mode adds by
+default, which are not needed for my use-case.
+
+#+begin_src emacs-lisp +n :results silent
+(defun venikx.com-html-src-block (src-block contents info)
+  "Transcode a SRC-BLOCK element from Org to HTML.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information."
+  (message (org-export-read-attribute :attr_html src-block))
+
+  (let ((code (org-html-format-code src-block info))
+        (caption (org-export-get-caption src-block))
+        (language (org-element-property :language src-block)))
+    (when code
+      (format "<figure>\n%s%s\n</figure>"
+              (if caption (format "<figcaption>%s</figcaption>\n" (car caption)) "")
+              (format "<pre><code class=\"language-%s\"%s>%s</code></pre>"
+                      language (venikx.com-html--attr src-block) code)))))
 #+end_src
 
 **** Section
