@@ -73,7 +73,7 @@ it through babel.
   (regexp-opt '("jpg" "jpeg" "gif" "png" "svg"
                 "ico" "cur" "css" "js"
                 "eot" "woff" "woff2" "ttf"
-                "html" "pdf")))
+                "html" "css" "pdf")))
 
 (defvar venikx.com-default-site-image "assets/me.jpg"
   "The image used when no meta-image is given.")
@@ -164,12 +164,16 @@ to convey the same semantic meaning as I write in org-mode.
         (verbatim . "<code>%s</code>")))
 #+end_src
 
+**** Force using external CSS files
+#+begin_src emacs-lisp +n :results silent
+(setq org-html-htmlize-output-type 'css)
+#+end_src
+
 **** TODO check what these do
 No idea what these do lol. Stole them from someone else.
 
 #+begin_src emacs-lisp +n :results silent
-(setq org-html-htmlize-output-type 'css
-      org-html-inline-images t)
+(setq org-html-inline-images t)
 #+end_src
 
 *** Modifying Transcoders
@@ -363,6 +367,7 @@ holding contextual information."
    (format "<html lang=\"%s\">\n" (plist-get info :language))
    "<head>"
    (venikx.com-build-head contents info)
+   "<link rel=\"stylesheet\" href=\"/assets/style.css\" />"
    "</head>"
    "<body>"
    "<div>"
