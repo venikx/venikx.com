@@ -24,3 +24,6 @@ jspm_packages/
 
 # Mac files
 .DS_Store
+
+# Ignore generated drafts
+public/drafts/
