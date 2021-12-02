@@ -5,7 +5,5 @@ with pkgs;
 mkShell {
   buildInputs = [
     nodejs
-    gnumake
-    simple-http-server
   ];
 }

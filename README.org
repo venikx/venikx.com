@@ -1,4 +1,14 @@
 #+TITLE: Kevin Rangel's Personal Hackerspace
 
-Built with [[https://www.gnu.org/software/emacs/][Emacs]] and the amazing [[https://orgmode.org/][Org Mode]]. Go checkout the [[file:elisp/config.org][configuration]] to
-understand how the website was generated.
+My hackerspace is a glued together Frankenstein monster of multiple
+inspirational resources of building a static website with [[https://www.gnu.org/software/emacs/][Emacs]] and the amazing
+[[https://orgmode.org/][Org Mode]].
+
+- [[https://www.redblobgames.com/][Red Blob Games]] :: Creating interactive tutorials using org-mode (NOT ATTEMPTED YET)
+- [[https://iotcl.com/][Toon Claes]] :: The main trigger to start publishing a site with Org Mode
+- [[http://duncan.codes][Duncan Codes]] :: List generation for the archive
+- [[https://www.brautaset.org/index.html][Stig's Soapbox]] :: The simple, but effective way to providing quality content
+- [[https://www.youtube.com/watch?v=618uCFTNNpE][System Crafters]] :: The main resource for heavily customizing ~ox-html~
+- [[https://github.com/apmiller108/slip-box/blob/main/publish.org][apmiller108/slip-box]] :: Future reference for my [[https://www.orgroam.com/][Org-roam]] powered [[https://github.com/venikx/braindump][Braindump]]
+
+  The custom exporter can be found here:  TODO LINK TO dotfiles
