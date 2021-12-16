@@ -1,0 +1,84 @@
+#+TITLE: Gaming on Linux with NixOS
+#+created: [2021-12-02 Thu 17:19]
+#+modified: [2021-12-17 Fri 00:12]
+#+keywords: gaming linux
+#+filetags: gaming
+#+meta_type: article
+#+image:
+#+image_alt:
+#+description:
+
+Windows is currently the king of gaming, and regardless of what the Linux
+fanatics say, there is absolutely no shame in admitting you run a dual-boot
+system in case a specific program or game can't be run under Linux.
+
+The upcoming release of the [[https://www.steamdeck.com/en/][Steam Deck]] is going to bring new users to the
+wonderful world of Linux. Gaming on Linux isn't as hard as it used to be, and
+with Steam Deck the compatibility will only increase.
+
+Let's figure out what Linux currently can do. The configuration in the guide is
+specifically for NixOS, but the concepts should work for Manjaro or PopOS! Void Linux,
+Ubuntu and others (mileage may vary).
+
+* Prerequisites
+** Installing the NVIDIA Drivers
+Read more: https://nixos.wiki/wiki/Nvidia
+
+#+begin_src nix
+services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
+hardware.opengl.enable = true;
+#+end_src
+
+** Installing the Official AMD Drivers
+Read more: https://nixos.wiki/wiki/AMD_GPU
+
+#+begin_src nix
+services.xserver.videoDrivers = lib.mkForce [ "amd-gpu" ];
+hardware.opengl.enable = true;
+#+end_src
+
+* Native Linux Steam Games
+** Enable Support for OpenGL and Vulkan
+#+begin_src nix
+hardware = {
+  opengl.enable = true;
+  opengl.driSupport32Bit  = true;
+  pulseaudio.support32Bit = true;
+};
+#+end_src
+
+** Prevent Steam from Creating Files in =home=
+#+begin_src nix
+home-manager.users.venikx = {
+  home.packages = with pkgs; [
+    # Prevent steam from polluting $HOME
+    (writeScriptBin "steam" ''
+          #!${stdenv.shell}
+          HOME="$XDG_DATA_HOME/steamlib" exec ${steam}/bin/steam "$@"
+        '')
+
+    # Needed for a dmenu entry
+    (makeDesktopItem {
+      name = "steam";
+      desktopName = "Steam";
+      icon = "steam";
+      exec = "steam";
+      terminal = "false";
+      mimeType = "x-scheme-handler/steam";
+      categories = "Network;FileTransfer;Game";
+    })
+  ];
+};
+
+system.userActivationScripts.setupSteamDir = ''mkdir -p "$XDG_DATA_HOME/steamlib"'';
+#+end_src
+
+** Games
+*** Barony
+#+begin_src shell results: none
+LD_PRELOAD="$LD_PRELOAD ./libSDL2-2.0.so.0 ./libSDL2_ttf-2.0.so.0 ./libSDL2_image-2.0.so.0" %command%
+#+end_src
+
+* Metadata
+- Tags :: [[id:22544eaa-48b3-4503-809d-de16171be0c0][Linux]]
+- Related Notes ::
