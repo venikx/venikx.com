@@ -18,9 +18,10 @@
     (insert (format "- [[file:%s][%s]] /%s/\n"
           (file-relative-name path)
           (cdr (assoc "TITLE" (get-keywords-from-file path)))
-          (cdr (assoc "DATE" (get-keywords-from-file path)))
+          (cdr (assoc "CREATED" (get-keywords-from-file path)))
           )))
   (buffer-string))
 #+end_src
 
 #+RESULTS:
+- [[file:publish-first-npm-package/index.org][Learn to Publish your First NPM Package]] /[2022-07-17 Sun]/
