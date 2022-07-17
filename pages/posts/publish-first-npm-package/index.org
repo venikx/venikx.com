@@ -1,6 +1,6 @@
 #+title: Learn to Publish your First NPM Package
 #+created: [2022-07-17 Sun]
-#+modified: [2022-07-17 Sun 20:20]
+#+modified: [2022-07-17 Sun 20:50]
 #+keywords: npm howto
 #+filetags: javascript
 #+meta_type: article
@@ -35,9 +35,6 @@ mkdir -p your-name-here && cd your-name-here
 #+end_src
 
 ** Initialize the Package with the NPM CLI
-:PROPERTIES:
-:CUSTOM_ID: init-npm-package
-:END:
 The ~npm init~ commands creates a ~package.json~ file, and configures the most
 important keys for us. Verify that the value of ~name~ does not exist in the
 [[https://www.npmjs.com/search?q=your-name-here][package registry]] as the name is used together with the ~version~ to create a unique
@@ -66,9 +63,6 @@ npm init -y
 #+end_src
 
 ** Create a ~index.js~ file
-:PROPERTIES:
-:CUSTOM_ID: console.js
-:END:
 /Don't/ do anything fancy yet, just to see if the basic components are working
 together. Add something simple to ~index.js~ and place it in the root of the
 repository.
@@ -182,7 +176,7 @@ Optional: If you'd like to enable [[https://nodejs.org/api/esm.html][import synt
 #+end_src
 
 *** Wrap the Bash Script with Node.js
-Remove the ~console.log~ from the [[#console.js][index.js]] and replace it with code which
+Remove the ~console.log~ from the ~index.js~ and replace it with code which
 executes the [[#business-card][previously]] created bash script.
 
 Please note that for some reason, the shebang is currently /required/ for ~npx
@@ -254,7 +248,7 @@ npm publish
 
 *** Troubleshooting
 If you rushed ahead (I do this myself as well 😅) and didn't make sure the
-package is available before [[#init-npm-package][creating]] your repository the publishing will fail.
+package is available before creating your repository the publishing will fail.
 
 Change the name of your package to a scoped one ~@your-user-name/business-card~
 and make sure the scoped package's access is set to public before running ~npm
