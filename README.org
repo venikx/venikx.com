@@ -1,4 +1,4 @@
-#+TITLE: Kevin Rangel's hacker space
+#+TITLE: My Personal Hacker Space
 
 [[https://app.netlify.com/sites/venikx-hackerspace/deploys][file:https://api.netlify.com/api/v1/badges/ef583120-ac6a-483d-9fae-39bd943b92eb/deploy-status.svg]]
 

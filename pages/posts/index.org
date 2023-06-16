@@ -1,8 +1,8 @@
-#+title: Blog | Kevin Rangel
+#+title: Blog | Kevin De Baerdemaeker
 #+date: [2021-04-24 Sat 01:07]
 #+options: title:nil
 #+meta_type: website
-#+description: A personal blog of Kevin Rangel, venikx, a freelance web developer based in Helsinki, Finland.
+#+description: A personal blog of Kevin De Baerdemaeker, venikx, a freelance web developer based in Helsinki, Finland.
 
 #+begin_src emacs-lisp :results raw :exports results
 (defun get-keywords-from-file (path)

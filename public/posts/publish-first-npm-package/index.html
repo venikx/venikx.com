@@ -51,7 +51,7 @@
         content="Person standing with open arms, like a cross, in shallow water on a beach which reflects the red, orange and blue shades of the sky."
       />
       <meta name="author" content="Kevin Rangel" />
-      <meta name="generator" content="Emacs 28.1 (Org mode 9.6)" />
+      <meta name="generator" content="Emacs 28.2 (Org mode 9.6.1)" />
     </head>
     <link rel="stylesheet" href="/assets/style.css" />
   </head>
@@ -116,7 +116,7 @@
         </p>
 
         <figure>
-          <pre><code class="language-sh"><span class="org-type">mkdir</span> -p your-name-here &amp;&amp; <span class="org-type">cd</span> your-name-here
+          <pre><code class="language-sh"><span class="org-type"><span class="org-tree-sitter-hl-faceXfunctionXcall">mkdir</span></span> <span class="org-tree-sitter-hl-faceXconstant">-p</span> your-name-here <span class="org-tree-sitter-hl-faceXoperator">&amp;&amp;</span> <span class="org-type"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-tree-sitter-hl-faceXfunctionXbuiltin">cd</span></span></span> your-name-here
 </code></pre>
         </figure>
 
@@ -144,23 +144,23 @@
         </p>
 
         <figure>
-          <pre><code class="language-sh">npm init -y
+          <pre><code class="language-sh"><span class="org-tree-sitter-hl-faceXfunctionXcall">npm</span> init <span class="org-tree-sitter-hl-faceXconstant">-y</span>
 </code></pre>
         </figure>
 
         <figure>
-          <pre><code class="language-json">{
-  <span class="org-keyword">"name"</span>: <span class="org-string">"your-name-here"</span>,
-  <span class="org-keyword">"version"</span>: <span class="org-string">"1.0.0"</span>,
-  <span class="org-keyword">"main"</span>: <span class="org-string">"index.js"</span>,
-  <span class="org-keyword">"scripts"</span>: {
-    <span class="org-keyword">"test"</span>: <span class="org-string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>
-  },
-  <span class="org-keyword">"keywords"</span>: [],
-  <span class="org-keyword">"author"</span>: <span class="org-string">""</span>,
-  <span class="org-keyword">"license"</span>: <span class="org-string">"ISC"</span>,
-  <span class="org-keyword">"description"</span>: <span class="org-string">""</span>
-}
+          <pre><code class="language-json"><span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"name"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"your-name-here"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"version"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"1.0.0"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"main"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"index.js"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"scripts"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+    <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"test"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"echo </span><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXescape">\"</span></span><span class="org-tree-sitter-hl-faceXstring">Error: no test specified</span><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXescape">\"</span></span><span class="org-tree-sitter-hl-faceXstring"> &amp;&amp; exit 1"</span>
+  <span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"keywords"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">[]</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"author"</span></span>: <span class="org-tree-sitter-hl-faceXstring">""</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"license"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"ISC"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"description"</span></span>: <span class="org-tree-sitter-hl-faceXstring">""</span>
+<span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>
 </code></pre>
         </figure>
 
@@ -184,7 +184,7 @@
           Verify if <code>node</code> can run the file you&rsquo;ve created.
         </p>
         <figure>
-          <pre><code class="language-sh">node index.js
+          <pre><code class="language-sh"><span class="org-tree-sitter-hl-faceXfunctionXcall">node</span> index.js
 </code></pre>
         </figure>
 
@@ -205,36 +205,36 @@ Hello World
         </p>
 
         <figure>
-          <pre><code class="language-sh"><span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/</span><span class="org-keyword">env</span><span class="org-comment"> bash</span>
-<span class="org-variable-name">blue</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput setaf 4)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">bold</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput bold)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">cyan</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput setaf 6)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">dim</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput dim)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">green</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput setaf 2)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">magenta</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput setaf 5)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">red</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput setaf 1)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">reset</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput sgr0)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">underline</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput smul)</span></span><span class="org-string">"</span>
-<span class="org-variable-name">yellow</span>=<span class="org-string">"</span><span class="org-string"><span class="org-sh-quoted-exec">$(tput setaf 3)</span></span><span class="org-string">"</span>
+          <pre><code class="language-sh"><span class="org-tree-sitter-hl-faceXcomment">#!/usr/bin/env bash</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">blue</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> setaf 4</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">bold</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> bold</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">cyan</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> setaf 6</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">dim</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> dim</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">green</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> setaf 2</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">magenta</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> setaf 5</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">red</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> setaf 1</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">reset</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> sgr0</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">underline</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> smul</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
+<span class="org-tree-sitter-hl-faceXproperty"><span class="org-tree-sitter-hl-faceXvariable">yellow</span></span>=<span class="org-tree-sitter-hl-faceXstring">"</span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">$(</span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXfunctionXcall"><span class="org-sh-quoted-exec">tput</span></span></span></span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec"> setaf 3</span></span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial"><span class="org-tree-sitter-hl-faceXstring"><span class="org-sh-quoted-exec">)</span></span></span><span class="org-tree-sitter-hl-faceXstring">"</span>
 
-<span class="org-type">cat</span> &lt;&lt;EOF
-<span class="org-sh-heredoc">${cyan}&#9581;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9582;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;                                                                 &#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}           ${bold}${cyan}Kevin De Baerdemaeker / venikx${reset}                        ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;                                                                 &#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}     ${underline}${bold}Email:${reset}  ${magenta}code@venikx.com                                     ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}      ${underline}${bold}Work:${reset}  ${red}Independent Web Developer                           ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}       ${underline}${bold}Web:${reset}  ${dim}https://www.${reset}${cyan}venikx.com                              ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;                                                                 &#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}   ${underline}${bold}Twitter:${reset}  ${dim}https://twitter.com/${reset}${blue}_venikx                         ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}    ${underline}${bold}Twitch:${reset}  ${dim}https://www.twitch.tv/${reset}${magenta}venikx_                       ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}    ${underline}${bold}GitHub:${reset}  ${dim}https://github.com/${reset}${green}venikx                           ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}  ${underline}${bold}LinkedIn:${reset}  ${dim}https://linkedin.com/in/${reset}${blue}venikx                      ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;                                                                 &#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;${reset}      ${underline}${bold}Card Inspiration:${reset}  ${yellow}</span><span class="org-type"><span class="org-sh-heredoc">curl</span></span><span class="org-sh-heredoc"> -sL bit.ly/2zvxUbd | sh            ${cyan}&#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9474;                                                                 &#9474;</span>
-<span class="org-sh-heredoc">${cyan}&#9584;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9583;</span>
-<span class="org-sh-heredoc">EOF</span>
+<span class="org-type"><span class="org-tree-sitter-hl-faceXfunctionXcall">cat</span></span> <span class="org-tree-sitter-hl-faceXoperator">&lt;&lt;</span><span class="org-tree-sitter-hl-faceXstringXspecial">EOF</span>
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9581;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9582;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;                                                                 &#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>           <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>Kevin De Baerdemaeker / venikx<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>                        <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;                                                                 &#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>     <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">underline</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>Email:<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">magenta</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>code@venikx.com                                     <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>      <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">underline</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>Work:<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">red</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>Independent Web Developer                           <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>       <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">underline</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>Web:<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">dim</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>https://www.<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>venikx.com                              <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;                                                                 &#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>   <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">underline</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>Twitter:<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">dim</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>https://twitter.com/<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">blue</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>_venikx                         <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>    <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">underline</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>Twitch:<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">dim</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>https://www.twitch.tv/<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">magenta</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>venikx_                       <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>    <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">underline</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>GitHub:<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">dim</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>https://github.com/<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">green</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>venikx                           <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">underline</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>LinkedIn:<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">dim</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>https://linkedin.com/in/<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">blue</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>venikx                      <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;                                                                 &#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>      <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">underline</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">bold</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>Card Inspiration:<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">reset</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>  <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">yellow</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span><span class="org-type">curl</span> <span class="org-tree-sitter-hl-faceXconstant">-sL</span> bit.ly/2zvxUbd <span class="org-tree-sitter-hl-faceXoperator">|</span> <span class="org-tree-sitter-hl-faceXfunctionXcall">sh</span>            <span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9474;                                                                 &#9474;
+<span class="org-tree-sitter-hl-faceXpunctuationXspecial">${</span><span class="org-tree-sitter-hl-faceXembedded"><span class="org-tree-sitter-hl-faceXproperty">cyan</span></span><span class="org-tree-sitter-hl-faceXpunctuationXspecial">}</span>&#9584;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9583;
+<span class="org-tree-sitter-hl-faceXstringXspecial">EOF</span>
 </code></pre>
         </figure>
 
@@ -243,8 +243,8 @@ Hello World
           <code>|</code>&rsquo;s are properly aligned.
         </p>
         <figure>
-          <pre><code class="language-sh"><span class="org-type">chmod</span> +x ./business-card
-./business-card
+          <pre><code class="language-sh"><span class="org-type"><span class="org-tree-sitter-hl-faceXfunctionXcall">chmod</span></span> +x ./business-card
+<span class="org-tree-sitter-hl-faceXfunctionXcall">./business-card</span>
 </code></pre>
         </figure>
 
@@ -260,7 +260,7 @@ Hello World
           <code>tput</code> affects the terminal it has no effect when I execute
           the code snippets in Emacs.
         </p>
-        <pre class="example" id="org24d96f8">
+        <pre class="example" id="orgd833411">
 ╭─────────────────────────────────────────────────────────────────╮
 │                                                                 │
 │           Kevin De Baerdemaeker / venikx                        │
@@ -303,22 +303,22 @@ Hello World
         </p>
 
         <figure>
-          <pre><code class="language-json">{
-  <span class="org-keyword">"bin"</span>: {
-    <span class="org-keyword">"your-name-here"</span>: <span class="org-string">"index.js"</span>
-  },
-  <span class="org-keyword">"type"</span>: <span class="org-string">"module"</span>,
-  <span class="org-keyword">"name"</span>: <span class="org-string">"your-name-here"</span>,
-  <span class="org-keyword">"version"</span>: <span class="org-string">"1.0.0"</span>,
-  <span class="org-keyword">"main"</span>: <span class="org-string">"index.js"</span>,
-  <span class="org-keyword">"scripts"</span>: {
-    <span class="org-keyword">"test"</span>: <span class="org-string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>
-  },
-  <span class="org-keyword">"keywords"</span>: [],
-  <span class="org-keyword">"author"</span>: <span class="org-string">""</span>,
-  <span class="org-keyword">"license"</span>: <span class="org-string">"ISC"</span>,
-  <span class="org-keyword">"description"</span>: <span class="org-string">""</span>
-}
+          <pre><code class="language-json"><span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"bin"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+    <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"your-name-here"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"index.js"</span>
+  <span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"type"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"module"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"name"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"your-name-here"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"version"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"1.0.0"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"main"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"index.js"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"scripts"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+    <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"test"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"echo </span><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXescape">\"</span></span><span class="org-tree-sitter-hl-faceXstring">Error: no test specified</span><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXescape">\"</span></span><span class="org-tree-sitter-hl-faceXstring"> &amp;&amp; exit 1"</span>
+  <span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"keywords"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">[]</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"author"</span></span>: <span class="org-tree-sitter-hl-faceXstring">""</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"license"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"ISC"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"description"</span></span>: <span class="org-tree-sitter-hl-faceXstring">""</span>
+<span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>
 </code></pre>
         </figure>
 
@@ -364,12 +364,12 @@ exec(command)
           <a href="business-card">running the bash script without node</a>.
         </p>
         <figure>
-          <pre><code class="language-sh">npm i -g
-npx your-name-here
+          <pre><code class="language-sh"><span class="org-tree-sitter-hl-faceXfunctionXcall">npm</span> i <span class="org-tree-sitter-hl-faceXconstant">-g</span>
+<span class="org-tree-sitter-hl-faceXfunctionXcall">npx</span> your-name-here
 </code></pre>
         </figure>
 
-        <pre class="example" id="org8dd0aec">
+        <pre class="example" id="org7b4a677">
 ╭─────────────────────────────────────────────────────────────────╮
 │                                                                 │
 │           Kevin De Baerdemaeker / venikx                        │
@@ -405,13 +405,13 @@ npx your-name-here
         </p>
 
         <figure>
-          <pre><code class="language-shell">npm login
+          <pre><code class="language-shell"><span class="org-tree-sitter-hl-faceXfunctionXcall">npm</span> login
 </code></pre>
         </figure>
 
         <h2 id="publish-"><a href="#publish-">Publish 🎉</a></h2>
         <figure>
-          <pre><code class="language-shell">npm publish
+          <pre><code class="language-shell"><span class="org-tree-sitter-hl-faceXfunctionXcall">npm</span> publish
 </code></pre>
         </figure>
 
@@ -432,25 +432,25 @@ npx your-name-here
         </p>
 
         <figure>
-          <pre><code class="language-json">{
-  <span class="org-keyword">"name"</span>: <span class="org-string">"@your-user-name/business-card"</span>,
-  <span class="org-keyword">"publishConfig"</span>: {
-    <span class="org-keyword">"access"</span>: <span class="org-string">"public"</span>
-  },
-  <span class="org-keyword">"bin"</span>: {
-    <span class="org-keyword">"your-name-here"</span>: <span class="org-string">"index.js"</span>
-  },
-  <span class="org-keyword">"type"</span>: <span class="org-string">"module"</span>,
-  <span class="org-keyword">"version"</span>: <span class="org-string">"1.0.0"</span>,
-  <span class="org-keyword">"main"</span>: <span class="org-string">"index.js"</span>,
-  <span class="org-keyword">"scripts"</span>: {
-    <span class="org-keyword">"test"</span>: <span class="org-string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>
-  },
-  <span class="org-keyword">"keywords"</span>: [],
-  <span class="org-keyword">"author"</span>: <span class="org-string">""</span>,
-  <span class="org-keyword">"license"</span>: <span class="org-string">"ISC"</span>,
-  <span class="org-keyword">"description"</span>: <span class="org-string">""</span>
-}
+          <pre><code class="language-json"><span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"name"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"@your-user-name/business-card"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"publishConfig"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+    <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"access"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"public"</span>
+  <span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"bin"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+    <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"your-name-here"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"index.js"</span>
+  <span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"type"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"module"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"version"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"1.0.0"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"main"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"index.js"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"scripts"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">{</span>
+    <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"test"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"echo </span><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXescape">\"</span></span><span class="org-tree-sitter-hl-faceXstring">Error: no test specified</span><span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXescape">\"</span></span><span class="org-tree-sitter-hl-faceXstring"> &amp;&amp; exit 1"</span>
+  <span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"keywords"</span></span>: <span class="org-tree-sitter-hl-faceXpunctuationXbracket">[]</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"author"</span></span>: <span class="org-tree-sitter-hl-faceXstring">""</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"license"</span></span>: <span class="org-tree-sitter-hl-faceXstring">"ISC"</span>,
+  <span class="org-tree-sitter-hl-faceXstring"><span class="org-tree-sitter-hl-faceXkeyword">"description"</span></span>: <span class="org-tree-sitter-hl-faceXstring">""</span>
+<span class="org-tree-sitter-hl-faceXpunctuationXbracket">}</span>
 </code></pre>
         </figure>
 

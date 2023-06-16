@@ -1,5 +1,5 @@
-#+title: Kevin Rangel Blog RSS Feed
-#+description: Come read what Kevin Rangel writes about.
+#+title: Kevin De Baerdemaeker Blog RSS Feed
+#+description: Come read what Kevin De Baerdemaeker writes about.
 #+date: [2021-04-24 Sat 01:07]
 
 * [[file:/home/venikx/code/venikx.com/posts/experimenting-with-org-mode-exports/index.org][Experimenting with OrgMode to HTML5 exporter]] :emacs:

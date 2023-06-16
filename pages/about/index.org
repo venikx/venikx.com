@@ -1,6 +1,6 @@
-#+title: About | Kevin Rangel
+#+title: About | Kevin De Baerdemaeker
 #+date: [2021-04-24 Sat 01:07]
-#+description: My name is Kevin Rangel, I'm a freelance web developer based in Helsinki, Finland.
+#+description: My name is Kevin De Baerdemaeker, I'm a freelance web developer based in Helsinki, Finland.
 
 I'm a *freelance web developer*, gamer, and an aspiring game developer; based in
 [[https://www.openstreetmap.org/node/25474663#map=16/60.1718/24.9413][Helsinki, Finland]]. I'm a 90s kid and lived most of my life in Belgium. I studied

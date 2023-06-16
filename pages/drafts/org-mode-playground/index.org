@@ -107,7 +107,7 @@ chaining code blocks to each other.
 ** Shell
 Let's create a variable
 #+BEGIN_SRC sh :session session-shell-chain :results silent
-MY_NAME="Kevin Rangel"
+MY_NAME="Kevin De Baerdemaeker"
 #+END_SRC
 
 And let's print it's value
@@ -118,7 +118,7 @@ echo $MY_NAME
 #+NAME: testing
 #+CAPTION: These are the results of the above running script
 #+RESULTS:
-: Kevin Rangel
+: Kevin De Baerdemaeker
 ** Lisp
 Sometimes you want preformat some output of a code block. The ~:post~ makes sure
 that another code block is executed right before displaying the results.

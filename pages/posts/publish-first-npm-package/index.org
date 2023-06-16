@@ -1,6 +1,6 @@
 #+title: Learn to Publish your First NPM Package
 #+created: [2022-07-17 Sun]
-#+modified: [2022-07-17 Sun 20:50]
+#+modified: [2023-06-16 Fri 14:19]
 #+keywords: npm howto
 #+filetags: javascript
 #+meta_type: article
@@ -72,13 +72,17 @@ console.log("Hello World")
 #+end_src
 
 Verify if ~node~ can run the file you've created.
-#+begin_src sh :dir ./your-name-here results: none
+#+begin_src sh :dir ./your-name-here :results none
 node index.js
 #+end_src
 
-#+begin_src sh :dir ./your-name-here :exports results
+#+NAME: hello-world
+#+begin_src sh :dir ./your-name-here :exports results :results output
 node example.js
 #+end_src
+
+#+RESULTS: hello-world
+: Hello World
 
 * Creating the Business Card
 I don't want to go to deep into how the bash script works, but in essence we can
