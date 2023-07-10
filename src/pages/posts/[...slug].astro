@@ -1,0 +1,21 @@
+---
+export async function getStaticPaths() {
+  const posts = await Astro.glob('./**/*.org')
+
+  return posts.map((post) => {
+    console.log(post)
+    return {
+      params: {
+        slug: 'testing-org',
+      },
+      props: post,
+    }
+  })
+}
+
+const { default: Content, frontmatter, file } = Astro.props
+console.log(JSON.stringify(file))
+---
+
+<h1>{frontmatter.title}</h1>
+<Content />
