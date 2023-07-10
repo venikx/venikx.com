@@ -1,5 +1,12 @@
 import { defineConfig } from 'astro/config'
 
+import image from '@astrojs/image'
+
 // https://astro.build/config
-const t = ''
-export default defineConfig({})
+export default defineConfig({
+  integrations: [
+    image({
+      serviceEntryPoint: '@astrojs/image/sharp',
+    }),
+  ],
+})
