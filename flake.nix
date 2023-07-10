@@ -1,6 +1,8 @@
 {
+  description = "venikx.com";
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -8,10 +10,10 @@
     inputs.flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = inputs.nixpkgs.legacyPackages.${system};
-      in
-      rec {
+      in {
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ nodejs-18_x ];
+          #packages = with pkgs; [ nodejs-18_x ];
+          nativeBuildInputs = with pkgs; [ nodejs-18_x ];
 
           shellHook = with pkgs; ''
             export PATH="$PWD/node_modules/.bin/:$PATH"
