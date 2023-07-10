@@ -1,5 +1,6 @@
 # Artifacts
 dist
+.astro
 
 # Dependency directories
 node_modules/
