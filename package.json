@@ -1,11 +1,18 @@
 {
   "devDependencies": {
+    "@astrojs/ts-plugin": "^1.0.10",
+    "astro": "^2.8.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "prettier-plugin-astro": "^0.10.0"
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && tsc --noEmit && astro build",
+    "preview": "astro preview"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
