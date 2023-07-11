@@ -6,11 +6,10 @@ import org from 'astro-org'
 
 import tailwind from '@astrojs/tailwind'
 
-// https://astro.build/config
 export default defineConfig({
   site: 'https://venikx.com',
   integrations: [
-    org({}),
+    org(),
     prefetch(),
     image({
       serviceEntryPoint: '@astrojs/image/sharp',

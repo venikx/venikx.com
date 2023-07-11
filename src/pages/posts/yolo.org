@@ -1,7 +1,9 @@
 :PROPERTIES:
 :ID:       68c5f292-db8b-4229-9e9c-f6474232492c
 :END:
-#+title: Yollloo
+#+title: yolo
 #+filetags: hello yolo
+#+date: 2023-07-11
+#+slug: yolo
 
 * Hi
