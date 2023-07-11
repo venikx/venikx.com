@@ -1,12 +1,13 @@
 ---
+import { allPages } from '../../utils'
 export async function getStaticPaths() {
-  const posts = await Astro.glob('./**/*.org')
+  const posts = allPages
 
-  return posts.map((post) => {
-    console.log(post)
+  return posts.map((post, id) => {
+    const slug = post.frontmatter.slug
     return {
       params: {
-        slug: 'testing-org',
+        slug: slug === '' ? undefined : slug,
       },
       props: post,
     }
@@ -14,7 +15,7 @@ export async function getStaticPaths() {
 }
 
 const { default: Content, frontmatter, file } = Astro.props
-console.log(JSON.stringify(file))
+console.info(JSON.stringify(file))
 ---
 
 <h1>{frontmatter.title}</h1>
