@@ -4,6 +4,8 @@ import sitemap from '@astrojs/sitemap'
 import prefetch from '@astrojs/prefetch'
 import org from 'astro-org'
 
+import tailwind from '@astrojs/tailwind'
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://venikx.com',
@@ -14,5 +16,6 @@ export default defineConfig({
       serviceEntryPoint: '@astrojs/image/sharp',
     }),
     sitemap(),
+    tailwind(),
   ],
 })
