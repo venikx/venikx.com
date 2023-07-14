@@ -1,5 +1,10 @@
 ---
 import { getEntry } from 'astro:content'
+import '@fontsource/ibm-plex-sans-condensed/400.css'
+import '@fontsource/ibm-plex-sans-condensed/700.css'
+import '@fontsource/ibm-plex-serif/400.css'
+import '@fontsource/ibm-plex-serif/600.css'
+import '@fontsource/ibm-plex-mono/300.css'
 
 const {
   data: { name },
@@ -34,7 +39,8 @@ const ogType = kind ? kind : 'website'
 
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
-  <body class="bg-black text-white">
+  <body class="bg-zinc-900 text-pink-50 font-sans">
+    <h1 class="font-serif">Hello</h1>
     <slot />
   </body>
 </html>
