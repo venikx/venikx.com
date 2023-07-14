@@ -19,8 +19,17 @@ export async function getStaticPaths() {
 }
 
 const { default: Content, frontmatter, file } = Astro.props
-console.info(JSON.stringify(file))
+console.log('====', JSON.stringify(file))
 ---
 
-<h1>{frontmatter.title}</h1>
-<Content />
+<Layout
+  kind="article"
+  title={frontmatter.title}
+  description={frontmatter.description}
+  image={frontmatter.image}
+>
+  <h1>{frontmatter.title}</h1>
+  <div class="prose lg:prose-xl prose-hackerman prose-headings:font-serif">
+    <Content />
+  </div>
+</Layout>
