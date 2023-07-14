@@ -1,0 +1,26 @@
+#+title: Blog | Kevin De Baerdemaeker
+#+created: 2021-04-24
+#+description: A personal blog of Kevin De Baerdemaeker, venikx, a freelance web developer based in Helsinki, Finland.
+
+#+begin_src emacs-lisp :results raw :exports results
+(defun get-keywords-from-file (path)
+  (with-temp-buffer
+    (insert-file-contents path)
+    (delay-mode-hooks (org-mode))
+    (org-element-map (org-element-parse-buffer 'element) 'keyword
+      (lambda (keyword) (cons (org-element-property :key keyword)
+                              (org-element-property :value keyword))))))
+
+(with-temp-buffer
+  (dolist (path (delete "./index.org" (directory-files-recursively "." ".org")))
+    (insert (format "- [[file:%s][%s]] /%s/\n"
+          (file-relative-name path)
+          (cdr (assoc "TITLE" (get-keywords-from-file path)))
+          (cdr (assoc "CREATED" (get-keywords-from-file path)))
+          )))
+  (buffer-string))
+#+end_src
+
+#+RESULTS:
+- [[file:org-mode-playground/index.org][Experimenting with OrgMode to HTML5 exporter]] /2021-04-24/
+- [[file:publish-first-npm-package/index.org][Learn to Publish your First NPM Package]] /2022-07-17/

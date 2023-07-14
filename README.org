@@ -1,7 +1,5 @@
 #+TITLE: My Personal Hacker Space
 
-[[https://app.netlify.com/sites/venikx-hackerspace/deploys][file:https://api.netlify.com/api/v1/badges/ef583120-ac6a-483d-9fae-39bd943b92eb/deploy-status.svg]]
-
 My hacker space is a glued together Frankenstein monster of multiple
 inspirational resources of building a static website with [[https://www.gnu.org/software/emacs/][Emacs]] and the amazing
 [[https://orgmode.org/][Org Mode]]. The full publishing configuration can be found in my [[https://github.com/venikx/dotfiles/blob/main/config/doom/config.org#publishing][dotfiles]] for

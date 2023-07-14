@@ -1,22 +1,10 @@
 ---
-import { Image } from '@astrojs/image/components'
-import heroImage from '../assets/helsinki.jpg'
-// Welcome to Astro! Everything between these triple-dash code fences
-// is your "component frontmatter". It never runs in the browser.
-console.log('This runs in your terminal, not the browser!')
+import Layout from '../layouts/Layout.astro'
 ---
 
-<!-- Below is your "component template." It's just HTML, but with
-     some magic sprinkled in to help you build great templates. -->
-<html>
-  <body class="bg-black">
-    <h1>Hello, World!</h1>
-    <Image src={heroImage} alt="descriptive text" width={300} />
-    <a href="/test" rel="prefetch">Go to test, but prefetch</a>
-  </body>
-</html>
-<style>
-  h1 {
-    color: orange;
-  }
-</style>
+<Layout title="Kevin De Baerdemaeker" description="">
+  <h1>Kevin De Baerdemaeker</h1>
+  <p>
+    Full list at my <a href="/posts" rel="prefetch">my blog</a>.
+  </p>
+</Layout>

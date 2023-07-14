@@ -1,13 +1,17 @@
 ---
+import path from 'node:path'
 import { allPages } from '../../utils'
+
 export async function getStaticPaths() {
   const posts = allPages
 
-  return posts.map((post, id) => {
-    const slug = post.frontmatter.slug
+  return posts.map((post) => {
+    const dirs = path.dirname(post.file).split(path.sep)
+    const slug = dirs[dirs.length - 1]
+
     return {
       params: {
-        slug: slug === '' ? undefined : slug,
+        slug: slug === '' || slug === 'posts' ? undefined : slug,
       },
       props: post,
     }
