@@ -1,19 +1,40 @@
 ---
-const { title } = Astro.props
+import { getEntry } from 'astro:content'
+
+const {
+  data: { name },
+} = await getEntry('authors', 'kevin')
+const { title, description, image, kind } = Astro.props
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
+const ogImage = image ? image : new URL('/pixel-me.jpeg', Astro.site)
+const ogType = kind ? kind : 'website'
 ---
 
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={name} />
+    <link rel="icon" type="image/svg" href="/favicon.svg" />
+    <link href={canonicalUrl} rel="canonical" />
+
+    <meta name="og:title" content={title} />
+    <meta name="og:description" content={description} />
+    <meta name="og:type" content={ogType} />
+    <meta name="og:image" content={ogImage} />
+    <meta name="og:image:alt" content="" />
+    <meta name="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content={name} />
+    <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
-  <body>
+  <body class="bg-black text-white">
     <slot />
-    <!-- your content is injected here -->
   </body>
 </html>
-
-<head> </head>

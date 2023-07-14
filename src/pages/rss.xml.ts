@@ -9,10 +9,10 @@ export const get = async (context: AstroUserConfig) => {
     site: context.site ?? 'https://venikx.com',
     items: allPages.map((p) => {
       return {
-        link: p.frontmatter.slug ?? '',
-        title: p.frontmatter.icon ?? '' + ' ' + p.frontmatter.title,
-        pubDate: p.frontmatter.date ?? '',
+        title: p.frontmatter.title ?? '',
+        pubDate: p.frontmatter.created ?? '',
         description: p.frontmatter.description ?? '',
+        link: `/posts/${p.frontmatter.slug}/`,
       }
     }),
   })

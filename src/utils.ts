@@ -1,4 +1,4 @@
-const pages = import.meta.glob<true, '', any>(['./pages/posts/*.org'], {
+const pages = import.meta.glob<true, '', any>(['./pages/posts/**/*.org'], {
   eager: true,
 })
 

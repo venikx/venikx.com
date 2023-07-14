@@ -1,7 +1,10 @@
 ---
+import { Image } from '@astrojs/image/components'
 import Layout from '../layouts/Layout.astro'
+import heroImage from '../assets/helsinki.jpg'
 ---
 
 <Layout title="Home Page">
   <p>My page content, wrapped in a layout!</p>
+  <Image src={heroImage} alt="descriptive text" width={300} />
 </Layout>
