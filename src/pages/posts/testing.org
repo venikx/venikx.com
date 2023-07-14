@@ -1,9 +1,0 @@
-#+title: Testing
-:PROPERTIES:
-:ID:       0f4845f8-305c-414b-97d7-36bcdef1a3db
-:END:
-#+title: testing
-#+date: 2023-07-11
-#+slug: testing
-
-[[id:68c5f292-db8b-4229-9e9c-f6474232492c][Yest]]
