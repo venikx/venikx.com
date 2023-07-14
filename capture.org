@@ -1,7 +1,0 @@
-* Inbox
-** TODO Add RSS feed file
-** TODO Add icon to head
-** TODO Handle og:type and twitter equivalent for articles and other pages
-** TODO Use ~venikx.com-html-export-block~ to embed iframe for react, vue, etc snippets and webpages
-** TODO Start the heading elements from h2 for articles
-** TODO Only add toc when there's a lot of content
