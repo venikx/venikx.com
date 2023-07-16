@@ -1,0 +1,220 @@
+#+title: Experimenting with OrgMode to HTML5 exporter
+#+created: 2021-04-24
+#+description: The blog post is living documentation regarding the exporting features I'm testing out with org-mode.
+#+keywords: emacs org-mode html5
+#+category: emacs
+#+cover: ./helsinki.jpg
+#+images: [[file:helsinki.jpg]]
+#+macro: created {{{date(%e %B %Y)}}}
+#+macro: modified {{{modification-time(%e %B %Y)}}}
+#+language: en
+#+slug: org-mode-playground
+
+* Features
+** Headings
+*** Another Heading
+**** Anothers Heading
+***** Anothers Heading
+****** Anothers Heading
+******* Anothers Heading
+******** Anothers Heading
+********* Anothers Heading
+********** Anothers Heading
+Hello
+** Paragraphs
+Hello, I'm a paragraph.
+** Emphasis
+Paragraph with *bold*, /italic/, _underline_, +strikethrough+, =verbatim= texts.
+** Blockquotes
+:PROPERTIES:
+:CUSTOM_ID: 1234567mol
+:END:
+*** Without Caption
+#+BEGIN_QUOTE
+Some quote where the attributation happens in the text itself. Or even ~code~.
+#+END_QUOTE
+
+*** With Caption
+#+CAPTION: Albert Einstein
+#+BEGIN_QUOTE
+Everything should be made as simple as possible,
+but /not/ any simpler.
+#+END_QUOTE
+** Lists
+*** Ordered Lists
+1. First item
+2. Second item
+3. Third item
+*** Unordered Lists
+- Do dishes
+- Some other things
+#+ATTR_HTML: :style border:2px solid black;
+    - hello
+** Code
+*** Inline Code
+Some inline ~<code class="nice innit?" />~ text.
+
+*** Code Block
+#+name: hellow
+#+begin_src js
+function Hellow(name) {
+  const t = "yoo";
+  t.toString();
+}
+#+end_src
+
+#+begin_src js :results output :noweb yes :exports both
+<<hellow>>
+Hellow("Kevin")
+#+end_src
+
+#+RESULTS:
+: Hello Kevin
+
+** TODO Testing
+
+* Embedding different kind of HTML5 snippets
+** HTML5 itself
+#+BEGIN_aside
+  Lorem ipsum
+#+END_aside
+
+** HTML5 Elements
+#+begin_example
+#+BEGIN_EXPORT htmls
+  <p>All lines between these markers are exported <strong>literally.</strong></p>
+#+END_EXPORT
+#+end_example
+#+BEGIN_EXPORT htmls
+  <p>All lines between these markers are exported <strong>literally.</strong></p>
+#+END_EXPORT
+
+#+BEGIN_EXPORT javascript
+console.log("HELLO")
+#+END_EXPORT
+** YouTube iframes
+#+CAPTION: An example of a working YouTube video embedded from org-mode
+#+begin_export htmls
+<iframe src="https://www.youtube-nocookie.com/embed/v_jDFgS2AqE" allowfullscreen title="YouTube Video"></iframe>
+#+end_export
+* Images
+#+CAPTION: A panoramic view of Helsinki
+[[file:../../assets/me.jpg]]
+
+* Generate snippets during the HTML5 export
+The REPL based languages usually support session arguments which allows for
+chaining code blocks to each other.
+
+** Shell
+Let's create a variable
+#+BEGIN_SRC sh :session session-shell-chain :results silent
+MY_NAME="Kevin De Baerdemaeker"
+#+END_SRC
+
+And let's print it's value
+#+BEGIN_SRC sh :session session-shell-chain :results ouput :exports both
+echo $MY_NAME
+#+END_SRC
+
+#+NAME: testing
+#+CAPTION: These are the results of the above running script
+#+RESULTS:
+: Kevin De Baerdemaeker
+** Lisp
+Sometimes you want preformat some output of a code block. The ~:post~ makes sure
+that another code block is executed right before displaying the results.
+
+#+BEGIN_SRC emacs-lisp :results value table :exports both :post add-header(*this*)
+  (mapcar (lambda (i)
+           (list i (+ (random 4) (- i 2))))
+          (number-sequence 1 20))
+#+END_SRC
+
+#+NAME: est-truth-data
+#+CAPTION: Truth and Estimate
+#+RESULTS:
+|-------+----------|
+| Truth | Estimate |
+|-------+----------|
+|     1 |        2 |
+|     2 |        3 |
+|     3 |        3 |
+|     4 |        2 |
+|     5 |        5 |
+|     6 |        4 |
+|     7 |        7 |
+|     8 |        7 |
+|     9 |        7 |
+|    10 |       10 |
+|    11 |        9 |
+|    12 |       12 |
+|    13 |       12 |
+|    14 |       13 |
+|    15 |       14 |
+|    16 |       16 |
+|    17 |       18 |
+|    18 |       16 |
+|    19 |       20 |
+|    20 |       19 |
+
+In order to get the table of data more comprehensive we utilize another block to
+post process the result. This block adds a header to the table.
+#+name: add-header
+#+begin_src emacs-lisp :var tbl=""
+(cons 'hline (cons '("Truth" "Estimate") (cons 'hline tbl)))
+#+end_src
+
+** Javascript
+#+name: hello-from-js
+#+begin_src js
+function Hello(name) {
+    console.log("Hello " + name)
+}
+#+end_src
+
+#+begin_src js :results output :noweb yes :exports both
+<<hello-from-js>>
+Hello("Kevin")
+#+end_src
+
+#+RESULTS:
+: Hello Kevin
+** Docker
+#+begin_src dockerfile
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#+end_src
+
+* Macros
+#+begin_src org
+#+macro: created {{{date(%e %B %Y)}}}
+#+macro: modified {{{modification-time(%e %B %Y)}}}
+
+The published date is {{{date(%e %B %Y)}}} while the modified date is
+{{{modification-time(%e %B %Y)}}}.
+#+end_src
+
+
+The published date is {{{date(%e %B %Y)}}} while the modified date is
+{{{modification-time(%e %B %Y)}}}.
