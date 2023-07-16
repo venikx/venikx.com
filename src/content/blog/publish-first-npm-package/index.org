@@ -5,7 +5,7 @@
 #+type: article
 #+cover: ./mohamed-nohassi-odxB5oIG_iA-unsplash.jpg]]
 #+imagess: [[file:mohamed-nohassi-odxB5oIG_iA-unsplash.jpg]]
-#+description: Publishing your first npm package can seem daunting at first, so let's create your own personal cURLable and npx business card and publish it as a package on npm.
+#+description: Publishing your first npm package can seem daunting at first so lets create your own personal cURLable and npx business card and publish it as a package on npm.
 #+PROPERTY: header-args :dir ./your-name-here :mkdirp yes
 
 * Introduction

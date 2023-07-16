@@ -1,36 +1,31 @@
 ---
-import path from 'node:path'
-import { allPages } from '../../utils'
+import { getCollection } from 'astro:content'
 import Layout from '../../layouts/Layout.astro'
 
 export async function getStaticPaths() {
-  const posts = allPages
+  const allBlogPosts = await getCollection('blog')
 
-  return posts.map((post) => {
-    const dirs = path.dirname(post.file).split(path.sep)
-    const slug = dirs[dirs.length - 1]
-
+  return allBlogPosts.map((post) => {
+    const slug = post.slug ?? ''
     return {
       params: {
-        slug: slug === '' || slug === 'posts' ? undefined : slug,
+        slug,
       },
-      props: post,
+      props: { entry: post },
     }
   })
 }
 
-const { default: Content, frontmatter, file } = Astro.props
-console.log('====', JSON.stringify(file))
+const { entry } = Astro.props
+const { Content } = await entry.render()
 ---
 
 <Layout
   kind="article"
-  title={frontmatter.title}
-  description={frontmatter.description}
-  image={frontmatter.image}
+  title={entry.data.title}
+  description={entry.data.description}
+  image={entry.data.cover}
 >
-  <h1>{frontmatter.title}</h1>
-  <div class="prose lg:prose-xl prose-hackerman prose-headings:font-serif">
-    <Content />
-  </div>
+  <h1>{entry.data.title}</h1>
+  <Content />
 </Layout>
