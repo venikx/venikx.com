@@ -1,10 +1,8 @@
 import { defineConfig, sharpImageService } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 import prefetch from '@astrojs/prefetch'
-import org from 'astro-org'
-
+import org from '@orgajs/astro'
 import tailwind from '@astrojs/tailwind'
-import orgMode from './src/org-mode'
 
 export default defineConfig({
   experimental: {
@@ -15,8 +13,7 @@ export default defineConfig({
   },
   site: 'https://venikx.com',
   integrations: [
-    orgMode(),
-    org(),
+    org({}),
     prefetch(),
     sitemap(),
     tailwind({
