@@ -10,26 +10,38 @@ const latestPosts = allBlogPosts.slice(0, 5)
 ---
 
 <Layout title="Kevin De Baerdemaeker | Homepage" description="">
-  <h2 class="text-2xl">Work</h2>
+  <h2 class="text-2xl">TL;DR</h2>
   <p>
-    Vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor, at
-    auctor urna nunc id cursus metus aliquam eleifend mi in nulla. Sed sed risus
-    pretium quam vulputate dignissim suspendisse? Urna nunc id cursus metus
-    aliquam eleifend mi in nulla posuere sollicitudin? Pulvinar neque laoreet
-    suspendisse interdum consectetur libero, id faucibus nisl tincidunt eget
-    nullam non nisi est, sit amet!
+    I write about web technologies, and graphics programming, mostly as a way to
+    <em>educate myself</em>.
   </p>
-  <h2 class="text-2xl">Latest Posts</h2>
-  {
-    latestPosts.map((post) => (
-      <PostSummary
-        title={post.data.title}
-        created={post.data.created}
-        slug={post.slug}
-      />
-    ))
-  }
+  <h2 class="text-2xl">Interests</h2>
   <p>
-    Not enough? Full list <Link href="/posts" rel="prefetch">here</Link>.
+    I've been delivering projects for multiple clients, in a wide variety of
+    technologies, but the stack I'm most comfortable with is Typescript,
+    Next.js, Node.js and PostreSQL (with Prisma).
+  </p>
+  <p>
+    Purely for shits and giggles, I'm exploring the creative possibilities of
+    coding using WebGL and OpenGL (C/C++). <em>But!</em> It's not easy! There's
+    a lot of math and computer science-y concepts and I never seem to <em
+      >get'em</em
+    >. I read that writing helps with understand, so... <em>Welcome! Hi!</em>
   </p>
 </Layout>
+ Also, people seem to love Rust and Golang. I need to hop on deez before it's
+too late!
+<p></p>
+<h2 class="text-2xl">Latest Posts</h2>
+{
+  latestPosts.map((post) => (
+    <PostSummary
+      title={post.data.title}
+      created={post.data.created}
+      slug={post.slug}
+    />
+  ))
+}
+<p>
+  Not enough? Full list <Link href="/posts" rel="prefetch">here</Link>.
+</p>
