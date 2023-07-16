@@ -1,0 +1,288 @@
+#+title: Learn to Publish your First NPM Package
+#+created: 2022-07-17
+#+keywords: npm howto
+#+filetags: javascript
+#+type: article
+#+cover: ./mohamed-nohassi-odxB5oIG_iA-unsplash.jpg]]
+#+imagess: [[file:mohamed-nohassi-odxB5oIG_iA-unsplash.jpg]]
+#+description: Publishing your first npm package can seem daunting at first, so let's create your own personal cURLable and npx business card and publish it as a package on npm.
+#+PROPERTY: header-args :dir ./your-name-here :mkdirp yes
+
+* Introduction
+Creating a [[https://www.npmjs.com/][npm]] package might seem an incredibly scary or complicated endeavor at
+first (been there, done that), but once you've done it once you might think "Is
+that all? 😕".
+
+Personally, I don't like being trapped in tutorial hell, and neither should you.
+So, I opted to create an npm package I wanted and is useful to me outside the
+scope of publishing to npm. Let's create our own ~npx username~ [[https://dev.to/wuz/setting-up-a-npx-username-card-1pip][card]], which
+executes a [[https://github.com/tallguyjenks/BusinessCard][cURLable business card]], because ="If it's not cURLable, it's not on
+the web." - Vint Cerf=.
+
+** Prerequisites
+- Node.js :: v16 (or above), basics
+- OS :: Linux/Mac OS/WSL
+- git :: basics
+
+* Initializing the Package
+I chose to name the folder and repository to be the username I use on Github,
+because then the README.md of the package (aka you) also acts as the [[https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme][profile on
+Github]].
+
+#+begin_src sh :results none :dir .
+mkdir -p your-name-here && cd your-name-here
+#+end_src
+
+** Initialize the Package with the NPM CLI
+The ~npm init~ commands creates a ~package.json~ file, and configures the most
+important keys for us. Verify that the value of ~name~ does not exist in the
+[[https://www.npmjs.com/search?q=your-name-here][package registry]] as the name is used together with the ~version~ to create a unique
+identifier.
+
+Checkout the [[https://docs.npmjs.com/cli/v8/configuring-npm/package-json][full documentation]] if you want to understand what the other fields
+are used for!
+
+#+begin_src sh :results none
+npm init -y
+#+end_src
+
+#+begin_src json
+{
+  "name": "your-name-here",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+#+end_src
+
+** Create a ~index.js~ file
+/Don't/ do anything fancy yet, just to see if the basic components are working
+together. Add something simple to ~index.js~ and place it in the root of the
+repository.
+
+#+begin_src js :tangle ./your-name-here/example.js :results none
+console.log("Hello World")
+#+end_src
+
+Verify if ~node~ can run the file you've created.
+#+begin_src sh :dir ./your-name-here :results none
+node index.js
+#+end_src
+
+#+NAME: hello-world
+#+begin_src sh :dir ./your-name-here :exports results :results output
+node example.js
+#+end_src
+
+#+RESULTS: hello-world
+: Hello World
+
+* Creating the Business Card
+I don't want to go to deep into how the bash script works, but in essence we can
+control the way text it outputted to the terminal using [[https://linuxcommand.org/lc3_adv_tput.php][~tput~]].
+
+#+begin_src sh :tangle ./your-name-here/business-card :results none
+#!/usr/bin/env bash
+blue="$(tput setaf 4)"
+bold="$(tput bold)"
+cyan="$(tput setaf 6)"
+dim="$(tput dim)"
+green="$(tput setaf 2)"
+magenta="$(tput setaf 5)"
+red="$(tput setaf 1)"
+reset="$(tput sgr0)"
+underline="$(tput smul)"
+yellow="$(tput setaf 3)"
+
+cat <<EOF
+${cyan}╭─────────────────────────────────────────────────────────────────╮
+${cyan}│                                                                 │
+${cyan}│${reset}           ${bold}${cyan}Kevin De Baerdemaeker / venikx${reset}                        ${cyan}│
+${cyan}│                                                                 │
+${cyan}│${reset}     ${underline}${bold}Email:${reset}  ${magenta}code@venikx.com                                     ${cyan}│
+${cyan}│${reset}      ${underline}${bold}Work:${reset}  ${red}Independent Web Developer                           ${cyan}│
+${cyan}│${reset}       ${underline}${bold}Web:${reset}  ${dim}https://www.${reset}${cyan}venikx.com                              ${cyan}│
+${cyan}│                                                                 │
+${cyan}│${reset}   ${underline}${bold}Twitter:${reset}  ${dim}https://twitter.com/${reset}${blue}_venikx                         ${cyan}│
+${cyan}│${reset}    ${underline}${bold}Twitch:${reset}  ${dim}https://www.twitch.tv/${reset}${magenta}venikx_                       ${cyan}│
+${cyan}│${reset}    ${underline}${bold}GitHub:${reset}  ${dim}https://github.com/${reset}${green}venikx                           ${cyan}│
+${cyan}│${reset}  ${underline}${bold}LinkedIn:${reset}  ${dim}https://linkedin.com/in/${reset}${blue}venikx                      ${cyan}│
+${cyan}│                                                                 │
+${cyan}│${reset}      ${underline}${bold}Card Inspiration:${reset}  ${yellow}curl -sL bit.ly/2zvxUbd | sh            ${cyan}│
+${cyan}│                                                                 │
+${cyan}╰─────────────────────────────────────────────────────────────────╯
+EOF
+#+end_src
+
+Execute the ~business-card~ to verify the ~|~'s are properly aligned.
+#+name: business-card-sh
+#+begin_src sh :dir (concat "/sudo::" (expand-file-name "your-name-here")) :results output :exports both
+chmod +x ./business-card
+./business-card
+#+end_src
+
+You should be able to see the same thing, but with /actual colors/. I execute
+these code snippets with [[https://orgmode.org/][Org Mode]]'s [[https://orgmode.org/manual/Structure-of-Code-Blocks.html][code blocks]]  in Emacs, which allows me to write
+*reproducible documents*, but since ~tput~ affects the terminal it has no effect
+when I execute the code snippets in Emacs.
+#+RESULTS: business-card-sh
+#+begin_example
+╭─────────────────────────────────────────────────────────────────╮
+│                                                                 │
+│           Kevin De Baerdemaeker / venikx                        │
+│                                                                 │
+│     Email:  code@venikx.com                                     │
+│      Work:  Independent Web Developer                           │
+│       Web:  https://www.venikx.com                              │
+│                                                                 │
+│   Twitter:  https://twitter.com/_venikx                         │
+│    Twitch:  https://www.twitch.tv/venikx_                       │
+│    GitHub:  https://github.com/venikx                           │
+│  LinkedIn:  https://linkedin.com/in/venikx                      │
+│                                                                 │
+│      Card Inspiration:  curl -sL bit.ly/2zvxUbd | sh            │
+│                                                                 │
+╰─────────────────────────────────────────────────────────────────╯
+#+end_example
+
+** Display your Business Card with ~npx~
+*** Prepare the ~package.json~
+In order to properly execute ~npx your-name-here~ we need to define the command
+and the corresponding script within the ~bin~ field.
+
+Optional: If you'd like to enable [[https://nodejs.org/api/esm.html][import syntax]], you also need to add ~"type":
+"module"~ to the package.json.
+
+#+begin_src json :tangle ./your-name-here/package.json
+{
+  "bin": {
+    "your-name-here": "index.js"
+  },
+  "type": "module",
+  "name": "your-name-here",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+#+end_src
+
+*** Wrap the Bash Script with Node.js
+Remove the ~console.log~ from the ~index.js~ and replace it with code which
+executes the [[#business-card][previously]] created bash script.
+
+Please note that for some reason, the shebang is currently /required/ for ~npx
+your-name-here~ to work.
+
+#+begin_src js :tangle ./your-name-here/index.js :results none
+#!/usr/bin/env node
+
+import util from "util";
+import { exec as execC } from "child_process";
+
+const exec = util.promisify(execC);
+const command = "./business-card";
+
+exec(command)
+  .then(({ stdout, stderr }) => {
+    if (stderr) {
+      throw new Error(stderr);
+    } else {
+      console.error(stdout);
+    }
+  })
+  .catch(console.error);
+#+end_src
+
+Test out if you get the same results as [[#business-card][running the bash script without node]].
+#+begin_src sh :results none
+npm i -g
+npx your-name-here
+#+end_src
+
+#+begin_src sh :exports results :results output
+./business-card
+#+end_src
+
+#+RESULTS:
+#+begin_example
+╭─────────────────────────────────────────────────────────────────╮
+│                                                                 │
+│           Kevin De Baerdemaeker / venikx                        │
+│                                                                 │
+│     Email:  code@venikx.com                                     │
+│      Work:  Independent Web Developer                           │
+│       Web:  https://www.venikx.com                              │
+│                                                                 │
+│   Twitter:  https://twitter.com/_venikx                         │
+│    Twitch:  https://www.twitch.tv/venikx_                       │
+│    GitHub:  https://github.com/venikx                           │
+│  LinkedIn:  https://linkedin.com/in/venikx                      │
+│                                                                 │
+│      Card Inspiration:  curl -sL bit.ly/2zvxUbd | sh            │
+│                                                                 │
+╰─────────────────────────────────────────────────────────────────╯
+#+end_example
+* Publishing the Business Card to NPM
+** Login to NPM
+In order to login to npm you first have to [[https://www.npmjs.com/signup][create an account]]. /Do not forget to
+verify your email address when you created your account./ It's required before
+you are able to publish to npm.
+
+#+begin_src shell :results none :exports code
+npm login
+#+end_src
+
+** Publish 🎉
+#+begin_src shell :results none :exports code
+npm publish
+#+end_src
+
+*** Troubleshooting
+If you rushed ahead (I do this myself as well 😅) and didn't make sure the
+package is available before creating your repository the publishing will fail.
+
+Change the name of your package to a scoped one ~@your-user-name/business-card~
+and make sure the scoped package's access is set to public before running ~npm
+publish~ again.
+
+#+begin_src json
+{
+  "name": "@your-user-name/business-card",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "your-name-here": "index.js"
+  },
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+#+end_src
+
+* Conclusion
+Hurray! Now you've seen that the most complicated part of publishing a package
+is the package itself, not the npm publishing process. Additionally, people are
+now able to query for your business card with cURL or ~npx your-user-name~.
+
+Let me know what kind of business cards you've created for yourself. You can
+fine mine [[https://github.com/venikx/venikx][here]].
