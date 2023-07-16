@@ -1,36 +1,54 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import Link from '../components/Link.astro'
+
+import { getEntry } from 'astro:content'
+const {
+  data: { socials },
+} = await getEntry('authors', 'kevin')
 ---
 
 <Layout
-  title="Kevin De Baerdemaeker"
-  description="My name is Kevin De Baerdemaeker, I'm a freelance web developer based in Helsinki, Finland."
+  title="About - Kevin De Baerdemaeker"
+  description="Humble freelance web developer sharing his musings..."
 >
-  <h1>Kevin De Baerdemaeker</h1>
+  <h1 class="text-4xl">About Kevin</h1>
+  <h2 class="text-2xl">Contact Information</h2>
+  <ul class="list-[square] list-inside">
+    <li>Send me an <Link href={socials.email}>email</Link>.</li>
+    <li>
+      On <Link href={socials.github}>GitHub</Link>, you can follow my work.
+    </li>
+    <li>
+      If I can assist you, please contact me on <Link href={socials.linkedin}>
+        LinkedIn
+      </Link>.
+    </li>
+  </ul>
+  <h2 class="text-2xl">Kevin's Background</h2>
   <p>
-    I'm a <span class="font-bold">freelance web developer</span>, gamer, and an
-    aspiring game developer; based in <a
-      href="https://www.openstreetmap.org/node/25474663#map=16/60.1718/24.9413"
-    >
-      Helsinki, Finland</a
-    >. I'm a 90s kid and lived most of my life in Belgium. I studied
-    electronics, and worked as a service technician, before realizing
-    programming is too much fun. So, I have been working as a frontend web
-    developer ever since.
+    I'm a 90s kid who has lived in Belgium most of my life. I remember playing
+    <Link href="https://en.wikipedia.org/wiki/Paperboy_(video_game)">
+      Paper Boy
+    </Link>
+     on the Commodore 64 when I was a kid, and gaming has always been a part of
+    my life. Aside from being glued to a screen, I spent too much time playing
+    with Legos and loved football.
   </p>
-
   <p>
-    I've developed websites and web applications for
-    <a href="https://freebility.be">Freebility</a>,
-    <a href="https://famoco.com">Famoco</a> and
-    <a href="https://epicgames.com">Epic Games</a>. In 2020
-    <span class="italic">amazing timing</span>, I decided to become
-    <span class="font-bold">self-employed</span>, and currently work as a
-    consultant for <a href="https://equinor.com">Equinor</a>.
+    I never thought I would be a programmer or understand how the games I liked
+    to play were made. As part of a robotics class in Ghent, I learned how to
+    program. Later on, I picked up the skills to build web pages using HTML,
+    CSS, JavaScript, Typescript, and Node.js.
   </p>
-
   <p>
-    For business inquiries, you can contact me via my
-    <a href="mailto:hello@babo.digital">business email</a>.
+    I've created websites and web apps for companies like
+    <Link href="https://freebility.be">Freebility</Link>,
+    <Link href="https://famoco.com">Famoco</Link> and
+    <Link href="https://epicgames.com">Epic Games</Link>. Nowadays, I'm a
+    self-employed consultant from Finland because I still like to work with web
+    technologies, but I wanted more freedom to reach my personal goals. I'm
+    trying to improve my creative side by learning three.js, WebGL, … eventually
+    I want to make games with C/C++ and OpenGL.
   </p>
 </Layout>

@@ -1,10 +1,16 @@
 ---
-import { getEntry } from 'astro:content'
+import './base.css'
 import '@fontsource/ibm-plex-sans-condensed/400.css'
 import '@fontsource/ibm-plex-sans-condensed/700.css'
+import '@fontsource/ibm-plex-sans/400.css'
+import '@fontsource/ibm-plex-sans/700.css'
 import '@fontsource/ibm-plex-serif/400.css'
 import '@fontsource/ibm-plex-serif/600.css'
 import '@fontsource/ibm-plex-mono/300.css'
+
+import { getEntry } from 'astro:content'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
 
 const {
   data: { name },
@@ -20,6 +26,7 @@ const ogType = kind ? kind : 'website'
 <html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -39,7 +46,11 @@ const ogType = kind ? kind : 'website'
 
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
-  <body class="bg-zinc-900 text-pink-50 font-sans">
-    <slot />
+  <body class="font-sans bg-purple-50 text-zinc-900 leading-relaxed">
+    <Header />
+    <main class="container w-full mx-auto my-12 px-8 max-w-4xl">
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>
