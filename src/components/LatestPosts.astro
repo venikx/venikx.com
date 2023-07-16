@@ -1,0 +1,20 @@
+---
+import { allPages } from '../utils'
+const lastPages = allPages
+  .filter((p) => p.frontmatter.type === 'article')
+  .slice(0, 5)
+---
+
+{
+  lastPages.map(({ frontmatter }) => (
+    <section>
+      <a
+        href="/posts"
+        class="transition-colors ease-in duration-200 inline-flex gap-6 hover:bg-pink-100 rounded-lg py-2 px-4 -ml-4"
+      >
+        <div>{frontmatter.created}</div>
+        <h3 class="inline m-0 font-normal">{frontmatter.title}</h3>
+      </a>
+    </section>
+  ))
+}

@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets'
+import { getEntry } from 'astro:content'
+import { Icon } from 'astro-icon'
+
+import heroImage from '../assets/helsinki.jpg'
+import Link from './Link.astro'
+const { showProfile = true } = Astro.props
+const {
+  data: { socials },
+} = await getEntry('authors', 'kevin')
+---
+
+<footer>
+  <div
+    class="my-4 py-8 bg-pink-100 container w-full mx-auto px-8 max-w-4xl flex flex-col gap-2"
+  >
+    {
+      showProfile && (
+        <div class="flex gap-8 items-center">
+          <Image
+            class="rounded-full h-24 w-24 transition duration-300 ease-in-out hover:scale-125"
+            src={heroImage}
+            alt=""
+            width={1134}
+          />
+          <p>
+            Non tellus orci, ac auctor augue mauris augue neque, gravida in
+            fermentum et, sollicitudin ac orci phasellus egestas tellus rutrum
+            tellus. Tellus at urna condimentum mattis pellentesque id nibh
+            tortor! Egestas congue quisque egestas diam in arcu cursus euismod
+            quis viverra nibh cras
+          </p>
+        </div>
+      )
+    }
+
+    <div class="flex gap-8 self-center">
+      <a
+        href={socials.github}
+        class="group inline-flex items-center gap-2 cursor-pointer hover:text-pink-500"
+      >
+        <Icon
+          name="carbon:email"
+          class="group-hover:animate-pulse text-current h-8 w-8"
+        />
+         Email
+      </a>
+
+      <a
+        href={socials.linkedin}
+        class="group inline-flex items-center gap-2 cursor-pointer hover:text-pink-500"
+      >
+        <Icon
+          name="carbon:logo-github"
+          class="group-hover:animate-pulse text-current h-8 w-8"
+        />
+         GitHub
+      </a>
+    </div>
+  </div>
+
+  <div
+    class="my-2 bg-purple-50 text-sm text-center text-zinc-500 flex flex-col"
+  >
+    <small
+      >© 2023 Kevin <span class="animate-pulse">De</span> Baerdemaeaker,
+      licensed under
+      <Link
+        href="https://creativecommons.org/licenses/by-nc/4.0/"
+        rel="noreferrer noopener"
+        target="_deez_nuts"
+        class="font-bold text-zinc-500 hover:bg-pink-200"
+      >
+        Creative Commons BY-NC 4.0
+      </Link>.
+    </small>
+    <small class="-mt-1">
+      All opinions here are my own, and don't represent what my clients think
+      now or in the future.
+    </small>
+  </div>
+</footer>

@@ -1,0 +1,22 @@
+---
+const {
+  href,
+  rel: theirRel,
+  withColor = true,
+  class: classNames = '',
+} = Astro.props
+//const textColor = withColor ? "text-pink-500" : "text-current"
+const classes = [
+  'hover:bg-pink-100',
+  'transition-colors',
+  'rounded-sm',
+  'ease-in',
+  'duration-200',
+  { 'text-pink-500': withColor },
+  { 'text-zinc-900': !withColor },
+  ...classNames.split(' '),
+]
+const rel = theirRel ? `${theirRel} noopener` : 'noopener'
+---
+
+<a class:list={classes} href={href} rel={rel}><slot /></a>

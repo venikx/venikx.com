@@ -1,10 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import LatestPosts from '../components/LatestPosts.astro'
+import Link from '../components/Link.astro'
 ---
 
-<Layout title="Kevin De Baerdemaeker" description="">
-  <h1>Kevin De Baerdemaeker</h1>
+<Layout title="Kevin De Baerdemaeker | Homepage" description="">
+  <h2 class="text-2xl">Work</h2>
   <p>
-    Full list at my <a href="/posts" rel="prefetch">my blog</a>.
+    Vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor, at
+    auctor urna nunc id cursus metus aliquam eleifend mi in nulla. Sed sed risus
+    pretium quam vulputate dignissim suspendisse? Urna nunc id cursus metus
+    aliquam eleifend mi in nulla posuere sollicitudin? Pulvinar neque laoreet
+    suspendisse interdum consectetur libero, id faucibus nisl tincidunt eget
+    nullam non nisi est, sit amet!
+  </p>
+  <h2 class="text-2xl">Latest Posts</h2>
+  <LatestPosts />
+  <p>
+    Not enough? Full list <Link href="/posts" rel="prefetch">here</Link>.
   </p>
 </Layout>

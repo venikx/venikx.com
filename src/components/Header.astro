@@ -1,0 +1,64 @@
+---
+import { Icon } from 'astro-icon'
+---
+
+<header class="hidden md:flex container w-full mx-auto my-4 px-8 max-w-4xl">
+  <div class="flex justify-between items-center w-full">
+    <a class="font-bold text-lg" href="/">Kevin De Baerdemaeker</a>
+    <nav class="flex items-center gap-8">
+      <a href="/posts" class="p-2 hover:underline">Posts</a>
+      <a href="/about" class="p-2 hover:underline">About</a>
+    </nav>
+  </div>
+</header>
+<header
+  class="isolate md:hidden container w-full mx-auto py-4 px-8 max-w-4xl bg-pink-100"
+>
+  <div class="flex justify-between items-center">
+    <a class="font-bold text-lg" href="/">Kevin De Baerdemaeker</a>
+    <button
+      id="open-menu"
+      class="hover:bg-pink-200 h-10 w-10 rounded-lg"
+      aria-label="Open Navigation Menu"
+    >
+      <Icon name="jam:menu" />
+    </button>
+    <button
+      id="close-menu"
+      class="hover:bg-pink-200 hidden h-10 w-10 rounded-lg"
+      aria-label="Close Navigation Menu"
+    >
+      <Icon name="jam:close" />
+    </button>
+  </div>
+  <nav id="mobile-nav" class="hidden flex flex-col items-center py-4">
+    <a
+      href="/posts"
+      class="w-full text-center text-xl py-8 hover:bg-pink-200 rounded-lg"
+      >Posts</a
+    >
+    <a
+      href="/about"
+      class="w-full text-center text-xl py-8 hover:bg-pink-200 rounded-lg"
+      >About</a
+    >
+  </nav>
+</header>
+
+<script>
+  const openMenu = document.getElementById('open-menu')
+  const closeMenu = document.getElementById('close-menu')
+  const mobileNav = document.getElementById('mobile-nav')
+
+  openMenu?.addEventListener('click', () => {
+    openMenu?.classList.add('hidden')
+    closeMenu?.classList.remove('hidden')
+    mobileNav?.classList.remove('hidden')
+  })
+
+  closeMenu?.addEventListener('click', () => {
+    openMenu?.classList.remove('hidden')
+    closeMenu?.classList.add('hidden')
+    mobileNav?.classList.add('hidden')
+  })
+</script>

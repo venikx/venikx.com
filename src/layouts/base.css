@@ -1,0 +1,26 @@
+/* The integration's default injected base.css file */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 100%;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+    @apply font-bold;
+    @apply mt-8;
+    @apply mb-2;
+  }
+
+  p {
+    @apply py-2;
+  }
+}

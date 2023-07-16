@@ -9,7 +9,7 @@ export default {
     extend: {
       fontFamily: {
         mono: ['IBM Plex Mono', ...defaultTheme.fontFamily.sans],
-        sans: ['IBM Plex Sans Condensed', ...defaultTheme.fontFamily.sans],
+        sans: ['IBM Plex Sans', ...defaultTheme.fontFamily.sans],
         serif: ['IBM Plex Serif', ...defaultTheme.fontFamily.sans],
       },
       typography: ({ theme }: ThemeConfig) => ({
