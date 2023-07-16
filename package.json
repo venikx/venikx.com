@@ -26,13 +26,11 @@
     "@fontsource/ibm-plex-sans": "^5.0.5",
     "@fontsource/ibm-plex-sans-condensed": "^5.0.5",
     "@fontsource/ibm-plex-serif": "^5.0.5",
+    "@orgajs/astro": "^1.0.3",
     "@tailwindcss/typography": "^0.5.9",
     "astro": "^2.8.3",
     "astro-icon": "^0.8.1",
-    "astro-org": "^1.0.0",
     "sharp": "^0.32.3",
-    "tailwindcss": "^3.3.3",
-    "uniorg-parse": "^2.0.1",
-    "uniorg-rehype": "^1.1.0"
+    "tailwindcss": "^3.3.3"
   }
 }
