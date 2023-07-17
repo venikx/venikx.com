@@ -10,10 +10,10 @@ const latestPosts = allBlogPosts.slice(0, 5)
 ---
 
 <Layout title="Kevin De Baerdemaeker | Homepage" description="">
-  <h2 class="text-2xl">TL;DR</h2>
   <p>
-    I write about web technologies, and graphics programming, mostly as a way to
-    <em>educate myself</em>.
+    I write about web technologies, and graphics programming. My goal with
+    writing is to <em>educate myself</em>, while keeping the learning as
+    entertaining.
   </p>
   <h2 class="text-2xl">Interests</h2>
   <p>
@@ -28,20 +28,22 @@ const latestPosts = allBlogPosts.slice(0, 5)
       >get'em</em
     >. I read that writing helps with understand, so... <em>Welcome! Hi!</em>
   </p>
+  <p>
+    Also, people seem to love Rust and Golang. I need to hop on deez before it's
+    too late!
+  </p>
+
+  <h2 class="text-2xl">Latest Posts</h2>
+  {
+    latestPosts.map((post) => (
+      <PostSummary
+        title={post.data.title}
+        created={post.data.created}
+        slug={post.slug}
+      />
+    ))
+  }
+  <p>
+    Not enough? Full list <Link href="/posts" rel="prefetch">here</Link>.
+  </p>
 </Layout>
- Also, people seem to love Rust and Golang. I need to hop on deez before it's
-too late!
-<p></p>
-<h2 class="text-2xl">Latest Posts</h2>
-{
-  latestPosts.map((post) => (
-    <PostSummary
-      title={post.data.title}
-      created={post.data.created}
-      slug={post.slug}
-    />
-  ))
-}
-<p>
-  Not enough? Full list <Link href="/posts" rel="prefetch">here</Link>.
-</p>
