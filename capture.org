@@ -1,3 +1,9 @@
 * Inbox
+** TODO Add picture on landing page
+:LOGBOOK:
+CLOCK: [2023-07-17 Mon 01:28]--[2023-07-17 Mon 01:29] =>  0:01
+:END:
+
+[[file:~/code/venikx.com/src/components/Footer.astro::</div>]]
 ** TODO Decide on the fonts, I prefer to have a monospace feel
 ** TODO Check if I can use file links in the frontmatter
