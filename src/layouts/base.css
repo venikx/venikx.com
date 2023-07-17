@@ -27,4 +27,20 @@
   .prose {
     @apply !max-w-full;
   }
+
+  .prose dt {
+    @apply font-bold;
+    @apply list-disc;
+    @apply inline;
+  }
+
+  .prose dd {
+    @apply -mt-2;
+    @apply pl-2;
+  }
+
+  .prose dd:before {
+    content: '╰──';
+    @apply pr-2;
+  }
 }

@@ -16,8 +16,10 @@ that all? 😕".
 Personally, I don't like being trapped in tutorial hell, and neither should you.
 So, I opted to create an npm package I wanted and is useful to me outside the
 scope of publishing to npm. Let's create our own ~npx username~ [[https://dev.to/wuz/setting-up-a-npx-username-card-1pip][card]], which
-executes a [[https://github.com/tallguyjenks/BusinessCard][cURLable business card]], because ="If it's not cURLable, it's not on
-the web." - Vint Cerf=.
+executes a [[https://github.com/tallguyjenks/BusinessCard][cURLable business card]], because
+#+begin_quote
+"If it's not cURLable, it's not on the web." - Vint Cerf
+#+end_quote
 
 ** Prerequisites
 - Node.js :: v16 (or above), basics
@@ -26,8 +28,8 @@ the web." - Vint Cerf=.
 
 * Initializing the Package
 I chose to name the folder and repository to be the username I use on Github,
-because then the README.md of the package (aka you) also acts as the [[https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme][profile on
-Github]].
+because then the README.md of the package (aka you) also acts as the
+[[https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme][profile on Github]].
 
 #+begin_src sh :results none :dir .
 mkdir -p your-name-here && cd your-name-here
@@ -76,12 +78,14 @@ node index.js
 #+end_src
 
 #+NAME: hello-world
-#+begin_src sh :dir ./your-name-here :exports results :results output
+#+begin_src sh :dir ./your-name-here :exports none :results code
 node example.js
 #+end_src
 
 #+RESULTS: hello-world
-: Hello World
+#+begin_src sh
+Hello World
+#+end_src
 
 * Creating the Business Card
 I don't want to go to deep into how the bash script works, but in essence we can
