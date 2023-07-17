@@ -23,4 +23,8 @@
   p {
     @apply py-2;
   }
+
+  .prose {
+    @apply !max-w-full;
+  }
 }
