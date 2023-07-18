@@ -7,7 +7,10 @@ import { getAllPosts } from '../lib/posts'
 const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
 ---
 
-<Layout title="Kevin De Baerdemaeker | Homepage" description="">
+<Layout
+  title="Kevin De Baerdemaeker | Homepage"
+  description="Humble full-stack web developer delivering solutions for clients in a wide variety of technologies. This is my personal blog, I ramble about the things I'm learning."
+>
   <p>
     I write about web technologies, and graphics programming. My goal with
     writing is to <em>educate myself</em>, while keeping the learning as
@@ -34,6 +37,6 @@ const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
   <h2 class="text-2xl">Latest Posts</h2>
   <PostList posts={latestPosts} />
   <p>
-    Not enough? Full list <Link href="/posts" rel="prefetch">here</Link>.
+    Not enough? Checkout <Link href="/posts" rel="prefetch">all my posts</Link>.
   </p>
 </Layout>
