@@ -1,0 +1,27 @@
+---
+const { posts } = Astro.props
+const formatDate = (date: Date) => date.toISOString().split('T')[0]
+---
+
+{
+  posts.length > 0 ? (
+    posts.map((post: (typeof posts)[number]) => {
+      const link = `/posts/${post.slug}`
+      return (
+        <section>
+          <a
+            href={link}
+            class="transition-colors ease-in duration-200 inline-flex gap-6 hover:bg-pink-100 rounded-lg py-1 px-4 -ml-4"
+          >
+            <div>{formatDate(post.data.created)}</div>
+            <h3 class="inline m-0 font-normal">{post.data.title}</h3>
+          </a>
+        </section>
+      )
+    })
+  ) : (
+    <small>
+      Err... Nothing to see here yet, or some integration went bust! 🐛
+    </small>
+  )
+}
