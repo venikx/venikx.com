@@ -1,5 +1,6 @@
 ---
 const { title, created, slug } = Astro.props
+const creationDate = created.toISOString().split('T')[0]
 ---
 
 <section>
@@ -7,7 +8,7 @@ const { title, created, slug } = Astro.props
     href=`/posts/${slug}`
     class="transition-colors ease-in duration-200 inline-flex gap-6 hover:bg-pink-100 rounded-lg py-1 px-4 -ml-4"
   >
-    <div>{created}</div>
+    <div>{creationDate}</div>
     <h3 class="inline m-0 font-normal">{title}</h3>
   </a>
 </section>

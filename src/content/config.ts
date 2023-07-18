@@ -10,7 +10,10 @@ const post = z.object({
 const blog = defineCollection({
   type: 'content',
   schema: post.extend({
-    created: z.string().datetime(),
+    created: z
+      .string()
+      .datetime()
+      .transform((d) => new Date(d)),
   }),
 })
 

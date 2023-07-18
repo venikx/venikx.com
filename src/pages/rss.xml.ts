@@ -12,7 +12,7 @@ export const get = async (context: AstroUserConfig) => {
       if (p.collection === 'blog') {
         return {
           title: p.data.title,
-          pubDate: new Date(p.data.created),
+          pubDate: p.data.created,
           description: p.data.description,
           link: `/posts/${p.slug}/`,
         }
