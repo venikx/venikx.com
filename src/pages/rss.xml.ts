@@ -1,18 +1,28 @@
 import rss from '@astrojs/rss'
 import type { AstroUserConfig } from 'astro/config'
-import { allPages } from '../utils'
+import { getAllPosts } from '../lib/posts'
 
 export const get = async (context: AstroUserConfig) => {
+  const allPosts = await getAllPosts()
   return rss({
     title: 'Kevin Blog',
     description: 'A humble Astronaut’s guide to the stars',
     site: context.site ?? 'https://venikx.com',
-    items: allPages.map((p) => {
+    items: allPosts.map((p) => {
+      if (p.collection === 'blog') {
+        return {
+          title: p.data.title,
+          pubDate: new Date(p.data.created),
+          description: p.data.description,
+          link: `/posts/${p.slug}/`,
+        }
+      }
+
       return {
-        title: p.frontmatter.title ?? '',
-        pubDate: p.frontmatter.created ?? '',
-        description: p.frontmatter.description ?? '',
-        link: `/posts/${p.frontmatter.slug}/`,
+        title: p.data.title,
+        pubDate: p.data.created,
+        description: p.data.description,
+        link: `/posts/${p.slug}/`,
       }
     }),
   })

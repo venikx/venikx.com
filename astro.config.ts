@@ -4,23 +4,28 @@ import prefetch from '@astrojs/prefetch'
 import org from '@orgajs/astro'
 import tailwind from '@astrojs/tailwind'
 import { demoteHeadings } from './src/lib/plugins'
+import mdx from '@astrojs/mdx'
 
 export default defineConfig({
+  site: 'https://venikx.com',
   experimental: {
     assets: true,
   },
   image: {
     service: sharpImageService(),
   },
-  site: 'https://venikx.com',
+  markdown: {
+    syntaxHighlight: 'prism',
+  },
   integrations: [
+    prefetch(),
+    mdx(),
     org({
       rehypePlugins: [demoteHeadings],
     }),
-    prefetch(),
-    sitemap(),
     tailwind({
       applyBaseStyles: false,
     }),
+    sitemap(),
   ],
 })
