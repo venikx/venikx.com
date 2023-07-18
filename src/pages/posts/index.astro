@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import PostSummary from '../../components/PostSummary.astro'
+import PostList from '../../components/PostList.astro'
 import { getAllPosts } from '../../lib/posts'
 
 const allBlogPosts = await getAllPosts()
@@ -8,13 +8,5 @@ const allBlogPosts = await getAllPosts()
 
 <Layout title="Kevin De Baerdemaeker | Homepage" description="">
   <h1 class="text-4xl">All Posts</h1>
-  {
-    allBlogPosts.map((post) => (
-      <PostSummary
-        title={post.data.title}
-        created={post.data.created}
-        slug={post.slug}
-      />
-    ))
-  }
+  <PostList posts={allBlogPosts} />
 </Layout>
