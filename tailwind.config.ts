@@ -8,9 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['IBM Plex Mono', ...defaultTheme.fontFamily.sans],
+        mono: ['Iosevka', ...defaultTheme.fontFamily.mono],
         sans: ['IBM Plex Sans', ...defaultTheme.fontFamily.sans],
-        serif: ['IBM Plex Serif', ...defaultTheme.fontFamily.sans],
+        serif: ['IBM Plex Serif', ...defaultTheme.fontFamily.serif],
       },
       typography: ({ theme }: ThemeConfig) => ({
         hackerman: {

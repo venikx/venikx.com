@@ -1,12 +1,12 @@
 ---
 import './base.css'
-import '@fontsource/ibm-plex-sans-condensed/400.css'
-import '@fontsource/ibm-plex-sans-condensed/700.css'
+
 import '@fontsource/ibm-plex-sans/400.css'
 import '@fontsource/ibm-plex-sans/700.css'
 import '@fontsource/ibm-plex-serif/400.css'
 import '@fontsource/ibm-plex-serif/600.css'
-import '@fontsource/ibm-plex-mono/300.css'
+import '@fontsource/iosevka/400.css'
+import '@fontsource/iosevka/700.css'
 
 import { getEntry } from 'astro:content'
 import Header from '../components/Header.astro'
@@ -48,7 +48,7 @@ const ogType = kind ? kind : 'website'
   </head>
   <body class="font-sans bg-purple-50 text-zinc-900 leading-relaxed">
     <Header />
-    <main class="container w-full mx-auto my-4 px-8 max-w-4xl">
+    <main class="container w-full mx-auto my-12 px-8 max-w-4xl">
       <slot />
     </main>
     <Footer />

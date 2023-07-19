@@ -12,61 +12,61 @@ const {
 ---
 
 <footer>
-  <div
-    class="my-4 py-8 bg-purple-100 container w-full mx-auto px-8 max-w-4xl flex flex-col gap-2"
-  >
-    {
-      showProfile && (
-        <div class="flex gap-8 items-center">
-          <Image
-            class="rounded-full w-24 transition duration-300 ease-in-out hover:scale-125"
-            src={heroImage}
-            alt=""
-            width={200}
-          />
-          <div>
-            <p>
-              The name is Kevin, and I'm a freelance software developer and
-              consultant. My thoughts can be all over the place, but they're
-              usually related to code. I read that writing helps with learning
-              and makes concepts stick. So, expect a lot of unfinished
-              ramblings.
-            </p>
-            <p>
-              For future messy thoughts, considering adding my{' '}
-              <Link href="/sitemap-index.xml" class="hover:bg-pink-200">
-                feed
-              </Link>{' '}
-              to your RSS reader. I don't really have social media, but you can
-              contact me via:
-            </p>
+  <div class="bg-purple-100 border-y-2 border-pink-200 my-4 py-8">
+    <div class="container w-full mx-auto px-8 max-w-4xl flex flex-col gap-2">
+      {
+        showProfile && (
+          <div class="flex gap-8 items-center">
+            <Image
+              class="rounded-full w-24 transition duration-300 ease-in-out hover:scale-125"
+              src={heroImage}
+              alt=""
+              width={200}
+            />
+            <div>
+              <p>
+                The name is Kevin, and I'm a freelance software developer and
+                consultant. My thoughts can be all over the place, but they're
+                usually related to code. I read that writing helps with learning
+                and makes concepts stick. So, expect a lot of unfinished
+                ramblings.
+              </p>
+              <p>
+                For future messy thoughts, considering adding my{' '}
+                <Link href="/sitemap-index.xml" class="hover:bg-pink-200">
+                  feed
+                </Link>{' '}
+                to your RSS reader. I don't really have social media, but you
+                can contact me via:
+              </p>
+            </div>
           </div>
-        </div>
-      )
-    }
+        )
+      }
 
-    <div class="flex gap-8 self-center">
-      <a
-        href={socials.github}
-        class="group inline-flex items-center gap-2 cursor-pointer hover:text-pink-700"
-      >
-        <Icon
-          name="carbon:email"
-          class="group-hover:animate-pulse text-current h-8 w-8"
-        />
-         Email
-      </a>
+      <div class="flex gap-8 self-center">
+        <a
+          href={socials.github}
+          class="group inline-flex items-center gap-2 cursor-pointer hover:text-pink-700"
+        >
+          <Icon
+            name="carbon:email"
+            class="group-hover:animate-pulse text-current h-8 w-8"
+          />
+           Email
+        </a>
 
-      <a
-        href={socials.linkedin}
-        class="group inline-flex items-center gap-2 cursor-pointer hover:text-pink-700"
-      >
-        <Icon
-          name="carbon:logo-github"
-          class="group-hover:animate-pulse text-current h-8 w-8"
-        />
-         GitHub
-      </a>
+        <a
+          href={socials.linkedin}
+          class="group inline-flex items-center gap-2 cursor-pointer hover:text-pink-700"
+        >
+          <Icon
+            name="carbon:logo-github"
+            class="group-hover:animate-pulse text-current h-8 w-8"
+          />
+           GitHub
+        </a>
+      </div>
     </div>
   </div>
 

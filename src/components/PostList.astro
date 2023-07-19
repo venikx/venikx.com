@@ -3,7 +3,7 @@ const { posts } = Astro.props
 const formatDate = (date: Date) => date.toISOString().split('T')[0]
 ---
 
-<div class="flex flex-col w-fit">
+<div class="flex flex-col w-fit -mt-1 mb-4">
   {
     posts.length > 0 ? (
       posts.map((post: (typeof posts)[number]) => {
@@ -11,7 +11,7 @@ const formatDate = (date: Date) => date.toISOString().split('T')[0]
         return (
           <a
             href={link}
-            class="transition-colors ease-in duration-200 inline-flex hover:bg-pink-100 rounded-lg py-2 px-4 -ml-4"
+            class="transition-colors ease-in duration-200 inline-flex hover:bg-pink-100 rounded-lg py-1 px-4 -ml-4"
           >
             <div>{formatDate(post.data.created)}</div>
             <h3 class="inline m-0 pl-6 font-normal">{post.data.title}</h3>
