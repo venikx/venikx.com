@@ -3,7 +3,7 @@ import { Image } from 'astro:assets'
 import { getEntry } from 'astro:content'
 import { Icon } from 'astro-icon'
 
-import heroImage from '../assets/helsinki.jpg'
+import bioImage from '../assets/pixel-art-kevin-db.webp'
 import Link from './Link.astro'
 const { showProfile = true } = Astro.props
 const {
@@ -16,12 +16,12 @@ const {
     <div class="container w-full mx-auto px-8 max-w-4xl flex flex-col gap-2">
       {
         showProfile && (
-          <div class="flex gap-8 items-center">
+          <div class="flex gap-4">
             <Image
-              class="rounded-full w-24 transition duration-300 ease-in-out hover:scale-125"
-              src={heroImage}
+              class="mt-2 h-16 w-16 transition duration-300 ease-in-out hover:scale-125"
+              src={bioImage}
               alt=""
-              width={200}
+              width={320}
             />
             <div>
               <p>

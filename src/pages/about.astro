@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets'
+import bioImage from '../assets/pixel-art-kevin-db.webp'
 import Layout from '../layouts/Layout.astro'
 import Link from '../components/Link.astro'
 
@@ -12,40 +14,52 @@ const {
   title="About - Kevin De Baerdemaeker"
   description="Humble freelance web developer sharing his musings..."
 >
+  <Image
+    class="-mr-4 mt-2 w-56 h-56 float-right rotate-y-180"
+    src={bioImage}
+    alt=""
+    width={320}
+  />
   <h1 class="text-4xl">About Kevin</h1>
-  <h2 class="text-2xl">Contact Information</h2>
-  <ul class="list-[square] list-inside">
-    <li>Send me an <Link href={socials.email}>email</Link>.</li>
-    <!-- prettier-ignore -->
-    <li>On <Link href={socials.github}>GitHub</Link>, you can follow my work.</li>
-    <!-- prettier-ignore -->
-    <li>If I can assist you, please contact me on <Link href={socials.linkedin}>LinkedIn</Link>.</li>
-  </ul>
-  <h2 class="text-2xl">Kevin's Background</h2>
-  <p>
-    I'm a 90s kid who has lived in Belgium most of my life. I remember playing
-    <!-- prettier-ignore -->
-    <Link href="https://en.wikipedia.org/wiki/Paperboy_(video_game)">Paper Boy</Link>
+  <section>
+    <h2 class="text-2xl">Contact Information</h2>
+    <ul class="list-[square] list-inside">
+      <li>Send me an <Link href={socials.email}>email</Link>.</li>
+      <!-- prettier-ignore -->
+      <li>On <Link href={socials.github}>GitHub</Link>, you can follow my work.</li>
+      <!-- prettier-ignore -->
+      <li>If I can assist you, please contact me on <Link href={socials.linkedin}>LinkedIn</Link>.</li>
+    </ul>
+  </section>
 
-    on the Commodore 64 when I was a kid, and gaming has always been a part of
-    my life. Aside from being glued to a screen, I've spent too much time
-    playing with Legos and loved football.
-  </p>
-  <p>
-    I never thought I would be a programmer or understand how the games I liked
-    to play were made. As part of a robotics class in Ghent, I learned how to
-    program. Later on, I picked up the skills to build web pages using HTML,
-    CSS, JavaScript, Typescript, and Node.js.
-  </p>
-  <p>
-    Over a span of 5y I've created websites and web apps for companies like
-    <Link href="https://freebility.be">Freebility</Link>,
-    <Link href="https://famoco.com">Famoco</Link> and
-    <Link href="https://epicgames.com">Epic Games</Link>. Nowadays, I'm a
-    self-employed consultant from Finland because I still like to work with web
-    technologies, but I wanted more freedom to reach my personal goals. I'm
-    trying to improve my creative side by learning three.js and WebGL.
-    Eventually I want to make games with C/C++ and OpenGL (maybe Vulkan by
-    then).
-  </p>
+  <section>
+    <h2 class="text-2xl">Kevin's Background</h2>
+    <p>
+      I'm a 90s kid who has lived in Belgium most of my life. I remember playing
+
+      <!-- prettier-ignore -->
+      <Link href="https://en.wikipedia.org/wiki/Paperboy_(video_game)">Paper Boy</Link>
+
+       on the Commodore 64 when I was a kid, and gaming has always been a part of
+      my life. Aside from being glued to a screen, I've spent too much time playing
+      with Legos and loved football.
+    </p>
+    <p>
+      I never thought I would be a programmer or understand how the games I
+      liked to play were made. As part of a robotics class in Ghent, I learned
+      how to program. Later on, I picked up the skills to build web pages using
+      HTML, CSS, JavaScript, Typescript, and Node.js.
+    </p>
+    <p>
+      Over a span of 5y I've created websites and web apps for companies like
+      <Link href="https://freebility.be">Freebility</Link>,
+      <Link href="https://famoco.com">Famoco</Link> and
+      <Link href="https://epicgames.com">Epic Games</Link>. Nowadays, I'm a
+      self-employed consultant from Finland because I still like to work with
+      web technologies, but I wanted more freedom to reach my personal goals.
+      I'm trying to improve my creative side by learning three.js and WebGL.
+      Eventually I want to make games with C/C++ and OpenGL (maybe Vulkan by
+      then).
+    </p>
+  </section>
 </Layout>

@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets'
 import Layout from '../layouts/Layout.astro'
+import bioImage from '../assets/pixel-art-kevin-db.webp'
 import PostList from '../components/PostList.astro'
 import Link from '../components/Link.astro'
 import { getAllPosts } from '../lib/posts'
@@ -11,11 +13,15 @@ const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
   title="Kevin De Baerdemaeker | Homepage"
   description="Humble full-stack web developer delivering solutions for clients in a wide variety of technologies. This is my personal blog, I ramble about the things I'm learning."
 >
-  <p>
-    I write about web technologies, and graphics programming. My goal with
-    writing is to <em>educate myself</em>, while keeping the learning as
-    entertaining.
-  </p>
+  <div class="flex items-center -mt-2">
+    <Image class="-ml-2 w-32 h-32 mr-4" src={bioImage} alt="" width={320} />
+    <p>
+      I write about web technologies, and graphics programming. My goal with
+      writing is to <em>educate myself</em>, while keeping the learning as
+      entertaining.
+    </p>
+  </div>
+
   <h2 class="text-2xl">Interests</h2>
   <p>
     I've been delivering projects for multiple clients, in a wide variety of
@@ -27,7 +33,8 @@ const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
     coding using WebGL and OpenGL (C/C++). <em>But!</em> It's not easy! There's
     a lot of math and computer science-y concepts and I never seem to <em
       >get'em</em
-    >. I read that writing helps with understand, so... <em>Welcome! Hi!</em>
+    >. I read that writing helps with understand, so...
+    <em>Welcome! Hi!</em>
   </p>
   <p>
     Also, people seem to love Rust and Golang. I need to hop on deez before it's

@@ -1,12 +1,15 @@
 * Inbox
-** TODO Add picture on landing page
+** DONE Add picture on landing page
+CLOSED: [2023-07-20 Thu 16:55]
 :LOGBOOK:
 CLOCK: [2023-07-17 Mon 01:28]--[2023-07-17 Mon 01:29] =>  0:01
 :END:
 
 [[file:~/code/venikx.com/src/components/Footer.astro::</div>]]
-** TODO Add pixel-me to assets for meta tags
+** DONE Add pdocumentsixel-me to assets for meta tags
+CLOSED: [2023-07-20 Thu 16:55]
 ** DONE Decide on the fonts, I prefer to have a monospace feel
 CLOSED: [2023-07-19 Wed 17:38]
 ** KILL Check if I can use file links in the frontmatter
 CLOSED: [2023-07-18 Tue 17:57]
+** TODO Write blog post about data structures & algorithms

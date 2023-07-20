@@ -18,7 +18,7 @@ const {
 const { title, description, image, kind } = Astro.props
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
-const ogImage = image ? image : new URL('/pixel-me.jpeg', Astro.site)
+const ogImage = image ? image : new URL('/pixel-art-kevin-db.png', Astro.site)
 const ogType = kind ? kind : 'website'
 ---
 

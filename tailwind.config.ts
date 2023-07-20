@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import typographyPlugin from '@tailwindcss/typography'
+import tw3DPlugin from 'tailwindcss-3d'
 import type { ThemeConfig } from 'tailwindcss/types/config'
 
 export default {
@@ -52,5 +53,5 @@ export default {
       }),
     },
   },
-  plugins: [typographyPlugin],
+  plugins: [typographyPlugin, tw3DPlugin as any],
 } satisfies Config
