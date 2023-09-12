@@ -2,10 +2,9 @@
 
 My hacker space is a glued together Frankenstein monster of multiple
 inspirational resources of building a static website with [[https://www.gnu.org/software/emacs/][Emacs]] and the amazing
-[[https://orgmode.org/][Org Mode]]. The full publishing configuration can be found in my [[https://github.com/venikx/dotfiles/blob/main/config/doom/config.org#publishing][dotfiles]] for
-doom.
+[[https://orgmode.org/][Org Mode]].
 
-- [[https://www.redblobgames.com/][Red Blob Games]] :: Creating interactive tutorials using org-mode (NOT ATTEMPTED YET)
+- [[https://www.redblobgames.com/][Red Blob Games]] :: Creating interactive tutorials using org-mode
 - [[https://iotcl.com/][Toon Claes]] :: The main trigger to start publishing a site with Org Mode
 - [[http://duncan.codes][Duncan Codes]] :: List generation for the archive
 - [[https://www.brautaset.org/index.html][Stig's Soapbox]] :: The simple, but effective way to providing quality content

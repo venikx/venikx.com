@@ -1,0 +1,175 @@
+#+title: NixOS
+#+description: Publishing your first npm package can seem daunting at first so lets create your own personal cURLable and npx business card and publish it as a package on npm.
+#+created: 2022-07-17T00:00:00Z
+#+draft: true
+
+Lately, I'm following along [[https://handmadehero.org/][Handmade Hero]] on NixOS using SDL ([[https://davidgow.net/handmadepenguin/default.html][Handmade Penguin]]),
+and wanted to setup [[https://zero-to-nix.com/concepts/flakes][nix flakes]] to build the derivation. I don't fully understand
+building derivations with flakes yet, as nix provides a lot built-in wrappers.
+But this seems to work for C/C++ with external dependencies.
+
+A couple requirements:
+- use ~nix build~ to create the derivation, built output inside ~./result~
+- place C++ files in ~./src~
+- setup a shell, which installs dependencies so ~eglot~ (Emacs LSP) and ~clangd~
+  can complete ~SDL2~ headers
+
+* What the ~flake.nix~?
+For my own system configuration I depend on =nixos-unstable=, but for projects I
+like to depend on more stable version =nixos-23.05=. I need the =flake-utils=,
+since it makes working with flakes easier when building derivations for multiple
+platforms.
+
+#+begin_src nix :exports code
+{
+  description = "Handmade Hero on NixOS";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }: {
+    # so what goes in here?
+  };
+}
+#+end_src
+
+Let's create some variables we need later to create the derivation and setup the
+development shell. The ~buildInputs~ are dependencies required by the runtime of
+the program, while the ~nativeBuildInputs~ are the required dependencies to
+build the program.
+
+#+begin_src nix :exports code
+outputs = { self, nixpkgs, flake-utils }:
+  flake-utils.lib.eachDefaultSystem (system:
+    let
+      name = "my-handmade-hero";
+      src = ./.;
+      pkgs = nixpkgs.legacyPackages.${system};
+      buildInputs = with pkgs; [ SDL2 SDL2.dev ];
+      nativeBuildInputs = with pkgs; [ clang-tools gf ];
+    in {
+      # then what do we put here?
+    });
+#+end_src
+
+To build the derivation we can depend on some helpers from the nix ecosystem. I
+haven't figured out yet how to indicate to build a binary with debug symbols, as
+the nix helpers seem to strip them out.
+
+#+name: package
+#+begin_src nix
+packages.default = let inherit (pkgs) stdenv; in stdenv.mkDerivation {
+  inherit system name src buildInputs nativeBuildInputs;
+
+  buildPhase = with pkgs;
+    "${clang}/bin/clang++ ./src/sdl_handmade.cpp -Wall -o handmade_hero -lSDL2";
+
+  installPhase = ''
+    mkdir -p $out/bin
+    cp handmade_hero $out/bin/
+  '';
+};
+#+end_src
+
+The development environment loads the same ~buildInputs~ and
+~nativeBuildInputs~, and as a sanity check reports the installed ~clang++~
+version.
+
+#+name: dev-shell
+#+begin_src nix
+devShells.default = pkgs.mkShell {
+  inherit buildInputs nativeBuildInputs;
+
+  shellHook = with pkgs; ''
+    echo "`${clang}/bin/clang++ --version`"
+  '';
+};
+#+end_src
+
+Now, by bringing all these puzzles pieces together, you end up with the
+following ~flake.nix~.
+
+#+begin_src nix :tangle flake.nix :noweb yes
+{
+  description = "Handmade Hero on NixOS";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        name = "my-handmade-hero";
+        src = ./.;
+        pkgs = nixpkgs.legacyPackages.${system};
+        buildInputs = with pkgs; [ SDL2 SDL2.dev ];
+        nativeBuildInputs = with pkgs; [ clang-tools gf ];
+      in {
+        <<package>>
+        <<dev-shell>>
+      });
+}
+#+end_src
+
+#+name: strip
+#+begin_src elisp :var text="\e[31mHello World\e[0m" :exports none
+(ansi-color-apply text)
+#+end_src
+
+Now, if you see...
+#+name: businesss
+#+begin_src sh :results output :exports both :post strip(*this*)
+nix flake show
+#+end_src
+
+#+RESULTS: businesss
+#+begin_example
+git+file:///home/venikx/code/venikx.com?dir=src/content/blog/handmade-hero-nixos
+├───devShells
+│   ├───aarch64-darwin
+│   │   └───default omitted (use '--all-systems' to show)
+│   ├───aarch64-linux
+│   │   └───default omitted (use '--all-systems' to show)
+│   ├───x86_64-darwin
+│   │   └───default omitted (use '--all-systems' to show)
+│   └───x86_64-linux
+│       └───default: development environment 'nix-shell'
+└───packages
+    ├───aarch64-darwin
+    │   └───default omitted (use '--all-systems' to show)
+    ├───aarch64-linux
+    │   └───default omitted (use '--all-systems' to show)
+    ├───x86_64-darwin
+    │   └───default omitted (use '--all-systems' to show)
+    └───x86_64-linux
+        └───default: package 'my-handmade-hero'
+#+end_example
+
+
+* SDL2 Message Boxes
+#+begin_src C++ :mkdirp yes :tangle src/sdl_handmade.cpp
+#include <SDL2/SDL.h>
+#include <stdio.h>
+
+int main(int arc, char **argv) {
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Handmade Hero",
+                           "This is Handmade Hero", 0);
+  return 0;
+}
+#+end_src
+
+* Ending it
+So...
+
+#+begin_src sh :results none :exports code
+nix build
+./result/bin/handmade_hero
+#+end_src
+
+
+#+caption: test
+[[file:./buffer.png]]
