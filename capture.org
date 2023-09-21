@@ -12,4 +12,7 @@ CLOSED: [2023-07-20 Thu 16:55]
 CLOSED: [2023-07-19 Wed 17:38]
 ** KILL Check if I can use file links in the frontmatter
 CLOSED: [2023-07-18 Tue 17:57]
-** TODO Write blog post about data structures & algorithms
+** KILL Write blog post about data structures & algorithms
+CLOSED: [2023-09-13 Wed 01:52]
+** TODO Use uniorg for image handling
+** TODO Upgrade to astro v3
