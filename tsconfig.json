@@ -13,5 +13,6 @@
         "name": "@astrojs/ts-plugin"
       }
     ]
-  }
+  },
+  "include": ["src/**/*", "astro.config.ts", "tailwind.config.ts"]
 }

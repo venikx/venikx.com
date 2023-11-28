@@ -1,21 +1,26 @@
-#+title: NixOS
-#+description: Publishing your first npm package can seem daunting at first so lets create your own personal cURLable and npx business card and publish it as a package on npm.
-#+created: 2022-07-17T00:00:00Z
+#+title: Building Handmade Penguin on NixOS with Nix Flakes
+#+description: Handmade Penguin is a Linux implementation of Handmade Hero, and my aim is to clarify how to bundle C/C++ and with external libraries on NixOS.
+#+created: 2022-11-28T00:00:00Z
 #+draft: true
 
-Lately, I'm following along [[https://handmadehero.org/][Handmade Hero]] on NixOS using SDL ([[https://davidgow.net/handmadepenguin/default.html][Handmade Penguin]]),
+Lately, I'm following along [[https://handmadehero.org/][Handmade Hero]] on NixOS using SDL2 ([[https://davidgow.net/handmadepenguin/default.html][Handmade Penguin]]),
 and wanted to setup [[https://zero-to-nix.com/concepts/flakes][nix flakes]] to build the derivation. I don't fully understand
 building derivations with flakes yet, as nix provides a lot built-in wrappers.
-But this seems to work for C/C++ with external dependencies.
+But, I made something work for C/C++ with external dependencies such as SDL2.
 
-A couple requirements:
-- use ~nix build~ to create the derivation, built output inside ~./result~
-- place C++ files in ~./src~
-- setup a shell, which installs dependencies so ~eglot~ (Emacs LSP) and ~clangd~
-  can complete ~SDL2~ headers
+If you are unfamiliar with the nix ecosystem, I recommend reading through [[https://nix.dev/tutorials/first-steps/][nix]]
+and [[https://www.tweag.io/blog/2020-05-25-flakes/][nix flakes]], but it's not a requirement. Personally, I'm still learning about
+these concepts myself.
+
+A couple requirements (or opinions rather):
+- use ~nix build~ to create the derivation, the output resides in the ~./result~
+  folder
+- place C++ source files in ~./src~
+- your editor of choice (I use Emacs btw 😎) linking SDL2 with the LSP, using a
+  local development environment
 
 * What the ~flake.nix~?
-For my own system configuration I depend on =nixos-unstable=, but for projects I
+For my own [[https://github.com/venikx/dotfiles][system configuration]] I depend on =nixos-unstable=, but for projects I
 like to depend on more stable version =nixos-23.05=. I need the =flake-utils=,
 since it makes working with flakes easier when building derivations for multiple
 platforms.
@@ -39,6 +44,10 @@ Let's create some variables we need later to create the derivation and setup the
 development shell. The ~buildInputs~ are dependencies required by the runtime of
 the program, while the ~nativeBuildInputs~ are the required dependencies to
 build the program.
+
+Personally, I use ~clangd~, but you can use whatever your LSP prefers. I also
+use ~gf~, to provide me with a simple debugger as [[https://remedybg.itch.io/remedybg][RemedyBG]] is not available on
+Linux [[https://github.com/x13pixels/remedybg-issues/issues/176#issuecomment-1555130327][yet]].
 
 #+begin_src nix :exports code
 outputs = { self, nixpkgs, flake-utils }:
@@ -120,13 +129,14 @@ following ~flake.nix~.
 (ansi-color-apply text)
 #+end_src
 
-Now, if you see...
-#+name: businesss
+Now, you can check if the flake is has been setup correctly.
+
+#+name: nix-show
 #+begin_src sh :results output :exports both :post strip(*this*)
 nix flake show
 #+end_src
 
-#+RESULTS: businesss
+#+RESULTS: nix-show
 #+begin_example
 git+file:///home/venikx/code/venikx.com?dir=src/content/blog/handmade-hero-nixos
 ├───devShells
@@ -149,8 +159,11 @@ git+file:///home/venikx/code/venikx.com?dir=src/content/blog/handmade-hero-nixos
         └───default: package 'my-handmade-hero'
 #+end_example
 
+* Verify the SDL2 headers with a Message Box
+The simplest way to check if a C/C++ codebase properly connects with SDL2 is
+showing a [[https://wiki.libsdl.org/SDL2/SDL_ShowSimpleMessageBox][message box]]. Your editor (I use Emacs btw 😎) should now also be able
+to complete SDL functions when you type =SDL_=.
 
-* SDL2 Message Boxes
 #+begin_src C++ :mkdirp yes :tangle src/sdl_handmade.cpp
 #include <SDL2/SDL.h>
 #include <stdio.h>
@@ -162,14 +175,20 @@ int main(int arc, char **argv) {
 }
 #+end_src
 
-* Ending it
-So...
+The hardest parts are behind us now. Running ~nix build~ creates an executable
+file.
 
 #+begin_src sh :results none :exports code
 nix build
+#+end_src
+
+After running the ~handmade_hero~ executable from the ~./result/bin/~ folder, you should see a message box.
+
+#+begin_src sh :results none :exports code
 ./result/bin/handmade_hero
 #+end_src
 
-
 #+caption: test
 [[file:./buffer.png]]
+
+Grrrr... Inline images aren't working when using Astro and org-mode, [[https://github.com/venikx/venikx.com/issues/6][sigh]].
