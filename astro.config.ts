@@ -8,9 +8,6 @@ import mdx from '@astrojs/mdx'
 
 export default defineConfig({
   site: 'https://venikx.com',
-  experimental: {
-    assets: true,
-  },
   image: {
     service: sharpImageService(),
   },
