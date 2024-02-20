@@ -9,6 +9,7 @@ export const get = async (context: AstroUserConfig) => {
     description: 'A humble Astronaut’s guide to the stars',
     site: context.site ?? 'https://venikx.com',
     items: allPosts.map((p) => {
+      //TODO(Kevin): Add content to rss feed to publish to dev.to
       if (p.collection === 'blog') {
         return {
           title: p.data.title,
