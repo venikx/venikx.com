@@ -4,24 +4,21 @@ const post = z.object({
   title: z.string(),
   description: z.string(),
   cover: z.optional(z.string()),
-  draft: z.optional(z.string()),
+  draft: z.optional(z.coerce.boolean()),
+  filetags: z
+    .string()
+    .default('')
+    .transform((f) => f.split(':').filter((f) => !!f)),
+  created: z.coerce.date(),
 })
 
 const blog = defineCollection({
   type: 'content',
-  schema: post.extend({
-    created: z
-      .string()
-      .datetime()
-      .transform((d) => new Date(d)),
-  }),
+  schema: post.extend({}),
 })
 
 const interactive = defineCollection({
-  schema: post.extend({
-    created: z.date(),
-    draft: z.optional(z.boolean()),
-  }),
+  schema: post.extend({}),
 })
 
 const authors = defineCollection({
