@@ -6,7 +6,10 @@ import icon from 'astro-icon'
 import { h } from 'hastscript'
 import org from './src/lib/astro-org'
 import mdx from '@astrojs/mdx'
-import rehypeShiftHeading from 'rehype-shift-heading'
+import rehypeShiftHeading, {
+  type Options as RehypeShiftOptions,
+} from 'rehype-shift-heading'
+import shiki, { type RehypeShikiOptions } from '@shikijs/rehype'
 
 export default defineConfig({
   prefetch: true,
@@ -27,7 +30,10 @@ export default defineConfig({
       },
     }),
     org({
-      rehypePlugins: [[rehypeShiftHeading, { shift: 1 }]],
+      rehypePlugins: [
+        [rehypeShiftHeading, { shift: 1 } as RehypeShiftOptions],
+        [shiki, { theme: 'synthwave-84' } as RehypeShikiOptions],
+      ],
       uniorgRehypeOptions: {
         handlers: {
           'example-block': (org) => {
