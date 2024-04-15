@@ -1,12 +1,14 @@
 import { defineConfig, sharpImageService } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
-import prefetch from '@astrojs/prefetch'
-import org from '@orgajs/astro'
 import tailwind from '@astrojs/tailwind'
-import { demoteHeadings } from './src/lib/plugins'
+import icon from 'astro-icon'
+import { h } from 'hastscript'
+import org from './src/lib/astro-org'
 import mdx from '@astrojs/mdx'
+import rehypeShiftHeading from 'rehype-shift-heading'
 
 export default defineConfig({
+  prefetch: true,
   site: 'https://venikx.com',
   image: {
     service: sharpImageService(),
@@ -15,10 +17,22 @@ export default defineConfig({
     syntaxHighlight: 'prism',
   },
   integrations: [
-    prefetch(),
     mdx(),
+    icon({
+      include: {
+        jam: ['menu', 'close'],
+        carbon: ['logo-github', 'logo-linkedin', 'email'],
+      },
+    }),
     org({
-      rehypePlugins: [demoteHeadings],
+      rehypePlugins: [[rehypeShiftHeading, { shift: 1 }]],
+      uniorgRehypeOptions: {
+        handlers: {
+          'example-block': (org) => {
+            return h('pre.example', [{ type: 'text', value: org.value }])
+          },
+        },
+      },
     }),
     tailwind({
       applyBaseStyles: false,

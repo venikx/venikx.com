@@ -188,6 +188,4 @@ After running the ~handmade_hero~ executable from the ~./result/bin/~ folder, yo
 #+end_src
 
 #+caption: test
-[[file:./buffer.png]]
-
-Grrrr... Inline images aren't working when using Astro and org-mode, [[https://github.com/venikx/venikx.com/issues/6][sigh]].
+[[./buffer.png]]

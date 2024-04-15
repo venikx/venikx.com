@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import typographyPlugin from '@tailwindcss/typography'
 import tw3DPlugin from 'tailwindcss-3d'
-import type { ThemeConfig } from 'tailwindcss/types/config'
+import type { PluginAPI } from 'tailwindcss/types/config'
 
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
@@ -13,7 +13,7 @@ export default {
         sans: ['IBM Plex Sans', ...defaultTheme.fontFamily.sans],
         serif: ['IBM Plex Serif', ...defaultTheme.fontFamily.serif],
       },
-      typography: ({ theme }: ThemeConfig) => ({
+      typography: (theme: PluginAPI['theme']) => ({
         hackerman: {
           css: {
             '--tw-prose-body': theme('colors.zinc[900]'),
