@@ -164,6 +164,7 @@ The simplest way to check if a C/C++ codebase properly connects with SDL2 is
 showing a [[https://wiki.libsdl.org/SDL2/SDL_ShowSimpleMessageBox][message box]]. Your editor (I use Emacs btw 😎) should now also be able
 to complete SDL functions when you type =SDL_=.
 
+#+caption: Finally! Some C++ code!
 #+begin_src cpp :mkdirp yes :tangle src/sdl_handmade.cpp
 #include <SDL2/SDL.h>
 #include <stdio.h>

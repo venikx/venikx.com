@@ -39,6 +39,32 @@ export default defineConfig({
           'example-block': (org) => {
             return h('pre.example', [{ type: 'text', value: org.value }])
           },
+          'src-block': function (org) {
+            const snippet = h(
+              'pre.src-block',
+              {},
+              h(
+                'code',
+                {
+                  className: org.language
+                    ? `language-${org.language}`
+                    : undefined,
+                },
+                org.value
+              )
+            )
+
+            const captions: any[] = Array.isArray(org.affiliated.CAPTION)
+              ? org.affiliated.CAPTION.flat()
+              : []
+
+            if (captions.length <= 0) {
+              return snippet
+            } else {
+              const figcaption = h('figcaption', captions[0]!.value)
+              return h('figure', [snippet, figcaption])
+            }
+          },
         },
       },
     }),
