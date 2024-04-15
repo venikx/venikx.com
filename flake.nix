@@ -11,7 +11,6 @@
       let pkgs = inputs.nixpkgs.legacyPackages.${system};
       in {
         devShells.default = pkgs.mkShell {
-          #packages = with pkgs; [ nodejs-18_x ];
           nativeBuildInputs = with pkgs; [ nodejs_20 ];
 
           shellHook = with pkgs; ''
