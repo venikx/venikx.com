@@ -17,8 +17,9 @@ const {
 } = await getEntry('authors', 'kevin')
 const { title, description, image, kind } = Astro.props
 
+import defaultImage from '../assets/pixel-art-kevin-db.png'
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
-const ogImage = image ? image : new URL('/pixel-art-kevin-db.png', Astro.site)
+const ogImage = image ? image : new URL(defaultImage.src, Astro.site)
 const ogType = kind ? kind : 'website'
 ---
 
