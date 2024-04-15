@@ -14,5 +14,8 @@ CLOSED: [2023-07-19 Wed 17:38]
 CLOSED: [2023-07-18 Tue 17:57]
 ** KILL Write blog post about data structures & algorithms
 CLOSED: [2023-09-13 Wed 01:52]
-** TODO Use uniorg for image handling
-** TODO Upgrade to astro v3
+** DONE Use uniorg for image handling
+CLOSED: [2024-04-15 Mon 12:56]
+** DONE Upgrade to astro v4
+CLOSED: [2024-04-15 Mon 12:56]
+** TODO Configure Cloudflare Image Optimization or pre-built with Github Actions

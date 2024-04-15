@@ -1,4 +1,5 @@
-import { defineConfig, sharpImageService } from 'astro/config'
+//import { defineConfig, sharpImageService } from 'astro/config'
+import { defineConfig, passthroughImageService } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
 import icon from 'astro-icon'
@@ -11,7 +12,8 @@ export default defineConfig({
   prefetch: true,
   site: 'https://venikx.com',
   image: {
-    service: sharpImageService(),
+    //service: sharpImageService(),
+    service: passthroughImageService(),
   },
   markdown: {
     syntaxHighlight: 'prism',
