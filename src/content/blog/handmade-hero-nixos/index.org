@@ -1,31 +1,29 @@
-#+title: Building Handmade Penguin on NixOS with Nix Flakes
-#+description: Handmade Penguin is a Linux implementation of Handmade Hero, and my aim is to clarify how to bundle C/C++ and with external libraries on NixOS.
+#+title: Building Handmade Hero with Nix Flakes
+#+description: Handmade Penguin is a Linux implementation of Handmade Hero, and my aim is to clarify how to bundle C/C++ with external libraries using Nix Flakes.
 #+created: 2023-11-28T00:00:00Z
 #+filetags: :nix:cpp:
 
-Lately, I'm following along [[https://handmadehero.org/][Handmade Hero]] on NixOS using SDL2 ([[https://davidgow.net/handmadepenguin/default.html][Handmade Penguin]]),
-and wanted to setup [[https://zero-to-nix.com/concepts/flakes][nix flakes]] to build the derivation. I don't fully understand
-building derivations with flakes yet, as nix provides a lot built-in wrappers.
-But, I made something work for C/C++ with external dependencies such as SDL2.
+Lately, I'm following along [[https://handmadehero.org/][Handmade Hero]] on NixOS using SDL2 (thank you
+[[https://davidgow.net/handmadepenguin/default.html][Handmade Penguin]]), and wanted to setup [[https://zero-to-nix.com/concepts/flakes][=Nix Flakes=]] to build the derivation. I
+made something work for ~C/C++~ with external dependencies such as ~SDL2~.
 
-If you are unfamiliar with the nix ecosystem, I recommend reading through [[https://nix.dev/tutorials/first-steps/][nix]]
-and [[https://www.tweag.io/blog/2020-05-25-flakes/][nix flakes]], but it's not a requirement. Personally, I'm still learning about
-these concepts myself.
+If you are unfamiliar with the nix ecosystem, I recommend reading my [[../how-to-nix/index.org][earlier
+post]], but it's not a requirement. I'm still learning about these concepts
+myself, so don't worry.
 
-A couple requirements (or opinions rather):
-- use ~nix build~ to create the derivation, the output resides in the ~./result~
-  folder
+My requirements:
+- ability to use ~nix run~ to display the project
 - place C++ source files in ~./src~
-- your editor of choice (I use Emacs btw 😎) linking SDL2 with the LSP, using a
-  local development environment
+- the =Language Server Protocol= (LSP) should pick up the ~SDL2~ library when
+  using [[https://direnv.net/][direnv]] in your editor of choice (I use Emacs btw 😎)
 
-* What the ~flake.nix~?
+* Show the ~flake.nix~ already!
 For my own [[https://github.com/venikx/dotfiles][system configuration]] I depend on =nixos-unstable=, but for projects I
 like to depend on more stable version =nixos-23.05=. I need the =flake-utils=,
 since it makes working with flakes easier when building derivations for multiple
 platforms.
 
-#+begin_src nix :exports code
+#+begin_src nix
 {
   description = "Handmade Hero on NixOS";
 
@@ -34,66 +32,61 @@ platforms.
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }: {
-    # so what goes in here?
-  };
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        # TODO(Kevin): What goes in here?
+      });
 }
 #+end_src
 
-Let's create some variables we need later to create the derivation and setup the
-development shell. The ~buildInputs~ are dependencies required by the runtime of
-the program, while the ~nativeBuildInputs~ are the required dependencies to
-build the program.
+I use ~clangd~, not sure why, but it's the one I chose. If you want to use
+~gcc~, go for it. I also use ~gf~ to provide me with a simple debugger as
+[[https://remedybg.itch.io/remedybg][RemedyBG]] is not available on Linux [[https://github.com/x13pixels/remedybg-issues/issues/176#issuecomment-1555130327][yet]].
 
-Personally, I use ~clangd~, but you can use whatever your LSP prefers. I also
-use ~gf~, to provide me with a simple debugger as [[https://remedybg.itch.io/remedybg][RemedyBG]] is not available on
-Linux [[https://github.com/x13pixels/remedybg-issues/issues/176#issuecomment-1555130327][yet]].
+The executable depends on ~SDL2~ being available at runtime, which is why we add
+it to the ~buildInputs~. Usually you would read ~mkDerivation~, but this
+environment provides ~gcc~ by default, not ~clang++~. We have to call the
+derivation helper from a ~clangStenv~.
 
-#+begin_src nix :exports code
-outputs = { self, nixpkgs, flake-utils }:
-  flake-utils.lib.eachDefaultSystem (system:
-    let
-      name = "my-handmade-hero";
-      src = ./.;
-      pkgs = nixpkgs.legacyPackages.${system};
-      buildInputs = with pkgs; [ SDL2 SDL2.dev ];
-      nativeBuildInputs = with pkgs; [ clang-tools gf ];
-    in {
-      # then what do we put here?
-    });
-#+end_src
-
-To build the derivation we can depend on some helpers from the nix ecosystem. I
-haven't figured out yet how to indicate to build a binary with debug symbols, as
-the nix helpers seem to strip them out.
-
-#+name: package
+#+name: packages
 #+begin_src nix
-packages.default = let inherit (pkgs) stdenv; in stdenv.mkDerivation {
-  inherit system name src buildInputs nativeBuildInputs;
+packages = {
+  default = let inherit (pkgs) clangStdenv;
+  in clangStdenv.mkDerivation {
+    name = "my-handmade-hero";
+    src = ./.;
+    buildInputs = with pkgs; [ SDL2 ];
 
-  buildPhase = with pkgs;
-    "${clang}/bin/clang++ ./src/sdl_handmade.cpp -Wall -o handmade_hero -lSDL2";
+    buildPhase = with pkgs;
+      "clang++ ./src/sdl_handmade.cpp -o handmade_hero -lSDL2";
 
-  installPhase = ''
-    mkdir -p $out/bin
-    cp handmade_hero $out/bin/
-  '';
+    installPhase = ''
+      mkdir -p $out/bin
+      cp handmade_hero $out/bin/my-handmade-hero
+    '';
+  };
 };
 #+end_src
 
-The development environment loads the same ~buildInputs~ and
-~nativeBuildInputs~, and as a sanity check reports the installed ~clang++~
-version.
+The reproducible development environment loads the same ~buildInputs~ and
+~nativeBuildInputs~, from the earlier mention package declaration via
+~inputsFrom~. The shell reports the installed ~clang++~ version as a sanity
+check.
 
 #+name: dev-shell
 #+begin_src nix
-devShells.default = pkgs.mkShell {
-  inherit buildInputs nativeBuildInputs;
+devShells = {
+  default = pkgs.mkShell.override { stdenv = pkgs.clangStdenv; } {
+    packages = with pkgs; [ clang-tools gf SDL2.dev ];
 
-  shellHook = with pkgs; ''
-    echo "`${clang}/bin/clang++ --version`"
-  '';
+    inputsFrom = [ self.packages.${system}.default ];
+
+    shellHook = with pkgs; ''
+      echo "`clang++ --version`"
+    '';
+  };
 };
 #+end_src
 
@@ -129,10 +122,10 @@ following ~flake.nix~.
 (ansi-color-apply text)
 #+end_src
 
-Now, you can check if the flake is has been setup correctly.
-
+Generate the lock file, and check if the flake is has been setup correctly.
 #+name: nix-show
-#+begin_src sh :results output :exports both :post strip(*this*)
+#+begin_src sh :results output :post strip(*this*)
+nix flake lock
 nix flake show
 #+end_src
 
@@ -159,10 +152,10 @@ git+file:///home/venikx/code/venikx.com?dir=src/content/blog/handmade-hero-nixos
         └───default: package 'my-handmade-hero'
 #+end_example
 
-* Verify the SDL2 headers with a Message Box
-The simplest way to check if a C/C++ codebase properly connects with SDL2 is
-showing a [[https://wiki.libsdl.org/SDL2/SDL_ShowSimpleMessageBox][message box]]. Your editor (I use Emacs btw 😎) should now also be able
-to complete SDL functions when you type =SDL_=.
+* Verify the SDL2 Headers with a Message Box
+The simplest way to check if C/C++ code properly links with the ~SDL2~ library
+is by showing a [[https://wiki.libsdl.org/SDL2/SDL_ShowSimpleMessageBox][message box]]. Your editor (I use Emacs btw 😎) should now also be
+able to complete SDL functions when you type =SDL_=.
 
 #+caption: Finally! Some C++ code!
 #+begin_src cpp :mkdirp yes :tangle src/sdl_handmade.cpp
@@ -177,17 +170,12 @@ int main(int arc, char **argv) {
 #+end_src
 
 The hardest parts are behind us now. Running ~nix build~ creates an executable
-file.
+file inside =result=. After running =./result/bin/handmade_hero= you should see
+a message box. Or equivalently run ~nix run~.
 
-#+begin_src sh :results none :exports code
-nix build
+#+begin_src sh :exports code :eval no
+nix run
 #+end_src
 
-After running the ~handmade_hero~ executable from the ~./result/bin/~ folder, you should see a message box.
-
-#+begin_src sh :results none :exports code
-./result/bin/handmade_hero
-#+end_src
-
-#+caption: test
+#+caption: A ~SimpleMessageBox~ appears with the text "This is Handmade Hero"
 [[./buffer.png]]

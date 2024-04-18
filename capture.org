@@ -20,3 +20,5 @@ CLOSED: [2024-04-15 Mon 12:56]
 CLOSED: [2024-04-15 Mon 12:56]
 ** TODO Configure Cloudflare Image Optimization or pre-built with Github Actions
 ** TODO Create a page for all the filetags
+** TODO Images do not have captions
+** TODO :exports none still exports

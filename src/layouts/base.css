@@ -43,4 +43,13 @@
     content: '╰──';
     @apply pr-2;
   }
+
+  .prose ul p {
+    margin: 0;
+  }
+
+  .prose dl p {
+    margin: 0;
+    display: inline-block;
+  }
 }

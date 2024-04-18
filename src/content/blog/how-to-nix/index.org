@@ -1,0 +1,521 @@
+#+title: How-To Nix (a guide to reproducible development environments)
+#+description: TODO
+#+created: 2023-11-28T00:00:00Z
+#+draft: true
+
+You've probably heard of [[https://nixos.org/][=Nix=]]. If you haven't, well... The landing page explains
+everything (just trust me 👀).
+
+#+begin_quote
+Declarative builds and deployments. Nix is a tool that takes a unique approach to package management and system configuration.
+-- https://nixos.org/
+#+end_quote
+
+eAsY rIgHt?! The same way the =monad is just a monoid in the category of
+endofunctors= makes zero sense for me, Nix's description is bit obtuse. Once the
+concepts start making sense, it ruins you in a good way. Let's build a tiny
+program using Nix, and slowly understand why /reproducible development
+environments/ are valuable.
+
+* Installing Nix
+The tooling is available on [[https://nixos.org/download/#nix-install-linux][=Linux=]], [[https://nixos.org/download/#nix-install-macos][=MacOS=]], [[https://nixos.org/download/#nix-install-windows][=WSL2=]], and more. If you want to
+immediately go /balls deep/ you can install [[https://nixos.org/download/#nixos-iso][=NixOS=]] on a useless laptop. The
+first time I tried out Nix was on an Ubuntu VM, because I didn't want to screw
+up my existing Linux installation.
+
+We'll use =Nix Flakes= (more on that later), which is still considered
+experimental, but in my opinion essential to ensure a reproducible development
+environment. In order to enable the flakes ecosystem, you can temporarily enable
+it when running the ~nix~ command.
+
+#+begin_src sh :eval no
+nix --experimental-features 'nix-command flakes' help
+#+end_src
+
+However, typing it out every time quickly becomes annoying, so you can append it
+to nix's configuration file.
+
+#+begin_src sh :eval no
+mkdir -p ~/.config/nix
+echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
+#+end_src
+
+And if you are using NixOS (nice!). You can add it to your configuration.
+
+#+begin_src nix
+nix.settings.experimental-features = [ "nix-command" "flakes" ];
+#+end_src
+
+* Messing Around with Nix Packages
+Let's say you are writing a blog post, and want to showcase a package ~hello~
+without polluting your existing Linux installation. I do not have this package
+installed, nor do I need it outside the scope of this article. Instead of
+installing it, and then forgetting to clean it up, we can ask =Nix= to
+temporarily make it available.
+
+The ~nix shell~ command starts a new shell and brings packages from the
+~nixpkgs~ flake into the shell environment.
+
+#+begin_src sh :exports results :results output :wrap example
+nix shell nixpkgs#hello nixpkgs#cowsay
+hello | cowsay
+#+end_src
+
+#+RESULTS:
+#+begin_example
+ _______________
+< Hello, world! >
+ ---------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+#+end_example
+
+Once you ~exit~ the shell, there's no more ~hello~, and no more ~cowsay~. It's
+as if these packages were never installed. In reality, they are still downloaded
+and locally available on your system. If you were to create a shell with the
+same packages Nix only has to create a /symbolic link/ to make them available for
+use.
+
+#+begin_src sh :eval no
+# NOTE(Kevin): Notice how fast it executes
+nix shell nixpkgs#hello nixpkgs#cowsay --command sh -c "hello | cowsay"
+#+end_src
+
+If you want to try out other packages, you can search the =Nix Package
+Repository= using ~nix search nixpkgs name-of-package~ or via the [[https://search.nixos.org/packages][website]].
+There's plenty of packages to try out: CLI tools, emulators, editors (yes
+neovim), and even more obscure packages might be readily available. According to
+[[https://repology.org/repositories/graphs][Repology]] the list of available packages looks huge, even compared to the =AUR=.
+
+#+caption: The number of packages in repositories for each Linux Distribution. Source: https://repology.org/repositories/graphs
+[[./map_repo_size_fresh.svg]]
+
+* An Actual Practical Guide to =Nix Flakes=
+I don't know about you, but I'm getting tired of constantly typing ~hello~ and
+~cowsay~ whenever I want an elevated shell with these packages. More
+importantly, how do we ensure these packages behave exactly the same way on
+different machines? There's a chance the channel version of the ~nixpkgs~ is
+different than mine, which /can/ yield different results on different machines.
+
+In order to properly pin down the exact version of ~nixpkgs~ we are going to
+build a =Nix Flake=. Let's initialize our flake, and inspect what it created.
+The =flake.nix= file looks somewhat familiar to a =package.json=, except ~nix~
+is an actual programming language for configuring systems.
+
+#+name: nix-flake-init
+#+begin_src sh :results output :wrap src nix
+mkdir -p first-flake
+cd first-flake
+nix flake init
+cat ./flake.nix
+#+end_src
+
+The ~inputs~ specify the dependencies of the flake. In our case, we depend on
+the =nixpkgs= repository under the =nixos= organization using the
+=nixos-unstable= branch. The ~description~ can be whatever you feel like.
+
+If you are unfamiliar with language, the ~outputs~ part can look confusing. In
+Javascript, this would be somewhat equivalent to ~const outputs = ({ self,
+nixpkgs }) => ({})~.
+
+#+RESULTS: nix-flake-init
+#+begin_src nix
+{
+  description = "A very basic flake";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+  };
+
+  outputs = { self, nixpkgs }: {
+
+    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
+
+    packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
+
+  };
+}
+#+end_src
+
+Let's change the ~description~, remove the two ~packages~ references, and make
+sure the ~inputs~ depend on the more stable =nixos-23.11= branch.
+
+The ~system~ variable depends on what processor architecture your system uses.
+There's ways to support multiple systems, but that's an exercise for the reader.
+The ~pkgs~ variable is how we get access to packages available for our processor
+architecture.
+
+Here's a list of possible options (you should change my ~aarch64-linux~ to a value that works for your architecture):
+- Linux (Intel/AMD): ~x86_64-linux~
+- Linux (ARM): ~aarch64-linux~
+- MacOS (M1/2/3): ~aarch64-darwin~
+- MacOS (Intel/AMD): ~x86_64-darwin~
+
+#+begin_src nix :tangle ./second-flake/flake.nix :mkdirp yes
+{
+  description = "Hello World from Nix";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+  };
+
+  outputs = { self, nixpkgs }:
+  let
+    system = "aarch64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in
+  {
+    # TODO(Kevin): Add reproducible shell environment
+  };
+}
+#+end_src
+
+Even though we chose a stable version for the ~nixpkgs~, it's still not clear
+how =Nix Flakes= pins down the exact version. The ~nix flake lock~ command
+generates a lock file, which snapshots the exact git hash the flake uses for the
+packages. We have to track the =flake.nix= with ~git~, otherwise the flake
+commands won't pick it up.
+
+#+begin_src sh :results output :wrap src json :dir ./second-flake
+git add flake.nix
+nix flake lock
+cat ./flake.lock
+#+end_src
+
+#+RESULTS:
+#+begin_src json
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1713145326,
+        "narHash": "sha256-m7+IWM6mkWOg22EC5kRUFCycXsXLSU7hWmHdmBfmC3s=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "53a2c32bc66f5ae41a28d7a9a49d321172af621e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
+#+end_src
+
+From this point forward, if two machines use the exact same =flake.lock=, the
+packages and their dependencies will be exactly the same on both machines. But
+what packages though? We haven't referenced any so far. _You are right!_
+Remember the =TODO= from earlier?
+
+The ~devShells.${system}.default~ is an attribute that's expected by the flake
+when we wish to setup a shell. The ~pkgs.mkShell~ is a function which expects an
+attribute set. In this attribute set we can define our packages, by referencing
+them via the ~pkgs~ variable.
+
+#+begin_src nix :tangle ./third-flake/flake.nix :mkdirp yes
+{
+  description = "Hello World from Nix";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+  };
+
+  outputs = { self, nixpkgs }:
+  let
+    system = "aarch64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in
+  {
+    devShells.${system}.default = pkgs.mkShell {
+      packages = [
+        pkgs.hello
+        pkgs.cowsay
+      ];
+    };
+  };
+}
+#+end_src
+
+#+begin_src sh :exports none :results none :dir ./third-flake :mkdirp yes
+git add flake.nix
+nix flake lock
+#+end_src
+
+Now that we've added these packages, everyone who uses nix with flakes, can run
+~nix develop~ to setup the shell, which provides the packages based on the
+=flake.nix=. Remember that the =flake.lock= pins down these packages to the
+exact same version, meaning that the packages and their dependencies will be
+exactly the same on different machines.
+
+#+begin_src sh :eval no
+nix develop
+hello | cowsay
+#+end_src
+
+It's also still possible to invoke the commands using a one-liner.
+#+begin_src sh :results output :dir ./third-flake :mkdirp yes :wrap example
+nix develop --command sh -c "hello | cowsay"
+#+end_src
+
+#+RESULTS:
+#+begin_example
+ _______________
+< Hello, world! >
+ ---------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+#+end_example
+
+* Reproducible Development Environments for Any Language
+If you are familiar with the =Node Version Manager= or =Python's Virtual
+Environments=, you can draw some similarities. Except, you are able to setup the
+development environment independently from the languages itself. Are you working
+on a project which requires ~nodejs_18~ and ~python3~? Done. Do you want to
+provide a default debugger when working on a ~C/C++~ project? Done. Do you want
+setup an environment for =Github Actions=? Done!
+
+If a =Javascript= project use nix already, anyone who clones the project should
+be able to run ~nix develop~ and have a fully working development environment
+available. For the sake of the article though, let's assume you want to
+contribute to a fictional project which uses ~bun~. You throw out your computer,
+because you didn't know there was yet another way to run Javascript...
+
+Anyways, you add ~pkgs.bun~ to the list of packages inside the ~pkgs.mkShell~
+set.
+
+#+begin_src nix :tangle ./fourth-flake/flake.nix :mkdirp yes
+{
+  description = "Hello World from Nix";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+  };
+
+  outputs = { self, nixpkgs }:
+  let
+    system = "aarch64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in
+  {
+    devShells.${system}.default = pkgs.mkShell {
+      packages = [
+        pkgs.hello
+        pkgs.cowsay
+        pkgs.bun
+      ];
+    };
+  };
+}
+#+end_src
+
+#+begin_src sh :exports none :results none :dir ./fourth-flake :mkdirp yes
+git add flake.nix
+nix flake lock
+#+end_src
+
+Once we start the shell with ~nix develop~, we are able to run our complicated
+app using ~bun~ (as recommended by the fictional project maintainers). Our
+application at home:
+
+#+begin_src c :mkdirp yes :tangle ./fourth-flake/hello.js :results none
+console.log("Hello from Nix and Javascript!");
+#+end_src
+
+If you would like to work inside the development environment provided by nix, we
+can again run ~nix develop~, and run our code. Remember, ~cowsay~ is still
+available because we haven't removed it yet from the =flake.nix=. The flake pins
+down ~bun~'s version, so you are running the exact same version as these
+fictional project maintainers.
+
+#+begin_src sh :eval no
+nix develop
+bun ./hello.js | cowsay
+#+end_src
+
+Or using the one-liner.
+#+begin_src sh :results output :dir ./fourth-flake :mkdirp yes :wrap example
+nix develop --command sh -c "bun ./hello.js | cowsay"
+#+end_src
+
+#+RESULTS:
+#+begin_example
+ ________________________________
+< Hello from Nix and Javascript! >
+ --------------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+#+end_example
+
+* TODO Building the actual application + bundling runtime deps
+Bundling an application for =Node.js= is slightly more involved, compared to
+bundling a program in ~C~. Let's write it and ship it with ~nix~. Don't worry,
+nothing fancy here.
+
+#+begin_src c :mkdirp yes :tangle ./fifth-flake/src/hello.c :results none
+#include <stdio.h>
+
+int main() {
+   printf("Hello from Nix and C!");
+   return 0;
+}
+#+end_src
+
+#+begin_src sh :exports none :results none :dir ./fifth-flake :mkdirp yes
+git add flake.nix src/hello.c
+nix flake lock
+#+end_src
+
+Remember the packages we've removed after running ~nix flake init~, it's time to
+bring them back, but tailor them to build our C program. The
+~pkgs.stdenv.mkDerivation~ is function with a set as it's argument. The set
+requires ~pname~, ~version~ and ~src~ to exist.
+
+In the ~buildPhase~ we tell nix how to build our application. The ~installPhase~
+places the executable in a bin folder so nix knows where to find when you want
+to run the application.
+
+#+begin_src nix :tangle ./fifth-flake/flake.nix :mkdirp yes
+{
+  description = "Hello World from Nix";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+  };
+
+  outputs = { self, nixpkgs }:
+  let
+    system = "aarch64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in
+  {
+    devShells.${system}.default = pkgs.mkShell {
+      packages = [
+        pkgs.hello
+        pkgs.cowsay
+        pkgs.bun
+      ];
+
+      inputsFrom = [
+        self.packages.${system}.myHello
+      ];
+    };
+
+    packages.${system} = {
+      myHello = pkgs.stdenv.mkDerivation {
+        pname = "my-hello";
+        version = "v0.0.1";
+        src = ./src;
+
+        buildPhase = ''
+          gcc hello.c -o my-hello
+        '';
+
+        installPhase = ''
+          mkdir -p $out/bin
+          cp my-hello $out/bin/
+        '';
+
+        buildInputs = [
+          # build time dependencies
+        ];
+
+        nativeBuildInputs = [
+          # runtime dependencies
+        ];
+      };
+      default = self.packages.${system}.myHello;
+    };
+  };
+}
+#+end_src
+
+Running ~nix build~ builds our application, and nix created a folder =./result=
+where it placed the bin folder. After building it, you can run the executable
+via ~./result/bin/my-hello~.
+
+#+begin_src sh :results output :wrap example :dir ./fifth-flake :mkdirp yes
+nix build
+nix shell nixpkgs#tree -c tree result
+#+end_src
+
+#+RESULTS:
+#+begin_example
+result
+└── bin
+    └── my-hello
+
+2 directories, 1 file
+#+end_example
+
+Or use ~nix run~, which is the equivalent of running ~nix build &&
+./result/bin/my-hello~.
+#+begin_src sh :results output :wrap example :dir ./fifth-flake :mkdirp yes
+nix run
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Hello from Nix and C!
+#+end_example
+
+In case you want to create a C program which depends on external runtime
+libraries, then you need to add these dependencies inside the ~buildInputs~ and
+make sure nix properly links these together. The ~inputsFrom~ makes the
+~buildInputs~ and ~nativeBuildInputs~ available for the package we just created.
+You might be thinking we are missing ~gcc~, as it's not part of the
+dependencies, but ~mkDerivation~ and ~mkShell~ already come with some helper
+available and one of them turns out to be ~gcc~. I'll cover more on these extra dependencies in a later post.
+
+The packages from the development environment when running ~nix develop~ is
+purposely not available during ~nix build~ and ~nix run~. I didn't understand
+this properly until recently, but this prevents certain packages from
+accidentally relying on a package that's accidentally installed on someone's
+system.
+
+Of course running ~nix develop~ in combination with ~nix run~ is not a problem.
+
+#+begin_src sh :exports results :results output :wrap example
+nix develop -c sh -c "nix run | cowsay"
+#+end_src
+
+#+RESULTS:
+#+begin_example
+ _______________________
+< Hello from Nix and C! >
+ -----------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+#+end_example
+
+* Conclusion
+There's so much to learn about the =Nix= ecosystem, as we've barely touched the
+surface. I'm personally still learning a lot about it, even while writing this
+article. The main draw for me to use Nix is being able to jump in and out of a
+project, and have the whole development environment setup using ~nix develop~.
+
+If you wish to see a more /production/ level =flake.nix=, you can check out my
+[[https://github.com/venikx/venikx.com/blob/main/flake.nix][personal website]], [[https://github.com/venikx/uniorg/blob/master/flake.nix][uniorg]] (a project I contribute to) or my [[https://github.com/venikx/dotfiles][dotfiles]] (nix
+configuration for my laptop, desktop, and macbook).
+
+*** Fun Fact
+Nix sounds like "nothing" for a Belgian, so when I'm talking in Dutch about nix,
+it often get confusing. =I'm trying to understand nothing.=
