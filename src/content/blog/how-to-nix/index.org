@@ -1,10 +1,11 @@
-#+title: How-To Nix (a guide to reproducible development environments)
-#+description: TODO
-#+created: 2023-11-28T00:00:00Z
-#+draft: true
+#+title: How-To Nix (yet another guide to development environments)
+#+description: Nix is like Python's venv, but for any language or tool. Nix is a build system. Nix is also difficult, but my aim is to lower the barrier of entry.
+#+created: 2024-04-15T00:00:00Z
+#+modified: [2024-04-19 Fri 01:38]
+#+filetags: :nix:
 
 You've probably heard of [[https://nixos.org/][=Nix=]]. If you haven't, well... The landing page explains
-everything (just trust me 👀).
+everything (just trust me 👀), or maybe it confuses you even more.
 
 #+begin_quote
 Declarative builds and deployments. Nix is a tool that takes a unique approach to package management and system configuration.
@@ -363,10 +364,10 @@ nix develop --command sh -c "bun ./hello.js | cowsay"
                 ||     ||
 #+end_example
 
-* TODO Building the actual application + bundling runtime deps
-Bundling an application for =Node.js= is slightly more involved, compared to
-bundling a program in ~C~. Let's write it and ship it with ~nix~. Don't worry,
-nothing fancy here.
+* Building and Packaging Applications with Nix
+Bundling an application for =Node.js= is slightly more involved, and is going to
+be an exercise for the reader. We're going to write a small ~C~ program and ship
+it with ~nix~. Don't worry, nothing fancy here.
 
 #+begin_src c :mkdirp yes :tangle ./fifth-flake/src/hello.c :results none
 #include <stdio.h>
@@ -382,14 +383,15 @@ git add flake.nix src/hello.c
 nix flake lock
 #+end_src
 
-Remember the packages we've removed after running ~nix flake init~, it's time to
-bring them back, but tailor them to build our C program. The
-~pkgs.stdenv.mkDerivation~ is function with a set as it's argument. The set
-requires ~pname~, ~version~ and ~src~ to exist.
+Remember the packages we've removed after running ~nix flake init~? It's time to
+bring them back, but tailor them to help us build the C program. The
+~pkgs.stdenv.mkDerivation~ is function with a set as it's argument. The
+attributes ~pname~, ~version~ and ~src~ are required.
 
-In the ~buildPhase~ we tell nix how to build our application. The ~installPhase~
-places the executable in a bin folder so nix knows where to find when you want
-to run the application.
+In ~buildPhase~ we tell nix how which compiler to use to build our program. The
+~installPhase~ places the executable in a bin folder so nix knows where to find
+it when you want to run the application. By default ~nix run~ looks inside the
+=./result/bin/= folder for an executable with the name taken from ~pname~.
 
 #+begin_src nix :tangle ./fifth-flake/flake.nix :mkdirp yes
 {
@@ -422,6 +424,8 @@ to run the application.
         version = "v0.0.1";
         src = ./src;
 
+        # NOTE(Kevin): We don't have to go into ./src during the phase, because
+        # it assumes the working directory to already include the files from src
         buildPhase = ''
           gcc hello.c -o my-hello
         '';
@@ -432,11 +436,6 @@ to run the application.
         '';
 
         buildInputs = [
-          # build time dependencies
-        ];
-
-        nativeBuildInputs = [
-          # runtime dependencies
         ];
       };
       default = self.packages.${system}.myHello;
@@ -445,9 +444,9 @@ to run the application.
 }
 #+end_src
 
-Running ~nix build~ builds our application, and nix created a folder =./result=
-where it placed the bin folder. After building it, you can run the executable
-via ~./result/bin/my-hello~.
+Running ~nix build~ builds our application, the ~$out~ variable translates to
+the =./result= folder. After building it, you can run the executable via
+~./result/bin/my-hello~.
 
 #+begin_src sh :results output :wrap example :dir ./fifth-flake :mkdirp yes
 nix build
@@ -464,7 +463,8 @@ result
 #+end_example
 
 Or use ~nix run~, which is the equivalent of running ~nix build &&
-./result/bin/my-hello~.
+./result/bin/my-hello~ without creating the =./result= folder inside the current
+working directory.
 #+begin_src sh :results output :wrap example :dir ./fifth-flake :mkdirp yes
 nix run
 #+end_src
@@ -474,19 +474,17 @@ nix run
 Hello from Nix and C!
 #+end_example
 
-In case you want to create a C program which depends on external runtime
-libraries, then you need to add these dependencies inside the ~buildInputs~ and
-make sure nix properly links these together. The ~inputsFrom~ makes the
-~buildInputs~ and ~nativeBuildInputs~ available for the package we just created.
-You might be thinking we are missing ~gcc~, as it's not part of the
-dependencies, but ~mkDerivation~ and ~mkShell~ already come with some helper
-available and one of them turns out to be ~gcc~. I'll cover more on these extra dependencies in a later post.
+The perceptive readers might be thinking: "Wait a darn minute! We are missing
+~pkgs.gcc~, it's not part of the flake? Stop fooling us!
 
-The packages from the development environment when running ~nix develop~ is
-purposely not available during ~nix build~ and ~nix run~. I didn't understand
-this properly until recently, but this prevents certain packages from
-accidentally relying on a package that's accidentally installed on someone's
-system.
+The ~buildInputs~ is the one responsible for defining all the build dependencies
+of our package. Yet, we don't need it here because ~mkDerivation~ is a helper that
+already bundles ~gcc~ by default. These potential dependencies are also exposed
+to the reproducible development environment via ~inputsFrom~.
+
+The packages from the reproducible development environment are purposely not
+available during ~nix build~ and ~nix run~, in order to prevent accidentally
+depending on packages that are only available on my system when I built them.
 
 Of course running ~nix develop~ in combination with ~nix run~ is not a problem.
 

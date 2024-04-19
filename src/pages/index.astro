@@ -36,8 +36,8 @@ const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
   </p>
   <p>
     Purely for shits and giggles, I'm exploring the creative possibilities of
-    coding using WebGL and OpenGL (C/C++). <em>But!</em> It's not easy! There's
-    a lot of math and computer science-y concepts and I never seem to <em
+    coding using WebGL and OpenGL (C/C++). <em>But!</em> It's not easy! There's a
+    lot of math and computer science-y concepts and I never seem to <em
       >get'em</em
     >. I read that writing helps with understand, so...
     <em>Welcome! Hi!</em>
@@ -50,6 +50,7 @@ const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
   <h2 class="text-2xl">Latest Posts</h2>
   <PostList posts={latestPosts} />
   <p>
-    Not enough? Checkout <Link href="/posts" rel="prefetch">all my posts</Link>.
+    Not enough? Checkout <Link href="/posts/" rel="prefetch">all my posts</Link
+    >.
   </p>
 </Layout>

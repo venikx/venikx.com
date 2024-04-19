@@ -7,7 +7,7 @@ const formatDate = (date: Date) => date.toISOString().split('T')[0]
   {
     posts.length > 0 ? (
       posts.map((post: (typeof posts)[number]) => {
-        const link = `/posts/${post.slug}`
+        const link = `/posts/${post.slug}/`
         return (
           <a
             href={link}

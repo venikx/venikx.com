@@ -2,16 +2,19 @@
 import { defineConfig, passthroughImageService } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
-import icon from 'astro-icon'
-import { h } from 'hastscript'
-import org from './src/lib/astro-org'
 import mdx from '@astrojs/mdx'
+import shiki, { type RehypeShikiOptions } from '@shikijs/rehype'
 import rehypeShiftHeading, {
   type Options as RehypeShiftOptions,
 } from 'rehype-shift-heading'
-import shiki, { type RehypeShikiOptions } from '@shikijs/rehype'
+import icon from 'astro-icon'
+import { h } from 'hastscript'
+
+import org from './src/lib/astro-org'
+import { replaceOrgLinks } from './src/lib/plugins'
 
 export default defineConfig({
+  trailingSlash: 'always', // if path doesn't resolve it shows up in dev
   prefetch: true,
   site: 'https://venikx.com',
   image: {
@@ -30,6 +33,7 @@ export default defineConfig({
       },
     }),
     org({
+      uniorgPlugins: [replaceOrgLinks],
       rehypePlugins: [
         [rehypeShiftHeading, { shift: 1 } as RehypeShiftOptions],
         [shiki, { theme: 'synthwave-84' } as RehypeShikiOptions],
