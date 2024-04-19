@@ -1,7 +1,7 @@
 #+title: How-To Nix (yet another guide to development environments)
 #+description: Nix is like Python's venv, but for any language or tool. Nix is a build system. Nix is also difficult, but my aim is to lower the barrier of entry.
 #+created: [2024-04-18 Thu]
-#+modified: [2024-04-19 Fri 13:03]
+#+modified: [2024-04-19 Fri 13:19]
 #+filetags: :nix:
 
 You've probably heard of [[https://nixos.org/][=Nix=]]. If you haven't, well... The landing page explains
@@ -478,9 +478,10 @@ The perceptive readers might be thinking: "Wait a darn minute! We are missing
 ~pkgs.gcc~, it's not part of the flake? Stop fooling us!
 
 The ~buildInputs~ is the one responsible for defining all the build dependencies
-of our package. Yet, we don't need it here because ~mkDerivation~ is a helper that
-already bundles ~gcc~ by default. These potential dependencies are also exposed
-to the reproducible development environment via ~inputsFrom~.
+of our package. Yet, we don't need it here because ~mkDerivation~ is a helper
+that already bundles ~gcc~ by default. These potential dependencies are also
+exposed to the reproducible development environment via ~inputsFrom~. For a
+project with actual ~buildInputs~ look [[../handmade-hero-nixos/index.org][here]].
 
 The packages from the reproducible development environment are purposely not
 available during ~nix build~ and ~nix run~, in order to prevent accidentally
