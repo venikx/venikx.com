@@ -5,16 +5,17 @@ const post = z.object({
   description: z.string(),
   cover: z.optional(z.string()),
   draft: z.optional(z.coerce.boolean()),
+  filetags: z.string().transform((f) => f.split(':').filter((f) => !!f)),
 })
 
-const orgDateToDate = (d) => new Date(d.slice(1, -1).split(' ')[0])
+const orgDateToDate = (d: string): Date =>
+  new Date(d.slice(1, -1).split(' ')[0] as string)
 
 const blog = defineCollection({
   type: 'content',
   schema: post.extend({
     created: z.string().transform(orgDateToDate),
     modified: z.string().transform(orgDateToDate),
-    filetags: z.string().transform((f) => f.split(':').filter((f) => !!f)),
   }),
 })
 
