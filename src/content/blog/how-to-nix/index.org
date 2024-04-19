@@ -1,7 +1,7 @@
 #+title: How-To Nix (yet another guide to development environments)
 #+description: Nix is like Python's venv, but for any language or tool. Nix is a build system. Nix is also difficult, but my aim is to lower the barrier of entry.
 #+created: [2024-04-18 Thu]
-#+modified: [2024-04-19 Fri 13:19]
+#+modified: [2024-04-19 Fri 14:39]
 #+filetags: :nix:
 
 You've probably heard of [[https://nixos.org/][=Nix=]]. If you haven't, well... The landing page explains
@@ -15,8 +15,8 @@ Declarative builds and deployments. Nix is a tool that takes a unique approach t
 eAsY rIgHt?! The same way the =monad is just a monoid in the category of
 endofunctors= makes zero sense for me, Nix's description is bit obtuse. Once the
 concepts start making sense, it ruins you in a good way. Let's build a tiny
-program using Nix, and slowly understand why /reproducible development
-environments/ are valuable.
+program using Nix, and slowly understand why /isolated development environments/
+are valuable.
 
 * Installing Nix
 The tooling is available on [[https://nixos.org/download/#nix-install-linux][=Linux=]], [[https://nixos.org/download/#nix-install-macos][=MacOS=]], [[https://nixos.org/download/#nix-install-windows][=WSL2=]], and more. If you want to
@@ -25,9 +25,9 @@ first time I tried out Nix was on an Ubuntu VM, because I didn't want to screw
 up my existing Linux installation.
 
 We'll use =Nix Flakes= (more on that later), which is still considered
-experimental, but in my opinion essential to ensure a reproducible development
-environment. In order to enable the flakes ecosystem, you can temporarily enable
-it when running the ~nix~ command.
+experimental, but in my opinion essential to ensure a _reproducible and
+isolated_ development environment. In order to enable the flakes ecosystem, you
+can temporarily enable it when running the ~nix~ command.
 
 #+begin_src sh :eval no
 nix --experimental-features 'nix-command flakes' help
@@ -168,7 +168,7 @@ Here's a list of possible options (you should change my ~aarch64-linux~ to a val
     pkgs = nixpkgs.legacyPackages.${system};
   in
   {
-    # TODO(Kevin): Add reproducible shell environment
+    # TODO(Kevin): Add isolated dev environment
   };
 }
 #+end_src
@@ -282,7 +282,7 @@ nix develop --command sh -c "hello | cowsay"
                 ||     ||
 #+end_example
 
-* Reproducible Development Environments for Any Language
+* Reproducible and Isolated Development Environments for Any Language
 If you are familiar with the =Node Version Manager= or =Python's Virtual
 Environments=, you can draw some similarities. Except, you are able to setup the
 development environment independently from the languages itself. Are you working
@@ -480,12 +480,12 @@ The perceptive readers might be thinking: "Wait a darn minute! We are missing
 The ~buildInputs~ is the one responsible for defining all the build dependencies
 of our package. Yet, we don't need it here because ~mkDerivation~ is a helper
 that already bundles ~gcc~ by default. These potential dependencies are also
-exposed to the reproducible development environment via ~inputsFrom~. For a
+exposed to the isolated development environment via ~inputsFrom~. For a
 project with actual ~buildInputs~ look [[../handmade-hero-nixos/index.org][here]].
 
-The packages from the reproducible development environment are purposely not
-available during ~nix build~ and ~nix run~, in order to prevent accidentally
-depending on packages that are only available on my system when I built them.
+The packages from the development environment (~nix developer~) are purposely
+not available during ~nix build~ and ~nix run~, in order to build and link the
+packages in complete isolation.
 
 Of course running ~nix develop~ in combination with ~nix run~ is not a problem.
 

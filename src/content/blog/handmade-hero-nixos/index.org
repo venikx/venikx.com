@@ -1,7 +1,7 @@
 #+title: Building Handmade Hero with Nix Flakes
 #+description: Handmade Penguin is a Linux implementation of Handmade Hero, and my aim is to clarify how to bundle C/C++ with external libraries using Nix Flakes.
 #+created: [2023-11-28 Tue]
-#+modified: [2024-04-19 Fri 13:23]
+#+modified: [2024-04-19 Fri 14:34]
 #+filetags: :nix:cpp:
 
 Lately, I'm following along [[https://handmadehero.org/][Handmade Hero]] on NixOS using SDL2 (thank you
@@ -72,7 +72,7 @@ packages = {
 };
 #+end_src
 
-The reproducible development environment loads the same ~buildInputs~ and
+The isolated development environment loads the same ~buildInputs~ and
 ~nativeBuildInputs~, from the earlier mention package declaration via
 ~inputsFrom~. The shell reports the installed ~clang++~ version as a sanity
 check.
