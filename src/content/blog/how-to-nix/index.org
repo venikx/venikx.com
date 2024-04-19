@@ -1,7 +1,7 @@
 #+title: How-To Nix (yet another guide to development environments)
 #+description: Nix is like Python's venv, but for any language or tool. Nix is a build system. Nix is also difficult, but my aim is to lower the barrier of entry.
-#+created: 2024-04-15T00:00:00Z
-#+modified: [2024-04-19 Fri 01:38]
+#+created: [2024-04-18 Thu]
+#+modified: [2024-04-19 Fri 13:03]
 #+filetags: :nix:
 
 You've probably heard of [[https://nixos.org/][=Nix=]]. If you haven't, well... The landing page explains
