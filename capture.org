@@ -24,3 +24,4 @@ CLOSED: [2024-04-15 Mon 12:56]
 ** TODO :exports none still exports
 ** TODO Implement dark mode, or use darker color scheme
 ** TODO Use [[https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0][Configuring Emacs and Eglot to work with Astro language server | by Jayaram |...]]
+** TODO Fix Lighthouse score from blog posts
