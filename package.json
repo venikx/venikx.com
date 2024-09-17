@@ -48,6 +48,6 @@
     "uniorg-rehype": "^1.1.1",
     "uniorg-slug": "^1.0.1",
     "unist-util-visit": "^5.0.0",
-    "vfile": "^6.0.1"
+    "vfile": "^6.0.3"
   }
 }
