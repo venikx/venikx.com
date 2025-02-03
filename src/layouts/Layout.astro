@@ -11,6 +11,7 @@ import '@fontsource/iosevka/700.css'
 import { getEntry } from 'astro:content'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import PostHog from '../components/posthog.astro'
 
 const {
   data: { name },
@@ -48,6 +49,7 @@ const ogType = kind ? kind : 'website'
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <PostHog />
   </head>
   <body class="font-sans bg-purple-50 text-zinc-900 leading-relaxed">
     <Header />
