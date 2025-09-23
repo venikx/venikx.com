@@ -1,4 +1,3 @@
-//import { defineConfig, sharpImageService } from 'astro/config'
 import { defineConfig, passthroughImageService } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
@@ -14,11 +13,10 @@ import org from './src/lib/astro-org'
 import { replaceOrgLinks } from './src/lib/plugins'
 
 export default defineConfig({
-  trailingSlash: 'always', // if path doesn't resolve it shows up in dev
+  trailingSlash: 'always',
   prefetch: true,
   site: 'https://venikx.com',
   image: {
-    //service: sharpImageService(),
     service: passthroughImageService(),
   },
   markdown: {
@@ -57,11 +55,9 @@ export default defineConfig({
                 org.value
               )
             )
-
             const captions: any[] = Array.isArray(org.affiliated.CAPTION)
               ? org.affiliated.CAPTION.flat()
               : []
-
             if (captions.length <= 0) {
               return snippet
             } else {

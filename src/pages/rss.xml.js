@@ -1,8 +1,8 @@
 import rss from '@astrojs/rss'
-import type { AstroUserConfig } from 'astro/config'
+import type from 'astro/config'
 import { getAllPosts } from '../lib/posts'
 
-export const GET = async (context: AstroUserConfig) => {
+export const GET = async (context) => {
   const allPosts = await getAllPosts()
   return rss({
     title: 'Kevin Blog',

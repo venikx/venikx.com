@@ -13,9 +13,12 @@ import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import PostHog from '../components/posthog.astro'
 
+const entry = await getEntry('authors', 'kevin')
+if (!entry) throw new Error('Author not found')
 const {
   data: { name },
-} = await getEntry('authors', 'kevin')
+} = entry
+
 const { title, description, image, kind } = Astro.props
 
 import defaultImage from '../assets/pixel-art-kevin-db.png'

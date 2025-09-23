@@ -5,9 +5,12 @@ import Layout from '../layouts/Layout.astro'
 import Link from '../components/Link.astro'
 
 import { getEntry } from 'astro:content'
+
+const entry = await getEntry('authors', 'kevin')
+if (!entry) throw new Error('Author not found')
 const {
   data: { socials },
-} = await getEntry('authors', 'kevin')
+} = entry
 ---
 
 <Layout
@@ -38,13 +41,12 @@ const {
     <p>
       I'm a 90s kid who has lived in Belgium most of my life. I remember playing
 
-
       <!-- prettier-ignore -->
       <Link href="https://en.wikipedia.org/wiki/Paperboy_(video_game)">Paper Boy</Link>
 
-       on the Commodore 64 when I was a kid, and gaming has always been a part of
-      my life. Aside from being glued to a screen, I've spent too much time playing
-      with Legos and loved football.
+      on the Commodore 64 when I was a kid, and gaming has always been a part of
+      my life. Aside from being glued to a screen, I've spent too much time
+      playing with Legos and loved football.
     </p>
     <p>
       I never thought I would be a programmer or understand how the games I

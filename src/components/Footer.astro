@@ -6,9 +6,12 @@ import { Icon } from 'astro-icon/components'
 import bioImage from '../assets/pixel-art-kevin-db.webp'
 import Link from './Link.astro'
 const { showProfile = true } = Astro.props
+
+const entry = await getEntry('authors', 'kevin')
+if (!entry) throw new Error('Author not found')
 const {
   data: { socials },
-} = await getEntry('authors', 'kevin')
+} = entry
 ---
 
 <footer>
