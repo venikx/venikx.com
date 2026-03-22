@@ -1,4 +1,5 @@
 ---
+import { render } from 'astro:content'
 import Layout from '../../layouts/Layout.astro'
 import { getAllPosts } from '../../lib/posts'
 
@@ -7,7 +8,7 @@ export async function getStaticPaths() {
     return allPosts.map((entry) => {
       return {
         params: {
-          slug: entry.slug,
+          slug: entry.id,
         },
         props: { entry },
       }
@@ -16,7 +17,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props
-const { Content } = await entry.render()
+const { Content } = await render(entry)
 ---
 
 <Layout
@@ -27,7 +28,7 @@ const { Content } = await entry.render()
 >
   <h1 class="text-4xl max-w-prose mb-8">{entry.data.title}</h1>
   <div
-    class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-sm prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100"
+    class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100"
   >
     <Content />
   </div>

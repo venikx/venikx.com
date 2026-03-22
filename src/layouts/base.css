@@ -1,7 +1,23 @@
-/* The integration's default injected base.css file */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-mono: 'Iosevka', monospace;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-serif: 'IBM Plex Serif', serif;
+}
+
+@utility prose-hackerman {
+  --tw-prose-body: var(--color-zinc-900);
+  --tw-prose-headings: var(--color-zinc-900);
+  --tw-prose-links: var(--color-pink-700);
+  --tw-prose-bold: var(--color-pink-700);
+  --tw-prose-quotes: var(--color-pink-700);
+  --tw-prose-quote-borders: var(--color-pink-700);
+  --tw-prose-code: var(--color-pink-700);
+  --tw-prose-pre-code: var(--color-zinc-950);
+  --tw-prose-pre-bg: var(--color-purple-100);
+}
 
 @layer base {
   html {

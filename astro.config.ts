@@ -1,7 +1,7 @@
 import { defineConfig, passthroughImageService } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
-import tailwind from '@astrojs/tailwind'
 import mdx from '@astrojs/mdx'
+import tailwindcss from '@tailwindcss/vite'
 import shiki, { type RehypeShikiOptions } from '@shikijs/rehype'
 import rehypeShiftHeading, {
   type Options as RehypeShiftOptions,
@@ -16,6 +16,9 @@ export default defineConfig({
   trailingSlash: 'always',
   prefetch: true,
   site: 'https://venikx.com',
+  vite: {
+    plugins: [tailwindcss()],
+  },
   image: {
     service: passthroughImageService(),
   },
@@ -67,9 +70,6 @@ export default defineConfig({
           },
         },
       },
-    }),
-    tailwind({
-      applyBaseStyles: false,
     }),
     sitemap(),
   ],

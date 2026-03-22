@@ -1,5 +1,4 @@
 import rss from '@astrojs/rss'
-import type from 'astro/config'
 import { getAllPosts } from '../lib/posts'
 
 export const GET = async (context) => {

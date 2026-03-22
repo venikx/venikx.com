@@ -1,4 +1,6 @@
-import { z, defineCollection } from 'astro:content'
+import { defineCollection } from 'astro:content'
+import { glob } from 'astro/loaders'
+import { z } from 'astro/zod'
 
 const post = z.object({
   title: z.string(),
@@ -12,7 +14,7 @@ const orgDateToDate = (d: string): Date =>
   new Date(d.slice(1, -1).split(' ')[0] as string)
 
 const blog = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.org', base: './src/content/blog' }),
   schema: post.extend({
     created: z.string().transform(orgDateToDate),
     modified: z.string().transform(orgDateToDate),
@@ -20,13 +22,14 @@ const blog = defineCollection({
 })
 
 const interactive = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/interactive' }),
   schema: post.extend({
     created: z.coerce.date(),
   }),
 })
 
 const authors = defineCollection({
-  type: 'data',
+  loader: glob({ pattern: '**/*.json', base: './src/content/authors' }),
   schema: z.object({
     name: z.string(),
     socials: z.object({

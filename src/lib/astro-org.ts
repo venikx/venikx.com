@@ -8,7 +8,7 @@ import type {
   ContentEntryType,
   HookParameters,
 } from 'astro'
-import { emitImageMetadata } from 'astro/assets/utils'
+import { emitImageMetadata } from 'astro/assets/utils/node'
 import type { Root as AstRoot, Element as AstElement } from 'hast'
 import { visit } from 'unist-util-visit'
 import { VFile } from 'vfile'
