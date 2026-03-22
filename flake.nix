@@ -17,6 +17,23 @@
         };
       in
       {
+        packages.default = pkgs.buildNpmPackage {
+          pname = "venikx-com";
+          version = "0.0.1";
+          src = ./.;
+
+          nodejs = pkgs.nodejs_24;
+          npmDepsHash = "sha256-cj88VH+cw0SEUHbToFTP4BwW5JCwgZYxTKxZYicaheQ=";
+
+          buildPhase = ''
+            npm run build
+          '';
+
+          installPhase = ''
+            cp -r dist $out
+          '';
+        };
+
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             nodejs_24
