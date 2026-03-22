@@ -1,15 +1,8 @@
 import fs from 'node:fs'
-import { fileURLToPath } from 'node:url'
+import { pathToFileURL } from 'node:url'
 
-import type { Rollup } from 'vite'
-import type {
-  AstroConfig,
-  AstroIntegration,
-  ContentEntryType,
-  HookParameters,
-} from 'astro'
-import { emitImageMetadata } from 'astro/assets/utils/node'
-import type { Root as AstRoot, Element as AstElement } from 'hast'
+import type { AstroIntegration, ContentEntryType, HookParameters } from 'astro'
+import type { Root as AstRoot } from 'hast'
 import { visit } from 'unist-util-visit'
 import { VFile } from 'vfile'
 import { unified, type PluggableList } from 'unified'
@@ -54,11 +47,8 @@ export default function org(options: Options = {}): AstroIntegration {
     name: 'astro-org',
     hooks: {
       'astro:config:setup': async (params) => {
-        const {
-          addContentEntryType,
-          addPageExtension,
-          config: astroConfig,
-        } = params as SetupHookParams
+        const { addContentEntryType, addPageExtension } =
+          params as SetupHookParams
 
         const uniorgToHast = unified()
           .use(uniorg)
@@ -92,36 +82,36 @@ export default function org(options: Options = {}): AstroIntegration {
               rawData: contents,
             }
           },
-          async getRenderModule({ fileUrl, contents }) {
-            const pluginContext = this
-            const filePath = fileURLToPath(fileUrl)
+          async getRenderFunction() {
+            return async function renderToString(entry) {
+              const filePath = entry.filePath
+              const fileUrl = filePath ? pathToFileURL(filePath) : undefined
 
-            const f = new VFile({ path: fileUrl, value: contents })
-            const hast = await uniorgToHast.run(
-              uniorgToHast.parse(f) as OrgData,
-              f
-            )
+              const f = new VFile({
+                path: fileUrl,
+                value: entry.body,
+              })
+              const hast = await uniorgToHast.run(
+                uniorgToHast.parse(f) as OrgData,
+                f
+              )
 
-            await emitOptimizedImages(hast, {
-              astroConfig,
-              pluginContext,
-              filePath,
-            })
+              const localImagePaths = collectLocalImagePaths(hast)
+              markImagesForOptimization(hast)
 
-            // TODO(Kevin): Typescript mismatch about the same packag?
-            await htmlToHtml.run(hast)
-            const htmlStr = htmlToHtml.stringify(hast as any, f)
+              // TODO(Kevin): Typescript mismatch about the same packag?
+              await htmlToHtml.run(hast)
+              const html = htmlToHtml.stringify(hast as any, f)
 
-            const code = `
-import { jsx, Fragment } from 'astro/jsx-runtime';
-const html = ${JSON.stringify(htmlStr)}
-
-export async function Content(props) {
-    return jsx(Fragment, { 'set:html': html });
-}
-export default Content;
-`
-            return { code }
+              return {
+                html,
+                metadata: {
+                  imagePaths: localImagePaths,
+                  headings: [],
+                  frontmatter: {},
+                },
+              }
+            }
           },
 
           contentModuleTypes: fs.readFileSync(
@@ -184,60 +174,51 @@ function saveIds() {
   }
 }
 
-function isValidUrl(str: string): boolean {
+function isLocalImage(src: string): boolean {
   try {
-    new URL(str)
-    return true
-  } catch {
+    new URL(src)
     return false
+  } catch {
+    return !src.startsWith('/')
   }
 }
 
-function shouldOptimizeImage(src: string) {
-  // NOTE(Kevin): Optimize anything that is NOT external or an absolute path to
-  // `public/`
-  return !isValidUrl(src) && !src.startsWith('/')
-}
+function collectLocalImagePaths(tree: AstRoot): string[] {
+  const paths: string[] = []
 
-async function emitOptimizedImages(
-  tree: AstRoot,
-  ctx: {
-    pluginContext: Rollup.PluginContext
-    filePath: string
-    astroConfig: AstroConfig
-  }
-) {
-  const images: AstElement[] = []
-
-  visit(tree, 'element', function (node) {
+  visit(tree, 'element', (node) => {
     if (
       node.tagName === 'img' &&
-      node.properties &&
-      node.properties.src &&
-      typeof node.properties.src === 'string' &&
-      shouldOptimizeImage(node.properties.src)
+      typeof node.properties?.src === 'string' &&
+      isLocalImage(node.properties.src)
     ) {
-      images.push(node)
+      paths.push(decodeURI(node.properties.src))
     }
   })
 
-  for (const node of images) {
-    if (typeof node.properties.src === 'string') {
-      const resolved = await ctx.pluginContext.resolve(
-        node.properties.src,
-        ctx.filePath
-      )
+  return paths
+}
 
-      if (resolved?.id && fs.existsSync(new URL(resolved.id, 'file://'))) {
-        const src = await emitImageMetadata(
-          resolved.id,
-          ctx.pluginContext.emitFile
-        )
+// Replaces <img src="./foo.png" alt="bar"> with
+// <img __ASTRO_IMAGE_='{"src":"./foo.png","alt":"bar","index":0}'>
+// so Astro's content layer image pipeline picks them up.
+function markImagesForOptimization(tree: AstRoot) {
+  const occurrenceMap = new Map<string, number>()
 
-        if (src) {
-          node.properties.src = src.src
-        }
+  visit(tree, 'element', (node) => {
+    if (
+      node.tagName === 'img' &&
+      typeof node.properties?.src === 'string' &&
+      isLocalImage(node.properties.src)
+    ) {
+      const src = decodeURI(node.properties.src)
+      const index = occurrenceMap.get(src) || 0
+      occurrenceMap.set(src, index + 1)
+
+      const imageProps = { ...node.properties, src, index }
+      node.properties = {
+        __ASTRO_IMAGE_: JSON.stringify(imageProps),
       }
     }
-  }
+  })
 }
