@@ -6,7 +6,7 @@
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
-    "uniorg": "^1.3.0"
+    "uniorg": "^1.4.0"
   },
   "scripts": {
     "prepare": "husky",
