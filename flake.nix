@@ -1,5 +1,5 @@
 {
-  description = "venikx.com";
+  description = "venikx.com - hackerspace";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
