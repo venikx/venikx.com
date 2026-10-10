@@ -16,7 +16,8 @@ import { createOrgProcessor } from './astro-org'
 import { orgOptions } from './org-options'
 
 // The notes live in their own repo (github.com/venikx/braindump), managed by
-// denote. Only top-level notes are published, unless tagged `private`.
+// denote. Only top-level notes are published, unless tagged `private`, which
+// only show up during development.
 const braindumpDir = path.resolve(
   (process.env.BRAINDUMP_DIR ?? '~/org').replace(/^~(?=\/|$)/, os.homedir())
 )
@@ -146,7 +147,10 @@ export function braindumpLoader(): Loader {
         const tags = String(frontmatter.filetags ?? '')
           .split(/[:\s]+/)
           .filter((t) => !!t)
-        if (tags.includes('private')) {
+        if (
+          tags.includes('private') &&
+          process.env.NODE_ENV !== 'development'
+        ) {
           // NOTE: Exports of the note (pdf, ...) share its identifier
           if (identifier) targets.delete(identifier)
           continue
