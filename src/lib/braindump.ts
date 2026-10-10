@@ -15,10 +15,9 @@ import { VFile } from 'vfile'
 import { createOrgProcessor } from './astro-org'
 import { orgOptions } from './org-options'
 
-// The notes live in their own repo (github.com/venikx/braindump), which is
-// migrating from org-roam to denote, so both flavors are supported. Only the
-// top-level notes are published, sub-directories (gtd, work, collections, ...)
-// and notes tagged `private` are skipped.
+// The notes live in their own repo (github.com/venikx/braindump) and are
+// managed by denote. Only the top-level notes are published, sub-directories
+// (gtd, work, collections, ...) and notes tagged `private` are skipped.
 const braindumpDir = path.resolve(
   expandHome(process.env.BRAINDUMP_DIR ?? '~/org')
 )
@@ -29,19 +28,35 @@ export const INDEX = 'index'
 export const noteHref = (slug: string) =>
   slug === INDEX ? '/braindump/' : `/braindump/${slug}/`
 
-// denote can turn any file into a note (pdfs, tex, ...), by naming it
-// `<identifier>--<title>__<tags>.<ext>`. Those are served as is.
-async function braindumpFiles() {
+// denote names every note `<identifier>--<title>__<tag1>_<tag2>.<ext>`
+function parseDenoteName(name: string) {
+  const [, identifier, title, tags] =
+    name.match(/^(\d{8}T\d{6})(?:==[^-.]*)?(?:--([^_.]+))?(?:__([^.]+))?\./) ??
+    []
+  if (!identifier) return
+  return { identifier, title, tags: tags?.split('_') ?? [] }
+}
+
+async function readDenoteNames() {
   if (!existsSync(braindumpDir)) return []
 
-  return (await fs.readdir(braindumpDir))
-    .filter((name) => DENOTE_ID.test(name) && !name.endsWith('.org'))
-    .filter((name) => !denoteTags(name).includes('private'))
-    .map((name) => ({
-      name,
-      path: path.join(braindumpDir, name),
-      identifier: name.match(DENOTE_ID)![0],
-      title: name.match(/--([^_.]+)/)?.[1]?.replaceAll('-', ' ') ?? name,
+  return (await fs.readdir(braindumpDir)).flatMap((name) => {
+    const denote = parseDenoteName(name)
+    return denote && !denote.tags.includes('private')
+      ? [{ name, ...denote }]
+      : []
+  })
+}
+
+// denote can turn any file into a note (pdfs, tex, ...), those are served as
+// is.
+async function braindumpFiles() {
+  return (await readDenoteNames())
+    .filter(({ name }) => !name.endsWith('.org'))
+    .map((file) => ({
+      ...file,
+      path: path.join(braindumpDir, file.name),
+      title: file.title?.replaceAll('-', ' ') ?? file.name,
     }))
 }
 
@@ -73,17 +88,14 @@ export function braindump(): AstroIntegration {
   }
 }
 
-const DENOTE_ID = /^\d{8}T\d{6}/
-
 type Note = {
   slug: string
+  identifier: string | undefined
   title: string
-  filetags: string[]
+  tags: string[]
   file: VFile
   hast: AstRoot
   frontmatter: Record<string, string | undefined>
-  // org-roam style `id:<uuid>` mapped to an anchor, '' for the file itself
-  ids: Record<string, string>
 }
 
 type Target = { href: string; title: string; note?: Note }
@@ -103,14 +115,32 @@ export function braindumpLoader(): Loader {
           return []
         }
 
-        const names = (await fs.readdir(braindumpDir))
-          .filter((name) => name.endsWith('.org'))
-          .sort()
         // NOTE: `archive` is taken by src/pages/braindump/archive.astro
         const slugs = new Set<string>([INDEX, 'archive'])
-        const notes: Note[] = []
+        const entries: (Pick<Note, 'slug' | 'identifier' | 'tags'> & {
+          name: string
+        })[] = (await readDenoteNames())
+          .filter(({ name }) => name.endsWith('.org'))
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map(({ name, identifier, title, tags }) => {
+            // Same as the file name, unless two notes share a title
+            const id = identifier.toLowerCase()
+            let slug = title ?? id
+            if (slugs.has(slug)) slug = `${slug}-${id}`
+            slugs.add(slug)
+            return { name, slug, identifier, tags }
+          })
+        if (existsSync(path.join(braindumpDir, 'index.org'))) {
+          entries.push({
+            name: 'index.org',
+            slug: INDEX,
+            identifier: undefined,
+            tags: [],
+          })
+        }
 
-        for (const name of names) {
+        const notes: Note[] = []
+        for (const { name, slug, identifier, tags } of entries) {
           const filePath = path.join(braindumpDir, name)
           const file = new VFile({
             path: filePath,
@@ -120,28 +150,14 @@ export function braindumpLoader(): Loader {
           file.messages.forEach((m) => logger.warn(`${name}: ${m.reason}`))
 
           const frontmatter = file.data.astro?.frontmatter ?? {}
-          const filetags = String(frontmatter.filetags ?? '')
-            .split(':')
-            .map((t) => t.trim())
-            .filter((t) => !!t)
-          if (filetags.includes('private')) continue
-
-          const stem = path.basename(name, '.org')
-          const title = frontmatter.title || stem
-          let slug = slugify(title) || slugify(stem)
-          if (slugs.has(slug)) slug = `${slug}-${slugify(stem)}`
-          if (name === 'index.org') slug = INDEX
-          slugs.add(slug)
-
           notes.push({
             slug,
-            title,
-            filetags,
+            identifier,
+            title: frontmatter.title || slug,
+            tags,
             file,
             hast,
             frontmatter,
-            ids:
-              (file.data.astro as { ids?: Record<string, string> }).ids ?? {},
           })
         }
 
@@ -151,25 +167,23 @@ export function braindumpLoader(): Loader {
       async function sync() {
         const notes = await readNotes()
 
+        // denote identifier to its target
         const targets = new Map<string, Target>()
         for (const file of await braindumpFiles()) {
-          const target = { href: `/braindump/files/${file.name}`, ...file }
-          targets.set(`denote:${file.identifier}`, target)
-          targets.set(`file:${file.path}`, target)
+          targets.set(file.identifier, {
+            href: `/braindump/files/${file.name}`,
+            title: file.title,
+          })
         }
         // NOTE: Added after the files, as org exports (pdf, tex) share the
         // identifier of their note, and the note is the one to link to.
         for (const note of notes) {
-          const href = noteHref(note.slug)
-          const target = { href, title: note.title, note }
-          for (const [id, hash] of Object.entries(note.ids)) {
-            targets.set(id, { ...target, href: href + hash })
-          }
-          const identifier =
-            note.frontmatter.identifier ??
-            path.basename(note.file.path).match(DENOTE_ID)?.[0]
-          if (identifier) targets.set(`denote:${identifier}`, target)
-          targets.set(`file:${note.file.path}`, target)
+          if (!note.identifier) continue
+          targets.set(note.identifier, {
+            href: noteHref(note.slug),
+            title: note.title,
+            note,
+          })
         }
 
         const backlinks = new Map(notes.map((n) => [n, new Set<Note>()]))
@@ -194,8 +208,8 @@ export function braindumpLoader(): Loader {
               id: note.slug,
               data: {
                 title: note.title,
-                filetags: note.filetags,
-                created: note.frontmatter.created ?? note.frontmatter.date,
+                filetags: note.tags,
+                created: note.frontmatter.date,
                 modified: note.frontmatter.modified,
                 backlinks: [...backlinks.get(note)!].map((n) => n.slug),
               },
@@ -235,18 +249,21 @@ function resolveLink(
   targets: Map<string, Target>,
   href: string
 ): Target | undefined {
-  // Drop org's search options (e.g. `file:foo.org::*Heading`)
-  const [link = ''] = decodeURI(href).split('::')
-  if (link.startsWith('file:')) {
-    const file = path.resolve(braindumpDir, expandHome(link.slice(5)))
-    return targets.get(`file:${file}`)
+  if (!href.startsWith('denote:')) return
+
+  // Links to a heading look like `denote:<identifier>::#<custom-id>`, which
+  // uniorg-slug also uses as the heading's html id.
+  const [identifier = '', search = ''] = href.slice(7).split('::')
+  const target = targets.get(identifier)
+  if (target?.note && search.startsWith('#')) {
+    return { ...target, href: target.href + search }
   }
-  return targets.get(link)
+  return target
 }
 
-// Points `id:`, `denote:` and `file:` links to the note's page, or the served
-// file. Links to private or missing notes, or local paths, can't be followed
-// on the web, so only their description is kept.
+// Points `denote:` links to the note's page, or the served file. Links to
+// private or missing notes, or local paths (`file:`), can't be followed on the
+// web, so only their description is kept.
 function rewriteLinks(
   tree: AstRoot,
   resolve: (href: string) => Target | undefined
@@ -254,7 +271,7 @@ function rewriteLinks(
   visit(tree, 'element', (node, index, parent) => {
     const href = node.properties.href
     if (node.tagName !== 'a' || typeof href !== 'string') return
-    if (!/^(id|denote|file):/.test(href)) return
+    if (!/^(denote|file):/.test(href)) return
 
     const target = resolve(href)
     if (!target) {
@@ -264,7 +281,7 @@ function rewriteLinks(
 
     node.properties.href = target.href
     const [child] = node.children
-    if (child?.type === 'text' && /^(id|denote|file):/.test(child.value)) {
+    if (child?.type === 'text' && child.value.startsWith('denote:')) {
       // Link without a description, show the title instead of the raw link
       node.children = [{ type: 'text', value: target.title }]
     }
@@ -316,20 +333,6 @@ function resolveAttachments() {
   }
 }
 
-// `20251204T000210--title__tag1_tag2.pdf` has the tags tag1 and tag2
-function denoteTags(name: string) {
-  return name.match(/__([^.]+)/)?.[1]?.split('_') ?? []
-}
-
 function expandHome(p: string) {
   return p.replace(/^~(?=\/|$)/, os.homedir())
-}
-
-function slugify(s: string) {
-  return s
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/\p{M}/gu, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
 }
