@@ -78,6 +78,7 @@ const DENOTE_ID = /^\d{8}T\d{6}/
 type Note = {
   slug: string
   title: string
+  filetags: string[]
   file: VFile
   hast: AstRoot
   frontmatter: Record<string, string | undefined>
@@ -105,7 +106,8 @@ export function braindumpLoader(): Loader {
         const names = (await fs.readdir(braindumpDir))
           .filter((name) => name.endsWith('.org'))
           .sort()
-        const slugs = new Set<string>([INDEX])
+        // NOTE: `archive` is taken by src/pages/braindump/archive.astro
+        const slugs = new Set<string>([INDEX, 'archive'])
         const notes: Note[] = []
 
         for (const name of names) {
@@ -134,6 +136,7 @@ export function braindumpLoader(): Loader {
           notes.push({
             slug,
             title,
+            filetags,
             file,
             hast,
             frontmatter,
@@ -191,6 +194,7 @@ export function braindumpLoader(): Loader {
               id: note.slug,
               data: {
                 title: note.title,
+                filetags: note.filetags,
                 created: note.frontmatter.created ?? note.frontmatter.date,
                 modified: note.frontmatter.modified,
                 backlinks: [...backlinks.get(note)!].map((n) => n.slug),

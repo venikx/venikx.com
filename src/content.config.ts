@@ -46,6 +46,7 @@ const braindump = defineCollection({
   loader: braindumpLoader(),
   schema: z.object({
     title: z.string(),
+    filetags: z.array(z.string()),
     created: z.string().transform(orgDateToDate).optional(),
     modified: z.string().transform(orgDateToDate).optional(),
     backlinks: z.array(reference('braindump')),

@@ -1,16 +1,7 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content'
+import { getEntry, render } from 'astro:content'
 import Layout from '../../layouts/Layout.astro'
-import { INDEX, noteHref } from '../../lib/braindump'
-
-const formatDate = (date: Date) => date.toISOString().split('T')[0]
-
-const notes = (await getCollection('braindump', (n) => n.id !== INDEX))
-  .map((note) => ({
-    ...note,
-    updated: note.data.modified ?? note.data.created,
-  }))
-  .sort((a, b) => (b.updated?.getTime() ?? 0) - (a.updated?.getTime() ?? 0))
+import { INDEX } from '../../lib/braindump'
 
 const index = await getEntry('braindump', INDEX)
 const IndexContent = index && (await render(index)).Content
@@ -20,41 +11,23 @@ const IndexContent = index && (await render(index)).Content
   title="Braindump | Kevin De Baerdemaeker"
   description="My second brain: rough notes to learn, understand and retain the things I'm interested in."
 >
-  <h1 class="text-4xl">Braindump</h1>
-  <p class="max-w-prose">
-    My second brain. These notes are written for myself, to learn, understand
-    and retain the things I'm interested in, so expect rough edges. Recently
-    updated notes come first.
-  </p>
-  <div class="flex flex-col w-fit -mt-1 mb-4">
-    {
-      notes.length > 0 ? (
-        notes.map((note) => (
-          <a
-            href={noteHref(note.id)}
-            class="transition-colors ease-in duration-200 inline-flex hover:bg-pink-100 rounded-lg py-1 px-4 -ml-4"
-          >
-            <div class="shrink-0">
-              {note.updated ? formatDate(note.updated) : '----------'}
-            </div>
-            <h3 class="inline m-0 pl-6 font-normal">{note.data.title}</h3>
-          </a>
-        ))
-      ) : (
-        <small>
-          Err... Nothing to see here yet, or some integration went bust! 🐛
-        </small>
-      )
-    }
-  </div>
+  <h1 class="text-4xl max-w-prose mb-8">Braindump</h1>
   {
     IndexContent && (
-      <section class="mt-12">
-        <hr class="border-pink-200 border-2" />
-        <div class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100">
-          <IndexContent />
-        </div>
-      </section>
+      <div class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100">
+        <IndexContent />
+      </div>
     )
   }
+  <section class="mt-12">
+    <hr class="border-pink-200 border-2" />
+    <p>
+      Every note is listed in the
+      <a
+        href="/braindump/archive/"
+        class="text-pink-700 underline transition-colors ease-in duration-200 rounded-xs hover:bg-pink-100"
+        >Archive</a
+      >.
+    </p>
+  </section>
 </Layout>
