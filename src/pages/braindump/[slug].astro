@@ -35,7 +35,7 @@ const backlinks = (await getEntries(entry.data.backlinks)).sort((a, b) =>
 >
   <h1 class="text-4xl max-w-prose mb-2">{entry.data.title}</h1>
   <p class="text-sm text-zinc-600 mb-8">
-    {updated && `updated ${formatDate(updated)}`}
+    {updated && `Modified ${formatDate(updated)}`}
   </p>
   <div
     class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100"
