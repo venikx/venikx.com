@@ -9,7 +9,16 @@ import type { Options } from './astro-org'
 export const orgOptions: Options = {
   rehypePlugins: [
     [rehypeShiftHeading, { shift: 1 } as RehypeShiftOptions],
-    [shiki, { theme: 'synthwave-84' } as RehypeShikiOptions],
+    [
+      shiki,
+      {
+        theme: 'synthwave-84',
+        // NOTE: Only load the languages in use, unknown ones stay plain
+        langs: [],
+        lazy: true,
+        onError: () => {},
+      } as RehypeShikiOptions,
+    ],
   ],
   uniorgRehypeOptions: {
     handlers: {

@@ -39,16 +39,13 @@ const FILE_TYPES: Record<string, string> = {
   '.webp': 'image/webp',
 }
 
-async function readDenoteNames() {
-  if (!existsSync(braindumpDir)) return []
-
-  return (await fs.readdir(braindumpDir)).flatMap((name) => {
-    const [, identifier, title] = name.match(DENOTE) ?? []
-    return identifier ? [{ name, identifier, title }] : []
-  })
-}
-
 const isFile = (name: string) => path.extname(name) in FILE_TYPES
+
+const isPublishable = (name: string) =>
+  DENOTE.test(name) &&
+  isFile(name) &&
+  !name.includes('/') &&
+  existsSync(path.join(braindumpDir, name))
 
 export function braindump(): AstroIntegration {
   return {
@@ -58,18 +55,12 @@ export function braindump(): AstroIntegration {
       'astro:server:setup': ({ server }) => {
         server.middlewares.use('/braindump/files/', (req, res, next) => {
           const name = new URL(req.url ?? '', 'file:').pathname.slice(1)
-          const file = path.join(braindumpDir, name)
-          if (
-            !DENOTE.test(name) ||
-            !isFile(name) ||
-            name.includes('/') ||
-            !existsSync(file)
-          ) {
-            return next()
-          }
+          if (!isPublishable(name)) return next()
 
           res.setHeader('Content-Type', FILE_TYPES[path.extname(name)]!)
-          createReadStream(file).on('error', next).pipe(res)
+          createReadStream(path.join(braindumpDir, name))
+            .on('error', next)
+            .pipe(res)
         })
       },
       'astro:build:done': async ({ dir, logger }) => {
@@ -79,23 +70,21 @@ export function braindump(): AstroIntegration {
             .filter((page) => page.endsWith('.html'))
             .map((page) => fs.readFile(new URL(page, pages), 'utf-8'))
         )
-        const linked = new Set(
-          html.flatMap((h) =>
-            [...h.matchAll(/"\/braindump\/files\/([^"]+)"/g)].map((m) => m[1])
-          )
-        )
-        const files = (await readDenoteNames()).filter(
-          ({ name }) => isFile(name) && linked.has(name)
+        const files = new Set(
+          html
+            .flatMap((h) => [...h.matchAll(/"\/braindump\/files\/([^"]+)"/g)])
+            .map((m) => m[1] ?? '')
+            .filter(isPublishable)
         )
 
         await fs.mkdir(new URL('files/', pages), { recursive: true })
-        for (const { name } of files) {
+        for (const name of files) {
           await fs.copyFile(
             path.join(braindumpDir, name),
             new URL(`files/${name}`, pages)
           )
         }
-        logger.info(`Copied ${files.length} files`)
+        logger.info(`Copied ${files.size} files`)
       },
     },
   }
@@ -122,25 +111,26 @@ export function braindumpLoader(): Loader {
   return {
     name: 'braindump',
     async load({ store, parseData, logger, config }) {
-      if (!existsSync(braindumpDir)) {
+      const names = await fs.readdir(braindumpDir).catch(() => {
         logger.warn(`No notes at ${braindumpDir}, set BRAINDUMP_DIR.`)
-      }
+        return []
+      })
 
-      const names = await readDenoteNames()
       const targets = new Map<string, Target>()
-      for (const { name, identifier } of names) {
-        if (isFile(name)) {
-          targets.set(identifier, { href: `/braindump/files/${name}` })
-        }
-      }
-
       const entries: {
         name: string
         identifier?: string | undefined
         title?: string | undefined
-      }[] = names.filter(({ name }) => path.extname(name) === '.org')
-      if (existsSync(path.join(braindumpDir, 'index.org'))) {
-        entries.push({ name: 'index.org' })
+      }[] = []
+      for (const name of names) {
+        const [, identifier, title] = name.match(DENOTE) ?? []
+        if (name === 'index.org') {
+          entries.push({ name })
+        } else if (identifier && path.extname(name) === '.org') {
+          entries.push({ name, identifier, title })
+        } else if (identifier && isFile(name)) {
+          targets.set(identifier, { href: `/braindump/files/${name}` })
+        }
       }
 
       const notes: Note[] = []
