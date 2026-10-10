@@ -31,8 +31,6 @@ type SetupHookParams = HookParameters<'astro:config:setup'> & {
   addContentEntryType: (contentEntryType: ContentEntryType) => void
 }
 
-// Split in two steps, so callers can rewrite the hast before it's
-// stringified (e.g. resolving links across files).
 export function createOrgProcessor(options: Options = {}) {
   const uniorgPlugins: PluggableList = [
     initFrontmatter,

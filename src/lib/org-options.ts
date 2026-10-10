@@ -6,8 +6,6 @@ import { h } from 'hastscript'
 
 import type { Options } from './astro-org'
 
-// Shared between the blog (astro-org integration) and the braindump loader,
-// so org files render the same everywhere.
 export const orgOptions: Options = {
   rehypePlugins: [
     [rehypeShiftHeading, { shift: 1 } as RehypeShiftOptions],
