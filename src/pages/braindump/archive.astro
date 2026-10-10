@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content'
+import Layout from '../../layouts/Layout.astro'
+import { INDEX, noteHref } from '../../lib/braindump'
+
+const formatDate = (date: Date) => date.toISOString().split('T')[0]
+const WEEK = 7 * 24 * 60 * 60 * 1000
+
+const notes = (await getCollection('braindump', (n) => n.id !== INDEX))
+  .map((note) => ({
+    ...note,
+    modified: note.data.modified ?? note.data.created,
+  }))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+
+// NOTE: Relative to the build, as the site is static
+const sections = [
+  {
+    title: 'Recently Updated',
+    notes: notes.filter(
+      (n) => n.modified && Date.now() - n.modified.getTime() <= WEEK
+    ),
+  },
+  { title: 'All Notes', notes },
+]
+---
+
+<Layout
+  title="Archive | Braindump"
+  description="Every note in Kevin's braindump."
+>
+  <h1 class="text-4xl">Archive</h1>
+  <div
+    class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100"
+  >
+    {
+      sections.map((section) => (
+        <section>
+          <h2>{section.title}</h2>
+          {section.notes.length > 0 ? (
+            <div class="overflow-x-auto">
+              <table class="table-fixed min-w-xl">
+                <thead>
+                  <tr>
+                    <th class="w-28">Modified</th>
+                    <th>Title</th>
+                    <th class="w-36">Tags</th>
+                    <th class="w-24 text-right">Backlinks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {section.notes.map((note) => (
+                    <tr>
+                      <td class="whitespace-nowrap">
+                        {note.modified && formatDate(note.modified)}
+                      </td>
+                      <td>
+                        <a href={noteHref(note.id)}>{note.data.title}</a>
+                      </td>
+                      <td>{note.data.filetags.join(', ')}</td>
+                      <td class="text-right">{note.data.backlinks.length}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p>Nothing was modified in the last 7 days.</p>
+          )}
+        </section>
+      ))
+    }
+  </div>
+</Layout>

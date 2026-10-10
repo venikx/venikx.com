@@ -31,7 +31,7 @@ type SetupHookParams = HookParameters<'astro:config:setup'> & {
   addContentEntryType: (contentEntryType: ContentEntryType) => void
 }
 
-export default function org(options: Options = {}): AstroIntegration {
+export function createOrgProcessor(options: Options = {}) {
   const uniorgPlugins: PluggableList = [
     initFrontmatter,
     [extractKeywords, { name: 'keywords' }],
@@ -43,6 +43,36 @@ export default function org(options: Options = {}): AstroIntegration {
 
   const rehypePlugins: PluggableList = [...(options.rehypePlugins ?? [])]
 
+  const uniorgToHast = unified()
+    .use(uniorg)
+    .use(uniorgPlugins)
+    .use(uniorg2rehype, options.uniorgRehypeOptions ?? {})
+
+  const htmlToHtml = unified()
+    .use(rehypeParse)
+    .use(rehypePlugins)
+    .use(rehypeStringify)
+
+  return {
+    async toHast(f: VFile) {
+      return uniorgToHast.run(uniorgToHast.parse(f) as OrgData, f)
+    },
+    async toHtml(hast: AstRoot, f: VFile) {
+      const imagePaths = collectLocalImagePaths(hast)
+      markImagesForOptimization(hast)
+
+      // TODO(Kevin): Typescript mismatch about the same packag?
+      await htmlToHtml.run(hast)
+      const html = htmlToHtml.stringify(hast as any, f)
+
+      return { html, imagePaths }
+    },
+  }
+}
+
+export default function org(options: Options = {}): AstroIntegration {
+  const processor = createOrgProcessor(options)
+
   return {
     name: 'astro-org',
     hooks: {
@@ -50,23 +80,13 @@ export default function org(options: Options = {}): AstroIntegration {
         const { addContentEntryType, addPageExtension } =
           params as SetupHookParams
 
-        const uniorgToHast = unified()
-          .use(uniorg)
-          .use(uniorgPlugins)
-          .use(uniorg2rehype, options.uniorgRehypeOptions ?? {})
-
-        const htmlToHtml = unified()
-          .use(rehypeParse)
-          .use(rehypePlugins)
-          .use(rehypeStringify)
-
         addPageExtension('.org')
         addContentEntryType({
           extensions: ['.org'],
           async getEntryInfo({ fileUrl, contents }) {
             const f = new VFile({ path: fileUrl, value: contents })
 
-            await uniorgToHast.run(uniorgToHast.parse(f) as OrgData, f)
+            await processor.toHast(f)
             const frontmatter = f.data.astro!.frontmatter
 
             return {
@@ -91,22 +111,15 @@ export default function org(options: Options = {}): AstroIntegration {
                 path: fileUrl,
                 value: entry.body,
               })
-              const hast = await uniorgToHast.run(
-                uniorgToHast.parse(f) as OrgData,
+              const { html, imagePaths } = await processor.toHtml(
+                await processor.toHast(f),
                 f
               )
-
-              const localImagePaths = collectLocalImagePaths(hast)
-              markImagesForOptimization(hast)
-
-              // TODO(Kevin): Typescript mismatch about the same packag?
-              await htmlToHtml.run(hast)
-              const html = htmlToHtml.stringify(hast as any, f)
 
               return {
                 html,
                 metadata: {
-                  imagePaths: localImagePaths,
+                  imagePaths,
                   headings: [],
                   frontmatter: {},
                 },

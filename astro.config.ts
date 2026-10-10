@@ -2,15 +2,12 @@ import { defineConfig, passthroughImageService } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 import mdx from '@astrojs/mdx'
 import tailwindcss from '@tailwindcss/vite'
-import shiki, { type RehypeShikiOptions } from '@shikijs/rehype'
-import rehypeShiftHeading, {
-  type Options as RehypeShiftOptions,
-} from 'rehype-shift-heading'
 import icon from 'astro-icon'
-import { h } from 'hastscript'
 
 import org from './src/lib/astro-org'
+import { orgOptions } from './src/lib/org-options'
 import { replaceOrgLinks } from './src/lib/plugins'
+import { braindump } from './src/lib/braindump'
 
 export default defineConfig({
   trailingSlash: 'always',
@@ -33,44 +30,8 @@ export default defineConfig({
         carbon: ['logo-github', 'logo-linkedin', 'email'],
       },
     }),
-    org({
-      uniorgPlugins: [replaceOrgLinks],
-      rehypePlugins: [
-        [rehypeShiftHeading, { shift: 1 } as RehypeShiftOptions],
-        [shiki, { theme: 'synthwave-84' } as RehypeShikiOptions],
-      ],
-      uniorgRehypeOptions: {
-        handlers: {
-          'example-block': (org) => {
-            return h('pre.example', [{ type: 'text', value: org.value }])
-          },
-          'src-block': function (org) {
-            const snippet = h(
-              'pre.src-block',
-              {},
-              h(
-                'code',
-                {
-                  className: org.language
-                    ? `language-${org.language}`
-                    : undefined,
-                },
-                org.value
-              )
-            )
-            const captions: any[] = Array.isArray(org.affiliated.CAPTION)
-              ? org.affiliated.CAPTION.flat()
-              : []
-            if (captions.length <= 0) {
-              return snippet
-            } else {
-              const figcaption = h('figcaption', captions[0]!.value)
-              return h('figure', [snippet, figcaption])
-            }
-          },
-        },
-      },
-    }),
+    org({ ...orgOptions, uniorgPlugins: [replaceOrgLinks] }),
+    braindump(),
     sitemap(),
   ],
 })

@@ -1,6 +1,8 @@
-import { defineCollection } from 'astro:content'
+import { defineCollection, reference } from 'astro:content'
 import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
+
+import { braindumpLoader } from './lib/braindump'
 
 const post = z.object({
   title: z.string(),
@@ -40,4 +42,15 @@ const authors = defineCollection({
   }),
 })
 
-export const collections = { blog, interactive, authors }
+const braindump = defineCollection({
+  loader: braindumpLoader(),
+  schema: z.object({
+    title: z.string(),
+    filetags: z.array(z.string()),
+    created: z.string().transform(orgDateToDate).optional(),
+    modified: z.string().transform(orgDateToDate).optional(),
+    backlinks: z.array(reference('braindump')),
+  }),
+})
+
+export const collections = { blog, interactive, authors, braindump }

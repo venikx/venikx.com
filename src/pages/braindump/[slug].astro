@@ -1,0 +1,65 @@
+---
+import {
+  getCollection,
+  getEntries,
+  render,
+  type CollectionEntry,
+} from 'astro:content'
+import Layout from '../../layouts/Layout.astro'
+import { INDEX, noteHref } from '../../lib/braindump'
+
+export async function getStaticPaths() {
+  const notes = await getCollection('braindump', (n) => n.id !== INDEX)
+  return notes.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }))
+}
+
+type Props = { entry: CollectionEntry<'braindump'> }
+
+const formatDate = (date: Date) => date.toISOString().split('T')[0]
+
+const { entry } = Astro.props
+const { Content } = await render(entry)
+const updated = entry.data.modified ?? entry.data.created
+const backlinks = (await getEntries(entry.data.backlinks)).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+)
+---
+
+<Layout
+  kind="article"
+  title={`${entry.data.title} | Braindump`}
+  description={`${entry.data.title}, a note from Kevin's braindump.`}
+>
+  <h1 class="text-4xl max-w-prose mb-2">{entry.data.title}</h1>
+  <p class="text-sm text-zinc-600 mb-8">
+    {updated && `Modified ${formatDate(updated)}`}
+  </p>
+  <div
+    class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100"
+  >
+    <Content />
+  </div>
+  {
+    backlinks.length > 0 && (
+      <section class="mt-12">
+        <hr class="border-pink-200 border-2" />
+        <h2 class="text-2xl">Backlinks</h2>
+        <ul class="list-[square] list-inside">
+          {backlinks.map((note) => (
+            <li>
+              <a
+                href={noteHref(note.id)}
+                class="text-pink-700 transition-colors ease-in duration-200 rounded-xs hover:bg-pink-100"
+              >
+                {note.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Layout>

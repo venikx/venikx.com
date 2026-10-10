@@ -1,0 +1,33 @@
+---
+import { getEntry, render } from 'astro:content'
+import Layout from '../../layouts/Layout.astro'
+import { INDEX } from '../../lib/braindump'
+
+const index = await getEntry('braindump', INDEX)
+const IndexContent = index && (await render(index)).Content
+---
+
+<Layout
+  title="Braindump | Kevin De Baerdemaeker"
+  description="My second brain: rough notes to learn, understand and retain the things I'm interested in."
+>
+  <h1 class="text-4xl max-w-prose mb-8">Braindump</h1>
+  {
+    IndexContent && (
+      <div class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100">
+        <IndexContent />
+      </div>
+    )
+  }
+  <section class="mt-12">
+    <hr class="border-pink-200 border-2" />
+    <p>
+      Every note is listed in the
+      <a
+        href="/braindump/archive/"
+        class="text-pink-700 underline transition-colors ease-in duration-200 rounded-xs hover:bg-pink-100"
+        >Archive</a
+      >.
+    </p>
+  </section>
+</Layout>
