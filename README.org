@@ -1,13 +1,18 @@
 #+TITLE: My Personal Hacker Space
 
-My hacker space is a glued together Frankenstein monster of multiple
-inspirational resources of building a static website with [[https://www.gnu.org/software/emacs/][Emacs]] and the amazing
-[[https://orgmode.org/][Org Mode]].
+The site `venikx.com` is my personal homepage, it serves as a very
+visually pleasing portfolio, a hackerspace where I make digital art
+experiments, curated blog posts if I want to dive deeper into topics,
+and a references map to all my personal notes.
 
-- [[https://www.redblobgames.com/][Red Blob Games]] :: Creating interactive tutorials using org-mode
-- [[https://iotcl.com/][Toon Claes]] :: The main trigger to start publishing a site with Org Mode
-- [[http://duncan.codes][Duncan Codes]] :: List generation for the archive
-- [[https://www.brautaset.org/index.html][Stig's Soapbox]] :: The simple, but effective way to providing quality content
-- [[https://www.youtube.com/watch?v=618uCFTNNpE][System Crafters]] :: The main resource for heavily customizing ~ox-html~
-- [[https://github.com/apmiller108/slip-box/blob/main/publish.org][apmiller108/slip-box]] :: Future reference for my [[https://www.orgroam.com/][Org-roam]] powered [[https://github.com/venikx/braindump][Braindump]]
+- most of the blog posts and personal notes are written in org-mode,
+  some blog posts are written with mdx if I need more visually
+  engaging or interactive examples
+- my personal notes are currently a mix between org-roam and
+  denote-org, as I'm in the middle of switching to denote-org
+- I build the digital art experiences purely in astro pages, as most
+  of them revolve around working with canvas
 
+Think of it as my own personal hackerspace, that looks super cool to
+show-off to other people that describes my life's work if they find it
+interesting to dig deeper.
