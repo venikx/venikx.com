@@ -34,7 +34,7 @@ nix --experimental-features 'nix-command flakes' help
 #+end_src
 
 However, typing it out every time quickly becomes annoying, so you can append it
-to nix's configuration file.
+to Nix's configuration file.
 
 #+begin_src sh :eval no
 mkdir -p ~/.config/nix
@@ -254,7 +254,7 @@ git add flake.nix
 nix flake lock
 #+end_src
 
-Now that we've added these packages, everyone who uses nix with flakes, can run
+Now that we've added these packages, everyone who uses Nix with flakes, can run
 ~nix develop~ to setup the shell, which provides the packages based on the
 =flake.nix=. Remember that the =flake.lock= pins down these packages to the
 exact same version, meaning that the packages and their dependencies will be
@@ -290,7 +290,7 @@ on a project which requires ~nodejs_18~ and ~python3~? Done. Do you want to
 provide a default debugger when working on a ~C/C++~ project? Done. Do you want
 setup an environment for =Github Actions=? Done!
 
-If a =Javascript= project use nix already, anyone who clones the project should
+If a =Javascript= project use Nix already, anyone who clones the project should
 be able to run ~nix develop~ and have a fully working development environment
 available. For the sake of the article though, let's assume you want to
 contribute to a fictional project which uses ~bun~. You throw out your computer,
@@ -336,7 +336,7 @@ application at home:
 console.log("Hello from Nix and Javascript!");
 #+end_src
 
-If you would like to work inside the development environment provided by nix, we
+If you would like to work inside the development environment provided by Nix, we
 can again run ~nix develop~, and run our code. Remember, ~cowsay~ is still
 available because we haven't removed it yet from the =flake.nix=. The flake pins
 down ~bun~'s version, so you are running the exact same version as these
@@ -388,8 +388,8 @@ bring them back, but tailor them to help us build the C program. The
 ~pkgs.stdenv.mkDerivation~ is function with a set as it's argument. The
 attributes ~pname~, ~version~ and ~src~ are required.
 
-In ~buildPhase~ we tell nix how which compiler to use to build our program. The
-~installPhase~ places the executable in a bin folder so nix knows where to find
+In ~buildPhase~ we tell Nix how which compiler to use to build our program. The
+~installPhase~ places the executable in a bin folder so Nix knows where to find
 it when you want to run the application. By default ~nix run~ looks inside the
 =./result/bin/= folder for an executable with the name taken from ~pname~.
 
@@ -516,5 +516,5 @@ If you wish to see a more /production/ level =flake.nix=, you can check out my
 configuration for my laptop, desktop, and macbook).
 
 *** Fun Fact
-Nix sounds like "nothing" for a Belgian, so when I'm talking in Dutch about nix,
+Nix sounds like "nothing" for a Belgian, so when I'm talking in Dutch about Nix,
 it often get confusing. =I'm trying to understand nothing.=

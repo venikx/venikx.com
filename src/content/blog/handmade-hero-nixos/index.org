@@ -8,7 +8,7 @@ Lately, I'm following along [[https://handmadehero.org/][Handmade Hero]] on NixO
 [[https://davidgow.net/handmadepenguin/default.html][Handmade Penguin]]), and wanted to setup [[https://zero-to-nix.com/concepts/flakes][=Nix Flakes=]] to build the derivation. I
 made something work for ~C/C++~ with external dependencies such as ~SDL2~.
 
-If you are unfamiliar with the nix ecosystem, I recommend reading my [[../how-to-nix/index.org][How-To Nix]]
+If you are unfamiliar with the Nix ecosystem, I recommend reading my [[../how-to-nix/index.org][How-To Nix]]
 guide, but it's not a requirement. I'm still learning about these concepts
 myself, so don't worry.
 

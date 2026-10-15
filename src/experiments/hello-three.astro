@@ -1,0 +1,40 @@
+---
+import type { ExperimentMeta } from '../lib/experiments'
+
+export const meta: ExperimentMeta = {
+  title: 'Hello, three.js',
+  description:
+    'My first steps into three.js: using basic transforms, cameras, geometries, textures and materials',
+  created: new Date('2026-10-15'),
+}
+---
+
+<p>This is a work in progress.</p>
+
+<canvas id="webgl" class="block aspect-video w-full rounded-lg bg-zinc-950"
+></canvas>
+
+<script>
+  import * as THREE from 'three'
+
+  const canvas = document.getElementById('webgl')
+  if (!(canvas instanceof HTMLCanvasElement)) throw new Error('missing canvas')
+
+  const sizes = { width: canvas.clientWidth, height: canvas.clientHeight }
+
+  const scene = new THREE.Scene()
+
+  const mesh = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: 'red' })
+  )
+  scene.add(mesh)
+
+  const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
+  camera.position.z = 3
+  scene.add(camera)
+
+  const renderer = new THREE.WebGLRenderer({ canvas })
+  renderer.setSize(sizes.width, sizes.height, false)
+  renderer.render(scene, camera)
+</script>

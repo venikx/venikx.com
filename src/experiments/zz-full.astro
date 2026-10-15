@@ -1,0 +1,25 @@
+---
+import type { ExperimentMeta } from '../lib/experiments'
+
+export const meta: ExperimentMeta = {
+  title: 'ZZ Full',
+  description: 'temp',
+  created: new Date('2020-01-01'),
+  draft: true,
+  fullscreen: true,
+}
+---
+
+<canvas id="zz" class="block h-dvh w-full"></canvas>
+
+<script>
+  const c = document.getElementById('zz') as HTMLCanvasElement
+  c.width = innerWidth
+  c.height = innerHeight
+  const g = c.getContext('2d')!
+  const grad = g.createLinearGradient(0, 0, c.width, c.height)
+  grad.addColorStop(0, '#581c87')
+  grad.addColorStop(1, '#f9a8d4')
+  g.fillStyle = grad
+  g.fillRect(0, 0, c.width, c.height)
+</script>

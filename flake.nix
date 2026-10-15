@@ -23,7 +23,7 @@
           src = ./.;
 
           nodejs = pkgs.nodejs_24;
-          npmDepsHash = "sha256-cj88VH+cw0SEUHbToFTP4BwW5JCwgZYxTKxZYicaheQ=";
+          npmDepsHash = "sha256-4L0nXXD8kXFUSskB7V2SgIJCaNwTkRLvlXv1Ha/oWSg=";
 
           buildPhase = ''
             npm run build
