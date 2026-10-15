@@ -1,17 +1,16 @@
 ---
-import type { InferGetStaticPropsType } from 'astro'
 import Layout from '../../layouts/Layout.astro'
 import { getAllExperiments } from '../../lib/experiments'
 
+// NOTE(venikx): Only pass params, astro dev caches getStaticPaths props, so
+// passing the experiment as props serves a stale version until a restart.
 export function getStaticPaths() {
-  return getAllExperiments().map(({ id, data, Content }) => ({
-    params: { slug: id },
-    props: { data, Content },
-  }))
+  return getAllExperiments().map(({ id }) => ({ params: { slug: id } }))
 }
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>
-const { data, Content } = Astro.props
+const experiment = getAllExperiments().find((e) => e.id === Astro.params.slug)
+if (!experiment) throw new Error(`unknown experiment: ${Astro.params.slug}`)
+const { data, Content } = experiment
 ---
 
 <Layout
