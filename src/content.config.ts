@@ -27,6 +27,7 @@ const interactive = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/interactive' }),
   schema: post.extend({
     created: z.coerce.date(),
+    modified: z.optional(z.coerce.date()),
   }),
 })
 

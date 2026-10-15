@@ -32,6 +32,7 @@ const backlinks = (await getEntries(entry.data.backlinks)).sort((a, b) =>
   kind="article"
   title={`${entry.data.title} | Braindump`}
   description={`${entry.data.title}, a note from Kevin's braindump.`}
+  modified={updated}
 >
   <h1 class="text-4xl max-w-prose mb-2">{entry.data.title}</h1>
   <p class="text-sm text-zinc-600 mb-8">

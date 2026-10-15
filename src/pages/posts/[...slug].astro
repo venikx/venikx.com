@@ -25,6 +25,7 @@ const { Content } = await render(entry)
   title={entry.data.title}
   description={entry.data.description}
   image={entry.data.cover}
+  modified={entry.data.modified ?? entry.data.created}
 >
   <h1 class="text-4xl max-w-prose mb-8">{entry.data.title}</h1>
   <div

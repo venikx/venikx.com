@@ -20,7 +20,7 @@ const {
   data: { name },
 } = entry
 
-const { title, description, image, kind, bare = false } = Astro.props
+const { title, description, image, kind, modified, bare = false } = Astro.props
 
 import defaultImage from '../assets/pixel-art-kevin-db.png'
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
@@ -58,6 +58,14 @@ const feeds = section
     <meta name="og:url" content={canonicalUrl} />
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content={name} />
+    {
+      modified && (
+        <meta
+          property="article:modified_time"
+          content={modified.toISOString()}
+        />
+      )
+    }
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="sitemap" href="/sitemap-index.xml" />

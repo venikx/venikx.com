@@ -8,6 +8,9 @@ import org from './src/lib/astro-org'
 import { orgOptions } from './src/lib/org-options'
 import { replaceOrgLinks } from './src/lib/plugins'
 import { braindump } from './src/lib/braindump'
+import { lastmod } from './src/lib/lastmod'
+
+const modified = lastmod()
 
 export default defineConfig({
   trailingSlash: 'always',
@@ -32,6 +35,7 @@ export default defineConfig({
     }),
     org({ ...orgOptions, uniorgPlugins: [replaceOrgLinks] }),
     braindump(),
-    sitemap(),
+    modified.integration,
+    sitemap({ serialize: modified.serialize }),
   ],
 })

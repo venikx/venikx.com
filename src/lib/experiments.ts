@@ -4,6 +4,7 @@ export interface ExperimentMeta {
   title: string
   description: string
   created: Date
+  modified?: Date
   draft?: boolean
   fullscreen?: boolean
 }
