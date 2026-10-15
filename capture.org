@@ -1,3 +1,6 @@
+#+todo: TODO(t) WAITING(w@/!) | DONE(d!)
+#+todo: | KILLED(k@)
+
 * Inbox
 ** DONE Add picture on landing page
 CLOSED: [2023-07-20 Thu 16:55]
@@ -10,18 +13,26 @@ CLOCK: [2023-07-17 Mon 01:28]--[2023-07-17 Mon 01:29] =>  0:01
 CLOSED: [2023-07-20 Thu 16:55]
 ** DONE Decide on the fonts, I prefer to have a monospace feel
 CLOSED: [2023-07-19 Wed 17:38]
-** KILL Check if I can use file links in the frontmatter
+** KILLED Check if I can use file links in the frontmatter
 CLOSED: [2023-07-18 Tue 17:57]
-** KILL Write blog post about data structures & algorithms
+** KILLED Write blog post about data structures & algorithms
 CLOSED: [2023-09-13 Wed 01:52]
 ** DONE Use uniorg for image handling
 CLOSED: [2024-04-15 Mon 12:56]
 ** DONE Upgrade to astro v4
 CLOSED: [2024-04-15 Mon 12:56]
-** TODO Configure Cloudflare Image Optimization or pre-built with Github Actions
+** KILLED Configure Cloudflare Image Optimization or pre-built with Github Actions
+CLOSED: [2026-10-16 Fri 02:47]
 ** TODO Create a page for all the filetags
-** TODO Images do not have captions
+** DONE Images do not have captions
+CLOSED: [2026-10-16 Fri 02:47]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2026-10-16 Fri 02:47]
+:END:
 ** TODO :exports none still exports
-** TODO Implement dark mode, or use darker color scheme
-** TODO Use [[https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0][Configuring Emacs and Eglot to work with Astro language server | by Jayaram |...]]
-** TODO Fix Lighthouse score from blog posts
+** KILLED Implement dark mode, or use darker color scheme
+CLOSED: [2026-10-16 Fri 02:46]
+** DONE Use [[https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0][Configuring Emacs and Eglot to work with Astro language server | by Jayaram |...]]
+CLOSED: [2026-10-16 Fri 02:45]
+** DONE Fix Lighthouse score from blog posts
+CLOSED: [2026-10-16 Fri 02:45]
