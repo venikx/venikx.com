@@ -12,6 +12,7 @@ import { getEntry } from 'astro:content'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import PostHog from '../components/posthog.astro'
+import { FEEDS } from '../lib/feed'
 
 const entry = await getEntry('authors', 'kevin')
 if (!entry) throw new Error('Author not found')
@@ -25,6 +26,14 @@ import defaultImage from '../assets/pixel-art-kevin-db.png'
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
 const ogImage = image ? image : new URL(defaultImage.src, Astro.site)
 const ogType = kind ? kind : 'website'
+
+const sections = [FEEDS.posts, FEEDS.experiments, FEEDS.braindump]
+const section = sections.find((f) =>
+  Astro.url.pathname.startsWith(f.href.replace(/rss\.xml$/, ''))
+)
+const feeds = section
+  ? [section, ...Object.values(FEEDS).filter((f) => f !== section)]
+  : Object.values(FEEDS)
 ---
 
 <!doctype html>
@@ -52,6 +61,16 @@ const ogType = kind ? kind : 'website'
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
+    {
+      feeds.map((feed) => (
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={feed.title}
+          href={feed.href}
+        />
+      ))
+    }
     <PostHog />
   </head>
   <body class="font-sans bg-purple-50 text-zinc-900 leading-relaxed">

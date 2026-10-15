@@ -1,0 +1,12 @@
+---
+import { Icon } from 'astro-icon/components'
+import type { Feed } from '../lib/feed'
+import Link from './Link.astro'
+
+type Props = { feed: Feed }
+const { feed } = Astro.props
+---
+
+<Link href={feed.href} class="inline-flex items-center gap-1">
+  <Icon name="carbon:rss" />RSS
+</Link>

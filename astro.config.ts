@@ -27,7 +27,7 @@ export default defineConfig({
     icon({
       include: {
         jam: ['menu', 'close'],
-        carbon: ['logo-github', 'logo-linkedin', 'email'],
+        carbon: ['logo-github', 'logo-linkedin', 'email', 'rss'],
       },
     }),
     org({ ...orgOptions, uniorgPlugins: [replaceOrgLinks] }),

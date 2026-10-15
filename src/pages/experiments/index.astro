@@ -1,7 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import PostList from '../../components/PostList.astro'
+import FeedLink from '../../components/FeedLink.astro'
 import { getAllExperiments } from '../../lib/experiments'
+import { FEEDS } from '../../lib/feed'
 
 const experiments = getAllExperiments()
 ---
@@ -10,7 +12,10 @@ const experiments = getAllExperiments()
   title="Experiments | Kevin De Baerdemaeker"
   description="Self-contained toys. Mostly canvas and digital art, but anything goes."
 >
-  <h1 class="text-4xl">Experiments</h1>
+  <div class="flex items-baseline justify-between gap-4">
+    <h1 class="text-4xl">Experiments</h1>
+    <FeedLink feed={FEEDS.experiments} />
+  </div>
   <p>
     Self-contained toys, each one its own page with dependencies. Mostly canvas
     and digital art, but anything goes.

@@ -1,7 +1,9 @@
 ---
 import { getEntry, render } from 'astro:content'
 import Layout from '../../layouts/Layout.astro'
+import FeedLink from '../../components/FeedLink.astro'
 import { INDEX } from '../../lib/braindump'
+import { FEEDS } from '../../lib/feed'
 
 const index = await getEntry('braindump', INDEX)
 const IndexContent = index && (await render(index)).Content
@@ -11,7 +13,10 @@ const IndexContent = index && (await render(index)).Content
   title="Braindump | Kevin De Baerdemaeker"
   description="My second brain: rough notes to learn, understand and retain the things I'm interested in."
 >
-  <h1 class="text-4xl max-w-prose mb-8">Braindump</h1>
+  <div class="flex items-baseline justify-between gap-4 mb-8">
+    <h1 class="text-4xl max-w-prose">Braindump</h1>
+    <FeedLink feed={FEEDS.braindump} />
+  </div>
   {
     IndexContent && (
       <div class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100">
