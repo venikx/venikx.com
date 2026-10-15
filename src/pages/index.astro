@@ -5,6 +5,7 @@ import bioImage from '../assets/pixel-art-kevin-db.webp'
 import PostList from '../components/PostList.astro'
 import Link from '../components/Link.astro'
 import { getAllPosts } from '../lib/posts'
+import { SECTIONS } from '../lib/sections'
 
 const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
 ---
@@ -31,25 +32,15 @@ const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
 
   <h2 class="text-2xl">What's in here</h2>
   <ul class="list-[square] list-inside">
-    <li>
-      <Link href="/posts/">Writing</Link>: posts on Nix, graphics programming
-      and game dev.
-    </li>
-    <li>
-      <Link href="/braindump/">Brain</Link>: my personal notes, all linked
-      together. Rough, unfinished and always growing.
-    </li>
-    <li>
-      <Link href="/lab/">Lab</Link>: self-contained toys. Mostly canvas and
-      digital art, but anything goes.
-    </li>
+    {
+      SECTIONS.map((s) => (
+        <li>
+          <Link href={s.href}>{s.label}</Link>: {s.blurb}
+        </li>
+      ))
+    }
   </ul>
 
   <h2 class="text-2xl">Latest Writing</h2>
   <PostList posts={latestPosts} />
-  <p>
-    Not enough? Checkout <Link href="/posts/" rel="prefetch"
-      >all my writing</Link
-    >.
-  </p>
 </Layout>

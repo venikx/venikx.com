@@ -13,6 +13,7 @@ import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import PostHog from '../components/posthog.astro'
 import { FEEDS } from '../lib/feed'
+import { SECTIONS } from '../lib/sections'
 
 const entry = await getEntry('authors', 'kevin')
 if (!entry) throw new Error('Author not found')
@@ -33,10 +34,9 @@ const ogImage = new URL(
 )
 const ogType = kind ? kind : 'website'
 
-const sections = [FEEDS.posts, FEEDS.experiments, FEEDS.braindump]
-const section = sections.find((f) =>
-  Astro.url.pathname.startsWith(f.href.replace(/rss\.xml$/, ''))
-)
+const section = SECTIONS.find((s) =>
+  Astro.url.pathname.startsWith(s.href)
+)?.feed
 const feeds = section
   ? [section, ...Object.values(FEEDS).filter((f) => f !== section)]
   : Object.values(FEEDS)

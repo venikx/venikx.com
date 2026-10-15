@@ -5,7 +5,10 @@ import { Icon } from 'astro-icon/components'
 
 import bioImage from '../assets/pixel-art-kevin-db.webp'
 import Link from './Link.astro'
-const { showProfile = true } = Astro.props
+import { FEEDS } from '../lib/feed'
+import { SECTIONS } from '../lib/sections'
+
+const isHome = Astro.url.pathname === '/'
 
 const entry = await getEntry('authors', 'kevin')
 if (!entry) throw new Error('Author not found')
@@ -18,7 +21,7 @@ const {
   <div class="bg-purple-100 border-y-2 border-pink-200 my-4 py-8">
     <div class="container w-full mx-auto px-8 max-w-4xl flex flex-col gap-2">
       {
-        showProfile && (
+        !isHome && (
           <div class="flex gap-4">
             <Image
               class="mt-2 h-16 w-16 transition duration-300 ease-in-out hover:scale-125"
@@ -27,25 +30,24 @@ const {
               width={320}
             />
             <div>
+              <p>Hi, I'm Kevin. Up for a side quest?</p>
+              <ul class="list-[square] list-inside mb-[1.25em]">
+                {SECTIONS.map((s) => (
+                  <li>
+                    <Link href={s.href}>{s.label}</Link>: {s.blurb}
+                  </li>
+                ))}
+              </ul>
               <p>
-                The name is Kevin, and this is my hackerspace. My thoughts can
-                be all over the place, but they're usually related to code. I
-                read that writing helps with learning and makes concepts stick.
-                So, expect a lot of unfinished ramblings.
-              </p>
-              <p>
-                For future messy thoughts, considering adding my
-                {/* prettier-ignore */}
-                <Link href="/rss.xml" class="hover:bg-pink-200">feed</Link>
-                to your RSS reader. I don't really have social media, but you
-                can contact me via:
+                Follow along via <Link href={FEEDS.main.href}>RSS</Link>, or say
+                hi:
               </p>
             </div>
           </div>
         )
       }
 
-      <div class="flex gap-8 self-center">
+      <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 self-center">
         <a
           href={socials.github}
           class="group inline-flex items-center gap-2 cursor-pointer hover:text-pink-700"
