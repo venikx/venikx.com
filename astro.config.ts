@@ -1,4 +1,4 @@
-import { defineConfig, passthroughImageService } from 'astro/config'
+import { defineConfig } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 import mdx from '@astrojs/mdx'
 import tailwindcss from '@tailwindcss/vite'
@@ -18,9 +18,6 @@ export default defineConfig({
   site: 'https://venikx.com',
   vite: {
     plugins: [tailwindcss()],
-  },
-  image: {
-    service: passthroughImageService(),
   },
   markdown: {
     syntaxHighlight: 'prism',

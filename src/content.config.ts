@@ -1,34 +1,37 @@
-import { defineCollection, reference } from 'astro:content'
+import { defineCollection, reference, type SchemaContext } from 'astro:content'
 import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
 
 import { braindumpLoader } from './lib/braindump'
 
-const post = z.object({
-  title: z.string(),
-  description: z.string(),
-  cover: z.optional(z.string()),
-  draft: z.optional(z.coerce.boolean()),
-  filetags: z.string().transform((f) => f.split(':').filter((f) => !!f)),
-})
+const post = ({ image }: SchemaContext) =>
+  z.object({
+    title: z.string(),
+    description: z.string(),
+    cover: z.optional(image()),
+    draft: z.optional(z.coerce.boolean()),
+    filetags: z.string().transform((f) => f.split(':').filter((f) => !!f)),
+  })
 
 const orgDateToDate = (d: string): Date =>
   new Date(d.slice(1, -1).split(' ')[0] as string)
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.org', base: './src/content/blog' }),
-  schema: post.extend({
-    created: z.string().transform(orgDateToDate),
-    modified: z.string().transform(orgDateToDate),
-  }),
+  schema: (ctx) =>
+    post(ctx).extend({
+      created: z.string().transform(orgDateToDate),
+      modified: z.string().transform(orgDateToDate),
+    }),
 })
 
 const interactive = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/interactive' }),
-  schema: post.extend({
-    created: z.coerce.date(),
-    modified: z.optional(z.coerce.date()),
-  }),
+  schema: (ctx) =>
+    post(ctx).extend({
+      created: z.coerce.date(),
+      modified: z.optional(z.coerce.date()),
+    }),
 })
 
 const authors = defineCollection({
