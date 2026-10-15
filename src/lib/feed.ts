@@ -12,23 +12,22 @@ export const FEEDS = {
   main: {
     href: '/rss.xml',
     title: "Kevin's Hackerspace",
-    description: 'Posts and experiments by Kevin De Baerdemaeker.',
+    description: 'Writing and lab experiments by Kevin De Baerdemaeker.',
   },
   posts: {
     href: '/posts/rss.xml',
-    title: "Kevin's Hackerspace: Posts",
-    description:
-      'Curated deep dives, for when I really want to understand or share a topic.',
+    title: "Kevin's Hackerspace: Writing",
+    description: 'Posts on Nix, graphics programming and game dev.',
   },
   experiments: {
-    href: '/experiments/rss.xml',
-    title: "Kevin's Hackerspace: Experiments",
+    href: '/lab/rss.xml',
+    title: "Kevin's Hackerspace: Lab",
     description:
-      'Self-contained toys. Mostly canvas and digital art, but anything goes.',
+      'Creative coding experiments. Self-contained toys, mostly canvas and digital art, but anything goes.',
   },
   braindump: {
     href: '/braindump/rss.xml',
-    title: "Kevin's Hackerspace: Braindump",
+    title: "Kevin's Hackerspace: Brain",
     description: "New notes in Kevin's braindump, rough and always growing.",
   },
 } satisfies Record<string, Feed>
@@ -47,7 +46,7 @@ export const experimentItems = (): RSSFeedItem[] =>
     title: e.data.title,
     description: e.data.description,
     pubDate: e.data.created,
-    link: `/experiments/${e.id}/`,
+    link: `/lab/${e.id}/`,
   }))
 
 export const braindumpItems = async (): Promise<RSSFeedItem[]> =>

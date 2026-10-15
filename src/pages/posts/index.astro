@@ -9,12 +9,13 @@ const allBlogPosts = await getAllPosts()
 ---
 
 <Layout
-  title="Posts | Kevin De Baerdemaeker"
-  description="Curated deep dives, for when I really want to understand or share a topic."
+  title="Writing on Nix, graphics & game dev | Kevin De Baerdemaeker"
+  description="Posts on Nix, graphics programming and game dev by Kevin De Baerdemaeker."
 >
   <div class="flex items-baseline justify-between gap-4">
-    <h1 class="text-4xl">All Posts</h1>
+    <h1 class="text-4xl">Writing</h1>
     <FeedLink feed={FEEDS.posts} />
   </div>
+  <p>Posts on Nix, graphics programming and game dev.</p>
   <PostList posts={allBlogPosts} />
 </Layout>

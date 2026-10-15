@@ -10,8 +10,8 @@ const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
 ---
 
 <Layout
-  title="Kevin De Baerdemaeker | Homepage"
-  description="Humble full-stack web developer delivering solutions for clients in a wide variety of technologies. This is my personal blog, I ramble about the things I'm learning."
+  title="Kevin De Baerdemaeker | Hackerspace"
+  description="Kevin's personal hackerspace: writing, a braindump of linked notes and creative coding experiments."
 >
   <div class="flex items-center -mt-2">
     <Image
@@ -22,35 +22,34 @@ const latestPosts = await getAllPosts().then((allPosts) => allPosts.slice(0, 5))
       loading="eager"
     />
     <p>
-      I write about web technologies, and graphics programming. My goal with
-      writing is to <em>educate myself</em>, while keeping the learning as
-      entertaining.
+      <em>Welcome! Hi!</em> This is my hackerspace. It's where I poke at whatever
+      I find interesting, be it graphics programming, Nix or game dev, and keep writing
+      about it until it <em>sticks</em>. Some of it is polished, most of it
+      isn't.
     </p>
   </div>
 
-  <h2 class="text-2xl">Interests</h2>
-  <p>
-    I've been delivering projects for multiple clients, in a wide variety of
-    technologies, but the stack I'm most comfortable with is Typescript,
-    Next.js, Node.js and PostreSQL (with Prisma).
-  </p>
-  <p>
-    Purely for shits and giggles, I'm exploring the creative possibilities of
-    coding using WebGL and OpenGL (C/C++). <em>But!</em> It's not easy! There's a
-    lot of math and computer science-y concepts and I never seem to <em
-      >get'em</em
-    >. I read that writing helps with understand, so...
-    <em>Welcome! Hi!</em>
-  </p>
-  <p>
-    Also, people seem to love Rust and Golang. I need to hop on deez before it's
-    too late!
-  </p>
+  <h2 class="text-2xl">What's in here</h2>
+  <ul class="list-[square] list-inside">
+    <li>
+      <Link href="/posts/">Writing</Link>: posts on Nix, graphics programming
+      and game dev.
+    </li>
+    <li>
+      <Link href="/braindump/">Brain</Link>: my personal notes, all linked
+      together. Rough, unfinished and always growing.
+    </li>
+    <li>
+      <Link href="/lab/">Lab</Link>: self-contained toys. Mostly canvas and
+      digital art, but anything goes.
+    </li>
+  </ul>
 
-  <h2 class="text-2xl">Latest Posts</h2>
+  <h2 class="text-2xl">Latest Writing</h2>
   <PostList posts={latestPosts} />
   <p>
-    Not enough? Checkout <Link href="/posts/" rel="prefetch">all my posts</Link
+    Not enough? Checkout <Link href="/posts/" rel="prefetch"
+      >all my writing</Link
     >.
   </p>
 </Layout>

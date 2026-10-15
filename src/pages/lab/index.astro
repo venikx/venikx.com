@@ -9,16 +9,16 @@ const experiments = getAllExperiments()
 ---
 
 <Layout
-  title="Experiments | Kevin De Baerdemaeker"
-  description="Self-contained toys. Mostly canvas and digital art, but anything goes."
+  title="Lab: creative coding & digital art | Kevin De Baerdemaeker"
+  description="Creative coding experiments. Self-contained toys, mostly canvas and digital art, but anything goes."
 >
   <div class="flex items-baseline justify-between gap-4">
-    <h1 class="text-4xl">Experiments</h1>
+    <h1 class="text-4xl">Lab</h1>
     <FeedLink feed={FEEDS.experiments} />
   </div>
   <p>
-    Self-contained toys, each one its own page with dependencies. Mostly canvas
-    and digital art, but anything goes.
+    Creative coding experiments. Self-contained toys, each one its own page with
+    dependencies. Mostly canvas and digital art, but anything goes.
   </p>
-  <PostList posts={experiments} base="/experiments/" />
+  <PostList posts={experiments} base="/lab/" />
 </Layout>
