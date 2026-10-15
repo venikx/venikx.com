@@ -1,0 +1,35 @@
+---
+import type { InferGetStaticPropsType } from 'astro'
+import Layout from '../../layouts/Layout.astro'
+import { getAllExperiments } from '../../lib/experiments'
+
+export function getStaticPaths() {
+  return getAllExperiments().map(({ id, data, Content }) => ({
+    params: { slug: id },
+    props: { data, Content },
+  }))
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+const { data, Content } = Astro.props
+---
+
+<Layout
+  bare={data.fullscreen}
+  kind="article"
+  title={data.title}
+  description={data.description}
+>
+  {
+    data.fullscreen ? (
+      <Content />
+    ) : (
+      <>
+        <h1 class="text-4xl max-w-prose mb-8">{data.title}</h1>
+        <div class="prose prose-hackerman prose-a:transition-colors prose-a:rounded-xs prose-a:ease-in prose-a:duration-200 hover:prose-a:bg-pink-100">
+          <Content />
+        </div>
+      </>
+    )
+  }
+</Layout>

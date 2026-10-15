@@ -19,7 +19,7 @@ const {
   data: { name },
 } = entry
 
-const { title, description, image, kind } = Astro.props
+const { title, description, image, kind, bare = false } = Astro.props
 
 import defaultImage from '../assets/pixel-art-kevin-db.png'
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
@@ -55,10 +55,18 @@ const ogType = kind ? kind : 'website'
     <PostHog />
   </head>
   <body class="font-sans bg-purple-50 text-zinc-900 leading-relaxed">
-    <Header />
-    <main class="container w-full mx-auto my-12 px-8 max-w-4xl">
-      <slot />
-    </main>
-    <Footer />
+    {
+      bare ? (
+        <slot />
+      ) : (
+        <>
+          <Header />
+          <main class="container w-full mx-auto my-12 px-8 max-w-4xl">
+            <slot />
+          </main>
+          <Footer />
+        </>
+      )
+    }
   </body>
 </html>

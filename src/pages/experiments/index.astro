@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import PostList from '../../components/PostList.astro'
+import { getAllExperiments } from '../../lib/experiments'
+
+const experiments = getAllExperiments()
+---
+
+<Layout
+  title="Experiments | Kevin De Baerdemaeker"
+  description="Self-contained toys. Mostly canvas and digital art, but anything goes."
+>
+  <h1 class="text-4xl">Experiments</h1>
+  <p>
+    Self-contained toys, each one its own page with dependencies. Mostly canvas
+    and digital art, but anything goes.
+  </p>
+  <PostList posts={experiments} base="/experiments/" />
+</Layout>

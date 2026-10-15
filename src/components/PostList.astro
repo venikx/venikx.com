@@ -1,5 +1,5 @@
 ---
-const { posts } = Astro.props
+const { posts, base = '/posts/' } = Astro.props
 const formatDate = (date: Date) => date.toISOString().split('T')[0]
 ---
 
@@ -7,7 +7,7 @@ const formatDate = (date: Date) => date.toISOString().split('T')[0]
   {
     posts.length > 0 ? (
       posts.map((post: (typeof posts)[number]) => {
-        const link = `/posts/${post.id}/`
+        const link = `${base}${post.id}/`
         return (
           <a
             href={link}
