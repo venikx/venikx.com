@@ -92,6 +92,7 @@ neovim), and even more obscure packages might be readily available. According to
 [[https://repology.org/repositories/graphs][Repology]] the list of available packages looks huge, even compared to the =AUR=.
 
 #+caption: The number of packages in repositories for each Linux Distribution. Source: https://repology.org/repositories/graphs
+#+attr_html: :alt Scatter plot of Linux package repositories, total packages against fresh packages. nixpkgs unstable sits top right, ahead of every other repository.
 [[./map_repo_size_fresh.svg]]
 
 * An Actual Practical Guide to =Nix Flakes=

@@ -3,6 +3,7 @@ import rehypeShiftHeading, {
   type Options as RehypeShiftOptions,
 } from 'rehype-shift-heading'
 import { h } from 'hastscript'
+import type { Paragraph, WithAffiliatedKeywords } from 'uniorg'
 
 import type { Options } from './astro-org'
 
@@ -22,6 +23,26 @@ export const orgOptions: Options = {
   ],
   uniorgRehypeOptions: {
     handlers: {
+      paragraph: function (org) {
+        // NOTE: uniorg's Paragraph type omits the affiliated keywords the
+        // parser attaches to it
+        const { affiliated } = org as Paragraph & WithAffiliatedKeywords
+        const caption = [affiliated.CAPTION ?? []]
+          .flat(3)
+          .filter((n) => typeof n !== 'string')
+        if (caption.length <= 0) return null
+
+        const children = this.toHast(org.children, org)
+        const hasImage = children.some(
+          (c) => c.type === 'element' && c.tagName === 'img'
+        )
+        if (!hasImage) return null
+
+        return h('figure', [
+          ...children,
+          h('figcaption', this.toHast(caption, org)),
+        ])
+      },
       'example-block': (org) => {
         return h('pre.example', [{ type: 'text', value: org.value }])
       },
