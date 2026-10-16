@@ -14,6 +14,8 @@ export const orgOptions: Options = {
       shiki,
       {
         theme: 'synthwave-84',
+        // NOTE: Bump colors below 4.5:1 contrast on the #262335 background
+        colorReplacements: { '#fe4450': '#ff5562', '#d50': '#f26a1b' },
         // NOTE: Only load the languages in use, unknown ones stay plain
         langs: [],
         lazy: true,
